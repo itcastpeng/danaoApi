@@ -95,11 +95,22 @@ class zhugedanao_oper_log(models.Model):
     class Meta:
         app_label = "zhugedanao"
 
+# 百度知道链接提交任务表
+class zhugedanao_lianjie_task_list(models.Model):
+    task_name = models.CharField(verbose_name="任务名称", max_length=128)
+    task_status = models.BooleanField(verbose_name='该任务是否完成', default=False)
+    task_progress = models.IntegerField(verbose_name='任务进度', default=0)
+    create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+    count_taskList = models.IntegerField(verbose_name='任务总数',default=0)
+
+    class Meta:
+        app_label = "zhugedanao"
+
 
 # 百度知道链接提交
 class zhugedanao_lianjie_tijiao(models.Model):
     user = models.ForeignKey('zhugedanao_userprofile', verbose_name="用户")
-    name = models.CharField(verbose_name="任务名称", max_length=128)
+    tid = models.ForeignKey(to=zhugedanao_lianjie_task_list, verbose_name='链接提交百度任务表', null=True, blank=True)
     url = models.TextField(verbose_name="提交链接")
     count = models.SmallIntegerField(verbose_name="提交次数", default=0)
     status_choices = (
@@ -109,7 +120,11 @@ class zhugedanao_lianjie_tijiao(models.Model):
     )
     status = models.SmallIntegerField(verbose_name="收录状态", choices=status_choices, default=1)
     get_task_date = models.DateTimeField(verbose_name='获取任务时间', null=True, blank=True)
-    create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+    is_zhixing = models.BooleanField(verbose_name='是否执行', default=False)
+    time_stamp = models.IntegerField(verbose_name='去任务间隔时间', default=0)
+
+    class Meta:
+        app_label = "zhugedanao"
 
 
 # 百度知道链接提交日志
