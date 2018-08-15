@@ -103,14 +103,14 @@ class zhugedanao_lianjie_task_list(models.Model):
     create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
     count_taskList = models.IntegerField(verbose_name='任务总数',default=0)
     is_update = models.BooleanField(verbose_name='是否可以修改', default=0)
-
+    user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
     class Meta:
         app_label = "zhugedanao"
 
 
 # 百度知道链接提交
 class zhugedanao_lianjie_tijiao(models.Model):
-    user = models.ForeignKey('zhugedanao_userprofile', verbose_name="用户")
+    user = models.ForeignKey('zhugedanao_userprofile', verbose_name="用户", null=True, blank=True)
     tid = models.ForeignKey(to=zhugedanao_lianjie_task_list, verbose_name='链接提交百度任务表', null=True, blank=True)
     url = models.TextField(verbose_name="提交链接")
     count = models.SmallIntegerField(verbose_name="提交次数", default=0)
