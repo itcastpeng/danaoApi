@@ -67,6 +67,39 @@ class UpdateForm(forms.Form):
         else:
             return url
 
+# 任务详情更新 先删除后创建
+class UpdateTaskForm(forms.Form):
+    o_id = forms.IntegerField(
+        required=True,
+        error_messages={
+            'required': '角色id不能为空'
+        }
+    )
+
+    name = forms.CharField(
+        required=True,
+        error_messages={
+            'required': "任务名称不能为空"
+        }
+    )
+    url = forms.CharField(
+        required=True,
+        error_messages={
+            'required': "提交链接不能为空"
+        }
+    )
+
+    def clean_url(self):
+        url_list = []
+        url = self.data.get('url')
+        for i in url.strip().split():
+            if i.strip():
+                url_list.append(i.strip())
+        if len(url_list) == 0:
+            self.add_error('url', '提交链接不能为空')
+        else:
+            return url_list
+
 
 # 判断是否是数字
 class SelectForm(forms.Form):
