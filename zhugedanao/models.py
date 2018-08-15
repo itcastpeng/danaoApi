@@ -102,6 +102,7 @@ class zhugedanao_lianjie_task_list(models.Model):
     task_progress = models.IntegerField(verbose_name='任务进度', default=0)
     create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
     count_taskList = models.IntegerField(verbose_name='任务总数',default=0)
+    is_update = models.BooleanField(verbose_name='是否可以修改', default=0)
 
     class Meta:
         app_label = "zhugedanao"

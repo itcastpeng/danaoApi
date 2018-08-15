@@ -17,7 +17,7 @@ import json
 def lianjie_tijiao(request):
     response = Response.ResponseObj()
     if request.method == "GET":
-        print('查询任务列表', request.GET)
+        print('查询任务列表=========================', request.GET)
         forms_obj = SelectForm(request.GET)
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
@@ -31,49 +31,57 @@ def lianjie_tijiao(request):
                 'create_date': ''
             }
             q = conditionCom(request, field_dict)
-            print('q -->', q)
+            # print('q -->', q)
             objs = models.zhugedanao_lianjie_task_list.objects.filter(q).order_by(order)
-            count = objs.count()
-            detail_count = 0
-            if objs:
-                detail = models.zhugedanao_lianjie_tijiao.objects.filter(tid=objs[0].id).filter(is_zhixing=0)
-                detail_count = detail.count()
+            count = objs.count()        # 任务列表总数
+
             if length != 0:
                 start_line = (current_page - 1) * length
                 stop_line = start_line + length
                 objs = objs[start_line: stop_line]
-
             # 返回的数据
             ret_data = []
-
             for obj in objs:
+                is_update = 0
+                if obj.create_date:
+                    now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+                    next_datetime_addoneday = (obj.create_date + datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
+                    if now_datetime > next_datetime_addoneday:
+                        obj.is_update = 1
+                        obj.save()
+                        is_update = 1
+                detail_task_count = models.zhugedanao_lianjie_tijiao.objects.filter(tid=obj.id)
+                # 该任务 详情总数
+                detail_task_count_num = detail_task_count.count()
+                # 该任务未执行总数
+                detail_count = detail_task_count.filter(is_zhixing=0).count()
                 zhuangtai = '未完成'
                 if obj.task_status:
                     zhuangtai = '已完成'
-                #  将查询出来的数据 加入列表
+                yiwancheng_obj = 0
+                if count != 0:
+                    yiwancheng_obj = detail_task_count_num - detail_count
                 ret_data.append({
                     'id': obj.id,
                     'task_name': obj.task_name,
                     'task_status':zhuangtai,
                     'task_progress': obj.task_progress,
                     'create_date': obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),
-                    'count_taskList':obj.count_taskList
+                    'count_taskList':obj.count_taskList,
+                    'yiwancheng_obj': yiwancheng_obj,  # 已完成数量
+                    'is_update':is_update
                 })
-            #  查询成功 返回200 状态码
-            yiwancheng_obj = 0
-            if count != 0:
-                yiwancheng_obj = count - detail_count
             response.code = 200
             response.msg = '查询成功'
             response.data = {
                 'ret_data': ret_data,
                 'data_count': count,    # 任务总数
-                'yiwancheng_obj':yiwancheng_obj # 已完成数量
             }
         else:
             response.code = 402
             response.msg = "请求异常"
             response.data = json.loads(forms_obj.errors.as_json())
+
     return JsonResponse(response.__dict__)
 
 
@@ -138,12 +146,9 @@ def lianjie_tijiao_detail(request):
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
 def lianjie_tijiao_oper(request, oper_type, o_id):
-    print('--------------oper')
     response = Response.ResponseObj()
     if request.method == "POST":
         if oper_type == "add":
-            print('添加----',request.POST)
-            print('===============> ', request.POST.get('url'))
             form_data = {
                 'oper_user_id': request.GET.get('user_id'),
                 'name': request.POST.get('name'),
