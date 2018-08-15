@@ -115,11 +115,11 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'zhugedanao',
-        'HOST': 'zhugedanao',
+        'NAME': 'danaoapi',
+        'HOST': 'danaoapi',
         'PORT': '3306',
-        'USER': 'zhugedanao',
-        'PASSWORD': 'zhugedanao'
+        'USER': 'danaoapi',
+        'PASSWORD': 'danaoapi'
     }
 }
 
