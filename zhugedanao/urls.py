@@ -5,7 +5,7 @@ from zhugedanao.views_dir.wechat import wechat
 from zhugedanao.views_dir import oper_log
 from zhugedanao.views_dir import tongji_data
 from zhugedanao.views_dir import lianjie_tijiao
-
+from zhugedanao.views_dir.Access_tijiaolianjie_task import access_task
 urlpatterns = [
 
     # url(r'^w_login',login.w_login),
@@ -28,5 +28,9 @@ urlpatterns = [
     # 需求管理
     url(r'^lianjie_tijiao/(?P<oper_type>\w+)/(?P<o_id>\d+)', lianjie_tijiao.lianjie_tijiao_oper),
     url(r'^lianjie_tijiao', lianjie_tijiao.lianjie_tijiao),
+    url(r'^detail_lianjie_tijiao/', lianjie_tijiao.lianjie_tijiao_detail),
+
+    # 获取任务
+    url(r'^access_task', access_task.task_access),
 
 ]

@@ -17,4 +17,27 @@
 404 非法请求
 405 扫码登录异常，请重新扫描
 
+
+展示任务列表	GET
+lianjie_tijiao
+参数   			请求方式	是否必须 		        说明
+current_page		GET			否			页码
+length				GET			否			条数	
+order				GET			否			排序条件
+
+展示任务详情数据  
+detail_lianjie_tijiao
+参数   				请求方式		是否必须     说明
+current_page	    GET			否			页码
+length				GET			否			条数	
+order				GET			否			排序条件
+tid			        GET			是 			父级id
+
+添加任务
+lianjie_tijiao/add/id
+参数   			请求方式		是否必须 		        说明
+user_id			GET					是 			操作人id
+name 			POST				是 			任务名称
+url		        POST				是 			任务链接
+
 ```

@@ -32,6 +32,7 @@ def is_token(table_obj):
     def is_token_decorator(func):
         def inner(request, *args, **kwargs):
             rand_str = request.GET.get('rand_str')
+            print(rand_str)
             timestamp = request.GET.get('timestamp', '')
             user_id = request.GET.get('user_id')
             objs = table_obj.objects.filter(id=user_id)
