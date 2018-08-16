@@ -23,7 +23,7 @@
 
 ``` 
 http请求方式: GET
-http请求url http://127.0.0.1:8000/zhugedanao/access_task?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+http请求url http://127.0.0.1:8000/zhugedanao/set_task_access
 参数   				请求方式		        是否必须            说明
 公共参数
 返回说明 （正常时返回的json数据 示例）
