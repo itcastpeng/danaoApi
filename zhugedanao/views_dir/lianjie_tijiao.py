@@ -174,7 +174,7 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
                     task_name = name,
                     create_date = now_datetime,
                     count_taskList=len(url_list),
-                    user_id=oper_user_id
+                    user_id_id=oper_user_id
                 )
                 for url in url_list:
                     querysetlist.append(
