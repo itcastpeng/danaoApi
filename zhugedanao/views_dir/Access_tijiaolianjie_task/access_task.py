@@ -12,7 +12,7 @@ response = Response.ResponseObj()
 
 # 判断是否还有任务
 def decideIsTask(request):
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(tid__is_update=1).filter(is_zhixing=0)
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0)
     flag = False
     if objs:
         flag = True
@@ -20,6 +20,7 @@ def decideIsTask(request):
     response.msg = '查询成功'
     response.data = {'flag': flag}
     return JsonResponse(response.__dict__)
+
 
 # api 返回十条任务
 def set_task_access(request):
@@ -57,6 +58,7 @@ def get_task_for(request):
     response.code = 200
     response.msg = '请求成功'
     return JsonResponse(response.__dict__)
+
 
 # 判断链接提交 当前时间大于创建时间+30分钟
 def panduan_shijian(request):
