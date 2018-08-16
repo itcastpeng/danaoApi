@@ -179,7 +179,6 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
                 for url in url_list:
                     querysetlist.append(
                         models.zhugedanao_lianjie_tijiao(
-                            user_id=oper_user_id,
                             tid_id=objs_id.id,
                             url=url
                         )
