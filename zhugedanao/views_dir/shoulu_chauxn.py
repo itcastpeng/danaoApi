@@ -1,13 +1,12 @@
 from openpyxl.styles import Font, Alignment
 from openpyxl import Workbook
-import sqlite3, os, json, time, datetime, threading, sys, requests, queue
+import sqlite3, os, json, time, datetime, threading, sys, queue
 from zhugedanao import models
 from publicFunc import Response
 from publicFunc import account
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
-from publicFunc.condition_com import conditionCom
 from zhugedanao.forms.shoulu_chaxun import AddForm, SelectForm
 import json
 import random
@@ -17,13 +16,14 @@ import random
 @account.is_token(models.zhugedanao_userprofile)
 def shouLuChaXunShow(request):
     response = Response.ResponseObj()
+    user_id = request.GET.get('user_id')
     if request.method == "GET":
         print('查询任务列表=========================', request.GET)
         forms_obj = SelectForm(request.GET)
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
-            objs = models.zhugedanao_shoulu_chaxun.objects.all()
+            objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id)
             dataCount = objs.count()        # 收录总数
             shoulu_objs = models.zhugedanao_shoulu_chaxun.objects.filter(is_shoulu=1)
             shouluCount = shoulu_objs.count()
@@ -98,6 +98,7 @@ def shouLuChaXunShow(request):
 @account.is_token(models.zhugedanao_userprofile)
 def shouLuChaxun(request, oper_type, o_id):
     response = Response.ResponseObj()
+    user_id = request.GET.get('user_id')
     if request.method == "POST":
         # 增加收录任务
         if oper_type == "add":
@@ -118,6 +119,7 @@ def shouLuChaxun(request, oper_type, o_id):
                     for url in url_list:
                         querysetlist.append(
                             models.zhugedanao_shoulu_chaxun(
+                                user_id_id=user_id,
                                 url=url,
                                 search=search,
                                 createAndStart_time=now_date
@@ -180,7 +182,7 @@ def shouLuChaxun(request, oper_type, o_id):
             ws['D2'].alignment = Alignment(horizontal='center', vertical='center')
             ws['E2'].alignment = Alignment(horizontal='center', vertical='center')
             row = 7
-            objs = models.zhugedanao_shoulu_chaxun.objects.all()
+            objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id)
             for obj in objs:
                 is_shoulu = '未收录'
                 search = ''
