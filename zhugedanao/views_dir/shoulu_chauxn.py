@@ -1,6 +1,6 @@
 from openpyxl.styles import Font, Alignment
 from openpyxl import Workbook
-import sqlite3, os, json, time, datetime, tkinter.messagebox, threading, sys, requests, queue
+import sqlite3, os, json, time, datetime, threading, sys, requests, queue
 from zhugedanao import models
 from publicFunc import Response
 from publicFunc import account
