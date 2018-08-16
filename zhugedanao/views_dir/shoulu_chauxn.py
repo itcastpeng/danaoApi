@@ -31,9 +31,9 @@ def shouLuChaXunShow(request):
             # 已完成 进度条
             zhixingCount = objs.filter(is_zhixing=1)
             yiZhiXingCount = zhixingCount.count()
-            yiWanCheng = 0
+            yiWanCheng_num = 0
             if yiZhiXingCount:
-                yiWanCheng = int((yiZhiXingCount / dataCount) * 100)
+                yiWanCheng_num = int((yiZhiXingCount / dataCount) * 100)
 
             # 收录率
             shouLuLv = 0
@@ -45,7 +45,9 @@ def shouLuChaXunShow(request):
                 start_line = (current_page - 1) * length
                 stop_line = start_line + length
                 objs = objs[start_line: stop_line]
-
+            whether_complete = False
+            if dataCount == yiZhiXingCount:
+                whether_complete = True
             # 返回的数据
             retData = []
             for obj in objs:
@@ -77,7 +79,8 @@ def shouLuChaXunShow(request):
                 'dataCount': dataCount,     # 任务总数
                 'shouluNum':shouluCount,    # 收录数
                 'shouLuLv':shouLuLv,        # 收录率
-                'yiWanCheng':yiWanCheng     # 已完成
+                'yiWanCheng':yiWanCheng_num,     # 已完成数量
+                'whether_complete':whether_complete # 是否全部完成
             }
         else:
             response.code = 402
