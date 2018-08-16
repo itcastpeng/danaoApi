@@ -111,7 +111,7 @@ class zhugedanao_lianjie_task_list(models.Model):
 # 百度知道链接提交
 class zhugedanao_lianjie_tijiao(models.Model):
     user = models.ForeignKey('zhugedanao_userprofile', verbose_name="用户", null=True, blank=True)
-    tid = models.ForeignKey(to=zhugedanao_lianjie_task_list, verbose_name='链接提交百度任务表', null=True, blank=True)
+    tid = models.ForeignKey(to='zhugedanao_lianjie_task_list', verbose_name='链接提交百度任务表', null=True, blank=True)
     url = models.TextField(verbose_name="提交链接")
     count = models.SmallIntegerField(verbose_name="提交次数", default=0)
     status_choices = (
@@ -122,7 +122,7 @@ class zhugedanao_lianjie_tijiao(models.Model):
     status = models.SmallIntegerField(verbose_name="收录状态", choices=status_choices, default=1)
     get_task_date = models.DateTimeField(verbose_name='获取任务时间', null=True, blank=True)
     is_zhixing = models.BooleanField(verbose_name='是否执行', default=False)
-    time_stamp = models.IntegerField(verbose_name='去任务间隔时间', default=0)
+    time_stamp = models.IntegerField(verbose_name='取任务间隔时间', default=0)
 
     class Meta:
         app_label = "zhugedanao"
@@ -134,3 +134,59 @@ class zhugedanao_lianjie_tijiao_log(models.Model):
     ip = models.CharField(verbose_name="提交的ip", max_length=128)
     address = models.CharField(verbose_name="提交机器的ip", max_length=128)
     create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+
+
+# 收录查询表
+class zhugedanao_shoulu_chaxun(models.Model):
+    is_shoulu = models.BooleanField(verbose_name='是否收录', default=0)
+    url = models.CharField(verbose_name='链接', max_length=128)
+    time_stamp = models.IntegerField(verbose_name='任务间隔时间', default=0)
+    title = models.CharField(verbose_name='网页标题', max_length=64, null=True, blank=True)
+    search = models.IntegerField(verbose_name='搜索引擎', default=0)
+    kuaizhao_time = models.CharField(verbose_name='快照时间', max_length=64, null=True, blank=True)
+    status_code = models.IntegerField(verbose_name='状态码', null=True, blank=True)
+    is_zhixing = models.BooleanField(verbose_name='是否已经执行', default=0)
+    createAndStart_time = models.DateTimeField(verbose_name='创建和开始时间', auto_now_add=True)
+
+# 覆盖查询
+class zhugedanao_fugai_chaxun(models.Model):
+    keyword = models.CharField(verbose_name='关键词', max_length=64)
+    search_engine = models.IntegerField(verbose_name='搜索引擎', default=0)
+    sousuo_guize = models.CharField(verbose_name='搜索规则', max_length=64)
+    createAndStart_time = models.DateTimeField(verbose_name='创建和开始时间', auto_now_add=True)
+    is_zhixing = models.BooleanField(verbose_name='是否执行', default=False)
+    time_stamp = models.IntegerField(verbose_name='任务间隔时间', default=0)
+    paiming_detail = models.CharField(verbose_name='总体排名', max_length=64, null=True, blank=True)
+    zhanwei = models.BooleanField(verbose_name='占位', default=False)
+    json_detail_data = models.TextField(verbose_name='详情数据 json格式', null=True, blank=True)
+    # chaxun_status = models.BooleanField(verbose_name='查询状态 是否查询完', default=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

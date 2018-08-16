@@ -4,11 +4,13 @@ from publicFunc import account
 from django.http import JsonResponse
 import time
 from django.db.models import Q
-import json
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 
 
-def task_access(request):
-    response = Response.ResponseObj()
+response = Response.ResponseObj()
+@csrf_exempt
+@account.is_token(models.zhugedanao_userprofile)
+def set_task_access(request):
     data_list = []
     now_time_stamp = int(time.time())
     time_stampadd30 = now_time_stamp + 30
@@ -28,3 +30,17 @@ def task_access(request):
     response.data = {'data_list':data_list}
     return JsonResponse(response.__dict__)
 
+
+@csrf_exempt
+@account.is_token(models.zhugedanao_userprofile)
+def get_task_for(request):
+    urlId = request.GET.get('urlId')
+    print('urlId----> ',urlId)
+    models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId).update(
+        is_zhixing=1,
+        status=1
+    )
+
+    response.code = 200
+    response.msg = '请求成功'
+    return JsonResponse(response.__dict__)
