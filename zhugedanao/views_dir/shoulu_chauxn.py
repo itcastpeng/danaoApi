@@ -126,11 +126,16 @@ def shouLuChauxn(request, oper_type, o_id):
                 response.code = 301
                 response.msg = json.loads(forms_obj.errors.as_json())
 
-        # 点击返回 删除任务
-        elif oper_type == 'clickReturn':
-            models.zhugedanao_shoulu_chaxun.objects.all().delete()
+    elif request.method == 'GET':
 
-        # 生成报表
+        # 点击返回 删除任务
+        if oper_type == 'clickReturn':
+            response.code = 200
+            response.msg = '退出成功'
+            models.zhugedanao_shoulu_chaxun.objects.all().delete()
+            return JsonResponse(response.__dict__)
+
+            # 生成报表
         elif oper_type == 'generateExcel':
             now_date = datetime.datetime.today().strftime('%Y-%m-%d %H-%M-%S')
             wb = Workbook()
