@@ -35,6 +35,7 @@ def set_task_access(request):
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0).filter(q)
     if objs:
         obj = objs[0]
+        obj.time_stamp = time_stampadd30
         response.data = {
             'tid': obj.id,
             'url': obj.url
