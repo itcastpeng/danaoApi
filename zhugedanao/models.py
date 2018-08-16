@@ -110,7 +110,7 @@ class zhugedanao_lianjie_task_list(models.Model):
 
 # 百度知道链接提交
 class zhugedanao_lianjie_tijiao(models.Model):
-    user = models.ForeignKey('zhugedanao_userprofile', verbose_name="用户", null=True, blank=True)
+    # user = models.ForeignKey('zhugedanao_userprofile', verbose_name="用户", null=True, blank=True)
     tid = models.ForeignKey(to='zhugedanao_lianjie_task_list', verbose_name='链接提交百度任务表', null=True, blank=True)
     url = models.TextField(verbose_name="提交链接")
     count = models.SmallIntegerField(verbose_name="提交次数", default=0)

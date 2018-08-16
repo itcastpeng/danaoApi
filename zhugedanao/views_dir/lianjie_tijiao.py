@@ -28,7 +28,8 @@ def lianjie_tijiao(request):
                 'task_name': '',
                 'task_status': '',
                 'task_progress': '',
-                'create_date': ''
+                'create_date': '',
+                'user_id':''
             }
             q = conditionCom(request, field_dict)
             print('q -->', q)
@@ -105,7 +106,7 @@ def lianjie_tijiao_detail(request):
             }
             q = conditionCom(request, field_dict)
             print('q -->', q)
-            objs = models.zhugedanao_lianjie_tijiao.objects.select_related('user', ).filter(q).filter(tid='{}'.format(tid)).order_by(order)
+            objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).filter(tid='{}'.format(tid)).order_by(order)
             count = objs.count()
             print('count----> ',count)
             if length != 0:
@@ -146,7 +147,6 @@ def lianjie_tijiao_detail(request):
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
 def lianjie_tijiao_oper(request, oper_type, o_id):
-    print('==========')
     response = Response.ResponseObj()
     if request.method == "POST":
         print('进入------')
@@ -173,7 +173,8 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
                 objs_id = models.zhugedanao_lianjie_task_list.objects.create(
                     task_name = name,
                     create_date = now_datetime,
-                    count_taskList=len(url_list)
+                    count_taskList=len(url_list),
+                    user_id=oper_user_id
                 )
                 for url in url_list:
                     querysetlist.append(
