@@ -98,16 +98,16 @@ def lianjie_tijiao_detail(request):
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
             tid = request.GET.get('tid')
-            order = request.GET.get('order', '-id')
+            order = request.GET.get('order', 'id')
             field_dict = {
                 'id': '',
                 'url': '__contains',
-                'user_id': '',
             }
             q = conditionCom(request, field_dict)
-            # print('q -->', q)
+            print('q -->', q)
             objs = models.zhugedanao_lianjie_tijiao.objects.select_related('user', ).filter(q).filter(tid='{}'.format(tid)).order_by(order)
             count = objs.count()
+            print('count----> ',count)
             if length != 0:
                 start_line = (current_page - 1) * length
                 stop_line = start_line + length
@@ -115,7 +115,7 @@ def lianjie_tijiao_detail(request):
 
             # 返回的数据
             ret_data = []
-
+            print('objs-> ',objs    )
             for obj in objs:
                 #  将查询出来的数据 加入列表
                 ret_data.append({
@@ -193,6 +193,7 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
                 # print(forms_obj.errors.as_json())
                 response.msg = json.loads(forms_obj.errors.as_json())
 
+        # 删除任务
         elif oper_type == "delete":
             # 删除 ID
             objs = models.zhugedanao_lianjie_task_list.objects.filter(id=o_id)
@@ -245,7 +246,7 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
                         )
                     models.zhugedanao_lianjie_tijiao.objects.bulk_create(querysetlist)
                 response.code = 200
-                response.msg = "添加成功"
+                response.msg = "修改成功"
             else:
                 print("验证不通过")
                 response.code = 301
@@ -264,7 +265,7 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
                     objs = objs[start_line: stop_line]
                 data_list = []
                 for obj in objs:
-                    data_list.append(obj.url)
+                    data_list.append(obj.url.replace(',', '\r\n'))
                 data_temp = {
                     'name':objs[0].tid.task_name,
                     'url':data_list
