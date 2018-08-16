@@ -230,6 +230,7 @@ http情求url： http://127.0.0.1:8000/zhugedanao/shouLuChaXunShow?timestamp=153
         "yiWanCheng": 0,                            # 已完成数量
         "shouLuLv": 0,                              # 收录率
         "shouluNum": 0                              # 收录数量
+        "whether_complete":True                     # True 表示完成 False 表示未完成
     },
     "msg": "查询成功",
     "code": 200
