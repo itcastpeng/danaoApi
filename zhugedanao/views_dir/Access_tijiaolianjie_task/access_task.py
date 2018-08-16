@@ -8,13 +8,10 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
 
 response = Response.ResponseObj()
-now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-nowDate = datetime.datetime.strptime(now_datetime, "%Y-%m-%d %H:%M:%S")
+
 # 判断是否还有任务
 def decideIsTask(request):
-    q = Q()
-    q.add(Q(createDateAdd30__lte=nowDate), Q.AND)
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).filter(tid__is_update=1).filter(is_zhixing=0)
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(tid__is_update=1).filter(is_zhixing=0)
     flag = False
     if objs:
         flag = True
@@ -24,14 +21,23 @@ def decideIsTask(request):
     return JsonResponse(response.__dict__)
 
 
+# if obj.create_date:
+#     now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+#     next_datetime_addoneday = (obj.create_date + datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
+#     if now_datetime > next_datetime_addoneday:
+#         obj.is_update = 1
+#         obj.save()
+
 # api 返回十条任务
 def set_task_access(request):
     data_list = []
     now_time_stamp = int(time.time())
     time_stampadd30 = now_time_stamp + 30
-    print('nowDate----> ',nowDate)
+    now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+    now_datetime = datetime.datetime.strptime(now_datetime, "%Y-%m-%d %H:%M:%S")
+    next_datetime_addoneday = (now_datetime - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
     q = Q()
-    q.add(Q(createDateAdd30__lte=nowDate), Q.AND)
+    q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time_stamp), Q.AND)
     print('q------> ',q)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(tid__is_update=1).filter(is_zhixing=0).filter(q)[0:10]
