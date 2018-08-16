@@ -43,12 +43,14 @@ def lianjie_tijiao(request):
             ret_data = []
             for obj in objs:
                 is_update = 0
-                if obj.createDateAdd30:
+                if obj.create_date:
                     now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                    nowDate = datetime.datetime.strptime(now_datetime, "%Y-%m-%d %H:%M:%S")
-                    if nowDate >= obj.createDateAdd30:
+                    next_datetime_addoneday = (obj.create_date + datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
+                    if now_datetime >= next_datetime_addoneday:
                         obj.is_update = 1
-                        is_update = 1
+                        obj.save()
+                    obj.is_update = 1
+                    is_update = 1
                 detail_task_count = models.zhugedanao_lianjie_tijiao.objects.filter(tid=obj.id)
                 # 该任务 详情总数
                 detail_task_count_num = detail_task_count.count()
@@ -160,19 +162,14 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
             forms_obj = AddForm(form_data)
             if forms_obj.is_valid():
                 print("验证通过")
-                # print(forms_obj.cleaned_data)
                 #  添加数据库
                 print('forms_obj.cleaned_data-->',forms_obj.cleaned_data)
-                # models.zhugedanao_userprofile.objects.create(**forms_obj.cleaned_data)
                 url_list = forms_obj.cleaned_data.get('url')
                 name = forms_obj.cleaned_data.get('name')
                 oper_user_id = forms_obj.cleaned_data.get('oper_user_id')
                 now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
                 querysetlist = []
-                nowDate = datetime.datetime.strptime(now_datetime, "%Y-%m-%d %H:%M:%S")
-                next_datetime_addoneday = (nowDate + datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
                 objs_id = models.zhugedanao_lianjie_task_list.objects.create(
-                    createDateAdd30=next_datetime_addoneday,
                     task_name = name,
                     create_date = now_datetime,
                     count_taskList=len(url_list),
@@ -181,7 +178,6 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
                 for url in url_list:
                     querysetlist.append(
                         models.zhugedanao_lianjie_tijiao(
-                            createDateAdd30=next_datetime_addoneday,
                             create_date=now_datetime,
                             tid_id=objs_id.id,
                             url=url
