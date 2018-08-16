@@ -58,8 +58,9 @@ def get_task_for(request):
         is_zhixing=1,
         status=1
     )
+    objs.save()
     models.zhugedanao_lianjie_tijiao_log.objects.create(
-        zhugedanao_lianjie_tijiao=objs[0].url,
+        zhugedanao_lianjie_tijiao_id=objs[0].id,
         ip=ip_addr,
         address=address,
         create_date=now_date,

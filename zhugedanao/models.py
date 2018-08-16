@@ -147,6 +147,7 @@ class zhugedanao_shoulu_chaxun(models.Model):
     status_code = models.IntegerField(verbose_name='状态码', null=True, blank=True)
     is_zhixing = models.BooleanField(verbose_name='是否已经执行', default=0)
     createAndStart_time = models.DateTimeField(verbose_name='创建和开始时间', auto_now_add=True)
+    user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
 
 # 覆盖查询
 class zhugedanao_fugai_chaxun(models.Model):
@@ -159,7 +160,7 @@ class zhugedanao_fugai_chaxun(models.Model):
     paiming_detail = models.CharField(verbose_name='总体排名', max_length=64, null=True, blank=True)
     zhanwei = models.BooleanField(verbose_name='占位', default=False)
     json_detail_data = models.TextField(verbose_name='详情数据 json格式', null=True, blank=True)
-    # chaxun_status = models.BooleanField(verbose_name='查询状态 是否查询完', default=False)
+    user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
 
 
 
