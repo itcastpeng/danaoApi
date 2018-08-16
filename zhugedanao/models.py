@@ -104,6 +104,7 @@ class zhugedanao_lianjie_task_list(models.Model):
     count_taskList = models.IntegerField(verbose_name='任务总数',default=0)
     is_update = models.BooleanField(verbose_name='是否可以修改', default=0)
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
+    createDateAdd30 = models.DateTimeField(verbose_name='创建时间加30分钟', null=True, blank=True)
     class Meta:
         app_label = "zhugedanao"
 
@@ -122,8 +123,9 @@ class zhugedanao_lianjie_tijiao(models.Model):
     status = models.SmallIntegerField(verbose_name="收录状态", choices=status_choices, default=1)
     get_task_date = models.DateTimeField(verbose_name='获取任务时间', null=True, blank=True)
     is_zhixing = models.BooleanField(verbose_name='是否执行', default=False)
-    time_stamp = models.IntegerField(verbose_name='取任务间隔时间', default=0)
-
+    time_stamp = models.IntegerField(verbose_name='取任务间隔时间', null=True,blank=True)
+    create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, null=True, blank=True)
+    createDateAdd30 = models.DateTimeField(verbose_name='创建时间加30分钟', null=True, blank=True)
     class Meta:
         app_label = "zhugedanao"
 
