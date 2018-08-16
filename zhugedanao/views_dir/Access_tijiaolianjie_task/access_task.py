@@ -36,7 +36,6 @@ def get_task_for(request):
         is_zhixing=1,
         status=1
     )
-
     response.code = 200
     response.msg = '请求成功'
     return JsonResponse(response.__dict__)
