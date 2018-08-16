@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^lianjie_tijiao_show', lianjie_tijiao.lianjie_tijiao),                                      # 提交链接 - 查看任务
     url(r'^detail_lianjie_tijiao/', lianjie_tijiao.lianjie_tijiao_detail),                       # 提交链接 - 查看详情
     url(r'^lianjie_tijiao/(?P<oper_type>\w+)/(?P<o_id>\d+)', lianjie_tijiao.lianjie_tijiao_oper),# 提交链接 - 操作
+    url(r'^decideIsTask', access_task.decideIsTask),                                             # 提交链接 - 判断是否还有任务
     url(r'^set_task_access', access_task.set_task_access),                                       # 提交链接 - 获取提交链接数据
     url(r'^get_task_for', access_task.get_task_for),                                             # 提交链接 - 接收返回的数据并改值
 

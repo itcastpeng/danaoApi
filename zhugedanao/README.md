@@ -64,7 +64,7 @@ urlId               GET                 是                 提交完成的url i
 http请求方式： POST
 http请求url： http://127.0.0.1:8000/zhugedanao/lianjie_tijiao/add/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
 参数   			请求方式		是否必须 		        说明
-user_id			GET					是 		    操作人id
+user_id			GET					是 		    用户id  token中获取 
 name 			POST				是 			任务名称
 url		        POST				是 			任务链接
 o_id            GET                 否           可写为0 添加指定id
@@ -176,8 +176,32 @@ url_list          POST      是                  需要操作的链接
 
 #### 收录查询 点击返回 说明：
 ``` 
-
-
+http请求方式： GET 
+http请求url： http://127.0.0.1:8000/zhugedanao/shouLuChauxn/clickReturn/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			请求方式		是否必须 		        说明
+无
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "退出成功",
+    "data": {},
+    "code": 200
+}
 ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
