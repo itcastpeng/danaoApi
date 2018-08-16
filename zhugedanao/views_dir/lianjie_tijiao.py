@@ -195,13 +195,12 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
 
         elif oper_type == "delete":
             # 删除 ID
-            models.zhugedanao_lianjie_tijiao.objects.filter(tid=o_id).delete()
             objs = models.zhugedanao_lianjie_task_list.objects.filter(id=o_id)
             if objs:
-                objs.delete()
                 task_id = objs[0].id
                 task_detail_objs = models.zhugedanao_lianjie_tijiao.objects.filter(tid=task_id)
                 task_detail_objs.delete()
+                objs.delete()
                 response.code = 200
                 response.msg = "删除成功"
             else:
