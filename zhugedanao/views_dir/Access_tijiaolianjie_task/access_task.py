@@ -8,8 +8,6 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
 
 response = Response.ResponseObj()
-
-
 # 判断是否还有任务
 def decideIsTask(request):
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0)
@@ -49,13 +47,24 @@ def set_task_access(request):
 # 获取id 更改状态
 @csrf_exempt
 def get_task_for(request):
+    now_date =  datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
     print('请求-')
     urlId = request.POST.get('urlId')
+    ip_addr= request.POST.get('ip_addr')
+    address= request.POST.get('address')
     print('urlId----> ', urlId)
-    models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId).update(
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
+    objs.update(
         is_zhixing=1,
         status=1
     )
+    models.zhugedanao_lianjie_tijiao_log.objects.create(
+        zhugedanao_lianjie_tijiao=objs[0].url,
+        ip=ip_addr,
+        address=address,
+        create_date=now_date,
+    )
+
     response.code = 200
     response.msg = '请求成功'
     return JsonResponse(response.__dict__)
