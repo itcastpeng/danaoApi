@@ -34,6 +34,7 @@ def set_task_access(request):
     if objs:
         obj = objs[0]
         obj.time_stamp = time_stampadd30
+        obj.save()
         response.data = {
             'tid': obj.id,
             'url': obj.url
@@ -58,7 +59,6 @@ def get_task_for(request):
         is_zhixing=1,
         status=1
     )
-    objs.save()
     models.zhugedanao_lianjie_tijiao_log.objects.create(
         zhugedanao_lianjie_tijiao_id=objs[0].id,
         ip=ip_addr,

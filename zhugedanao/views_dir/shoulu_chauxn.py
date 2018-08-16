@@ -10,6 +10,8 @@ import datetime
 from zhugedanao.forms.shoulu_chaxun import AddForm, SelectForm
 import json
 import random
+import multiprocessing
+from zhugedanao.views_dir.threading_task_pachong import threading_task
 
 # cerf  token验证 用户展示模块
 @csrf_exempt
@@ -126,6 +128,7 @@ def shouLuChaxun(request, oper_type, o_id):
                             )
                         )
                 models.zhugedanao_shoulu_chaxun.objects.bulk_create(querysetlist)
+                multiprocessing.Process(target=threading_task.shoulu_func, args=())
                 response.code = 200
                 response.msg = "添加成功"
             else:
@@ -139,7 +142,7 @@ def shouLuChaxun(request, oper_type, o_id):
         if oper_type == 'clickReturn':
             response.code = 200
             response.msg = '退出成功'
-            models.zhugedanao_shoulu_chaxun.objects.all().delete()
+            models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
             return JsonResponse(response.__dict__)
 
             # 生成报表
