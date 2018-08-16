@@ -180,6 +180,7 @@ http请求方式： GET
 http请求url： http://127.0.0.1:8000/zhugedanao/shouLuChauxn/clickReturn/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
 参数   			请求方式		是否必须 		        说明
 无
+
 返回说明 （正常时返回的json数据 示例）
 {
     "msg": "退出成功",
@@ -190,10 +191,50 @@ http请求url： http://127.0.0.1:8000/zhugedanao/shouLuChauxn/clickReturn/0?tim
 
 #### 收录查询 生成excel表格 说明：
 ``` 
-http请求方式
+http请求方式： GET
+http请求url： http://127.0.0.1:8000/zhugedanao/shouLuChaxun/generateExcel/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			请求方式		是否必须 		        说明
+无
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {
+        "excel_name": "171534405338"            # 随机生成时间戳名字(随机数 + 时间戳)
+    },
+    "msg": "生成成功",
+    "code": 200
+}
 ```
 
+#### 收录查询 展示所有数据 说明：
+``` 
+http请求方式： GET
+http情求url： http://127.0.0.1:8000/zhugedanao/shouLuChaXunShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			请求方式		是否必须 		        说明
+无
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {
+        "retData": [
+            {   
+                "status_code": null,                # 链接返回的 状态码
+                "search": "百度",                    # 搜索引擎
+                "is_shoulu": "未收录",               # 是否收录
+                "url": "sdfsadfsdaf",               # 链接
+                "kuaizhao_time": null,              # 链接返回的 快照时间
+                "title": null                       # 链接标题
+            },
+        ],
+        "dataCount": 1,                             # 数据总数
+        "yiWanCheng": 0,                            # 已完成数量
+        "shouLuLv": 0,                              # 收录率
+        "shouluNum": 0                              # 收录数量
+    },
+    "msg": "查询成功",
+    "code": 200
+}
+```
 
 
 
