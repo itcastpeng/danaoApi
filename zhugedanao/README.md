@@ -188,7 +188,11 @@ http请求url： http://127.0.0.1:8000/zhugedanao/shouLuChauxn/clickReturn/0?tim
 }
 ```
 
+#### 收录查询 生成excel表格 说明：
+``` 
+http请求方式
 
+```
 
 
 
