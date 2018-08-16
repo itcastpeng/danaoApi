@@ -24,7 +24,7 @@ def decideIsTask(request):
 def set_task_access(request):
     data_list = []
     now_time_stamp = int(time.time())
-    time_stampadd30 = now_time_stamp + 30
+    time_stampadd30 = now_time_stamp + 600
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
     q = Q()
     q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
