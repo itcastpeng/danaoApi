@@ -33,14 +33,14 @@ def set_task_access(request):
     data_list = []
     now_time_stamp = int(time.time())
     time_stampadd30 = now_time_stamp + 30
-    now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-    now_datetime = datetime.datetime.strptime(now_datetime, "%Y-%m-%d %H:%M:%S")
-    next_datetime_addoneday = (now_datetime - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
+    # now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+    # now_datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
     q = Q()
     q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time_stamp), Q.AND)
     print('q------> ',q)
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(tid__is_update=1).filter(is_zhixing=0).filter(q)[0:10]
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0).filter(q)[0:10]
     print('objs-----> ',objs)
     for obj in objs:
         obj.time_stamp = time_stampadd30
