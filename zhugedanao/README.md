@@ -97,63 +97,64 @@ url             POST        否                   要修改的url
 
 返回说明 （正常时返回的json数据 示例）
 {
+    "msg": "修改成功",
     "data": {},
-    "code": 200,
-    "msg": "添加成功"
+    "code": 200
 }
 ```
 
+#### 链接提交 展示任务列表
+``` 
+http请求方式： GET
+http请求url:  http://127.0.0.1:8000/zhugedanao/lianjie_tijiao_show?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			请求方式		是否必须 		        说明
 
-
-
-
-
-
-
-
-
-
-#### 展示任务列表
-
-GET数据示例:
-
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "查询成功",
+    "data": {
+        "ret_data": [                       
+            {
+                "yiwancheng_obj": 0,                        # 已完成数量
+                "task_name": "任务列表1",                    # 任务名字
+                "task_progress": 0,                         # 任务进度
+                "task_status": "未完成",                     # 任务状态
+                "create_date": "2018-08-16 11:00:24",       # 创建时间
+                "is_update": 1,                             # 是否可以修改和删除 1不可以 0可以
+                "id": 16,                                   # 任务id
+                "count_taskList": 3                         # 详情数据数量
+            },
+        ],
+        "data_count": 1                                     任务列表总数
+    },
+    "code": 200
+}
 ```
-参数   			    请求方式	        是否必须 		        说明
-current_page		GET			否			页码
-length				GET			否			条数	
-order				GET			否			排序条件
+
+#### 链接提交 展示任务详情数据
+``` 
+http请求方式： GET
+http请求url： http://127.0.0.1:8000/zhugedanao/detail_lianjie_tijiao?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11&tid=15
+参数   			请求方式		是否必须 		        说明
+tid             GET         是                   父级id
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {
+        "data_count": 1,                        # 详情总数
+        "ret_data": [
+            {
+                "url": "fdg",                   # 详情url
+                "status_text": "等待查询",       # 详情状态
+                "id": 106,                      # 详情id
+                "count": 0                      # 详情提交次数
+            },
+        ]
+    },
+    "msg": "查询成功",
+    "code": 200
+}
 ```
-
-
-展示任务详情数据  
-detail_lianjie_tijiao
-参数   				请求方式		是否必须     说明
-current_page	    GET			否			页码
-length				GET			否			条数	
-order				GET			否			排序条件
-tid			        GET			是 			父级id
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
