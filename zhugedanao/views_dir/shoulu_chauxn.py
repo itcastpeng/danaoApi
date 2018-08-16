@@ -10,7 +10,7 @@ import datetime
 from publicFunc.condition_com import conditionCom
 from zhugedanao.forms.shoulu_chaxun import AddForm, SelectForm
 import json
-
+import random
 
 # cerf  token验证 用户展示模块
 @csrf_exempt
@@ -91,7 +91,7 @@ def shouLuChaXunShow(request):
 #  csrf  token验证
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
-def shouLuChauxn(request, oper_type, o_id):
+def shouLuChaxun(request, oper_type, o_id):
     response = Response.ResponseObj()
     if request.method == "POST":
         # 增加收录任务
@@ -198,24 +198,14 @@ def shouLuChauxn(request, oper_type, o_id):
                 ws.cell(row=row, column=4, value="{is_shoulu}".format(is_shoulu=is_shoulu))
                 ws.cell(row=row, column=5, value="{kuaizhao_time}".format(kuaizhao_time=obj.kuaizhao_time))
                 row += 1
-
-            wb.save('./1.xlsx')
-
-            # root = Tk()
-            # root.withdraw()
-            # dirname = askdirectory(parent=root, initialdir="/", title='Pick a directory')
-            # task_name = '收录查询'
-            # if dirname:
-            #     if dirname == 'C:/':
-            #         tkinter.messagebox.showerror('错误', '请选择路径 !')
-            #     else:
-            #         file_name = dirname.replace('\\', '/') + '/' + '{}.xls' \
-            #                                                        'x'.format(task_name + '_' + now_date)
-            #         wb.save(file_name)
-            #         tkinter.messagebox.showinfo('提示', '生成完毕 !')
-            # else:
-            #     print('点击取消')
-            # root.destroy()  # 销毁
+            randInt = random.randint(1, 100)
+            nowDateTime = int(time.time())
+            excel_name = str(randInt) + str(nowDateTime)
+            wb.save(os.path.join(os.getcwd(), 'statics', 'zhugedanao', 'shouLuExcel' , '{}.xlsx'.format(excel_name)))
+            response.code = 200
+            response.msg = '生成成功'
+            response.data = {'excel_name':excel_name}
+            return JsonResponse(response.__dict__)
 
     else:
         response.code = 402

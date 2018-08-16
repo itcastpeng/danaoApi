@@ -22,7 +22,7 @@ urlpatterns = [
     url(r'^set_task_access', access_task.set_task_access),                                       # 提交链接 - 获取提交链接数据
     url(r'^get_task_for', access_task.get_task_for),                                             # 提交链接 - 接收返回的数据并改值
 
-    url(r'^shouLuChauxn/(?P<oper_type>\w+)/(?P<o_id>\d+)', shoulu_chauxn.shouLuChauxn),          # 收录查询 - 操作
+    url(r'^shouLuChaxun/(?P<oper_type>\w+)/(?P<o_id>\d+)', shoulu_chauxn.shouLuChaxun),          # 收录查询 - 操作
     url(r'^shouLuChaXunShow', shoulu_chauxn.shouLuChaXunShow),                                   # 收录查询 - 查看数据
 
     url(r'^fuGaiChaXun/(?P<oper_type>\w+)/(?P<o_id>\d+)', fugai_chaxun.fuGaiChaXun),             # 覆盖查询 - 操作
