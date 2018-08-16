@@ -1,7 +1,5 @@
 from openpyxl.styles import Font, Alignment
 from openpyxl import Workbook
-from tkinter import *
-from tkinter.filedialog import askdirectory
 import sqlite3, os, json, time, datetime, tkinter.messagebox, threading, sys, requests, queue
 from zhugedanao import models
 from publicFunc import Response
