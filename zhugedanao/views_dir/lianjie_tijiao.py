@@ -195,6 +195,7 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
 
         elif oper_type == "delete":
             # 删除 ID
+            models.zhugedanao_lianjie_tijiao.objects.filter(tid=o_id).delete()
             objs = models.zhugedanao_lianjie_task_list.objects.filter(id=o_id)
             if objs:
                 objs.delete()
