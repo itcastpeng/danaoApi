@@ -266,10 +266,10 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
                 data_list = []
                 for obj in objs:
                     print('obj.url------> ',obj.url)
-                    data_list.append(obj.url + '\r\n')
+                    data_list.append(obj.url)
                 data_temp = {
                     'name':objs[0].tid.task_name,
-                    'url':data_list
+                    'url':'\r\n'.join(data_list)
                 }
                 print('data_temp---> ',data_temp)
                 response.code = 200
