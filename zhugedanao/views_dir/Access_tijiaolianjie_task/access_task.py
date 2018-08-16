@@ -21,21 +21,11 @@ def decideIsTask(request):
     response.data = {'flag': flag}
     return JsonResponse(response.__dict__)
 
-
-# if obj.create_date:
-#     now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-#     next_datetime_addoneday = (obj.create_date + datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-#     if now_datetime > next_datetime_addoneday:
-#         obj.is_update = 1
-#         obj.save()
-
 # api 返回十条任务
 def set_task_access(request):
     data_list = []
     now_time_stamp = int(time.time())
     time_stampadd30 = now_time_stamp + 30
-    # now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-    # now_datetime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
     q = Q()
     q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
@@ -66,4 +56,15 @@ def get_task_for(request):
     )
     response.code = 200
     response.msg = '请求成功'
+    return JsonResponse(response.__dict__)
+
+# 判断链接提交 当前时间大于创建时间+30分钟
+def panduan_shijian(request):
+    q = Q()
+    next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
+    q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
+    objs = models.zhugedanao_lianjie_task_list.objects.filter(q)
+    for obj in objs:
+        obj.is_update = 1
+    response.code = 200
     return JsonResponse(response.__dict__)

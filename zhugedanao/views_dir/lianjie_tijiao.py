@@ -42,15 +42,6 @@ def lianjie_tijiao(request):
             # 返回的数据
             ret_data = []
             for obj in objs:
-                is_update = 0
-                if obj.create_date:
-                    now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                    next_datetime_addoneday = (obj.create_date + datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-                    if now_datetime >= next_datetime_addoneday:
-                        obj.is_update = 1
-                        obj.save()
-                    obj.is_update = 1
-                    is_update = 1
                 detail_task_count = models.zhugedanao_lianjie_tijiao.objects.filter(tid=obj.id)
                 # 该任务 详情总数
                 detail_task_count_num = detail_task_count.count()
@@ -70,7 +61,7 @@ def lianjie_tijiao(request):
                     'create_date': obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),
                     'count_taskList':obj.count_taskList,
                     'yiwancheng_obj': yiwancheng_obj,  # 已完成数量
-                    'is_update':is_update
+                    'is_update':int(obj.is_update)
                 })
             response.code = 200
             response.msg = '查询成功'
