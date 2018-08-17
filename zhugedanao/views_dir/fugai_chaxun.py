@@ -10,7 +10,7 @@ import datetime
 from publicFunc.condition_com import conditionCom
 from zhugedanao.forms.fugai_chaxun import AddForm, SelectForm
 import json
-
+import random
 
 # cerf  token验证 用户展示模块
 @csrf_exempt
@@ -43,7 +43,9 @@ def fuGaiChaxunShow(request):
             yiWanCheng = 0
             if yiZhiXingCount:
                 yiWanCheng = int((yiZhiXingCount / dataCount) * 100)
-
+            whether_complete = False
+            if dataCount == yiWanCheng:
+                whether_complete = True
             # 分页
             if length != 0:
                 start_line = (current_page - 1) * length
@@ -51,11 +53,10 @@ def fuGaiChaxunShow(request):
                 objs = objs[start_line: stop_line]
 
             # 返回的数据
-            retData = []
+            data_list = []
             for obj in objs:
                 if obj.json_detail_data:
                     pass
-
                 if str(obj.search_engine) == '1':
                     yinqing = '百度'
                 elif str(obj.search_engine) == '4':
@@ -66,20 +67,28 @@ def fuGaiChaxunShow(request):
                     yinqing = '手机360'
                 else:
                     yinqing = ''
-                retData.append({
+                detail_obj_json = ''
+                if obj.json_detail_data:
+                    detail_obj_json = obj.json_detail_data
+                data_list.append({
+                    'id':obj.id,
                     'keyword':obj.keyword,
                     'search_engine':yinqing,
-                    'paiming_detail':obj.paiming_detail,
+                    'rank_info':obj.paiming_detail,
+                    'otherData':detail_obj_json
                 })
             response.code = 200
             response.msg = '查询成功'
             response.data = {
-                'retData': retData,         # 详情
+                'retData': data_list,         # 详情
                 'dataCount': dataCount,     # 任务总数
                 'paiming_num':paiming_num,  # 有排名数
                 'fugailv':fugailv,          # 覆盖率
                 'paiminglv':paiminglv,      # 排名率
-                'yiwancheng_obj':yiWanCheng
+                'yiwancheng_obj':yiWanCheng, # 已完成数量
+                'chongfu_num':10,            # 重复数
+                'whether_complete':whether_complete,    # 是否全部完成
+                'query_progress':20         # 进度条
             }
         else:
             response.code = 402
@@ -100,9 +109,9 @@ def fuGaiChaXun(request, oper_type, o_id):
         # 增加收录任务
         if oper_type == "add":
             form_data = {
-                'search_list': request.POST.get('search_list'),
-                'keywords_list': request.POST.get('keywords_list'),
-                'conditions_list':request.POST.get('conditions_list')
+                'search_list': request.POST.get('searchEngineModel'),
+                'keywords_list': request.POST.get('editor_content'),
+                'conditions_list':request.POST.get('fugai_tiaojian')
             }
             #  创建 form验证 实例（参数默认转成字典）
             forms_obj = AddForm(form_data)
@@ -114,7 +123,8 @@ def fuGaiChaXun(request, oper_type, o_id):
                 conditions_list = forms_obj.cleaned_data.get('conditions_list')
                 querysetlist = []
                 now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                for search in search_list:
+                print('search_list-----------> ',search_list)
+                for search in json.loads(search_list):
                     for keyword in keywords_list:
                         print(search, keyword, conditions_list)
                         querysetlist.append(
@@ -138,7 +148,7 @@ def fuGaiChaXun(request, oper_type, o_id):
         elif oper_type == 'clickReturn':
             models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id).delete()
             response.code = 200
-            response.msg = "删除成功"
+            response.msg = "退出成功"
             return JsonResponse(response.__dict__)
 
         # 生成报表
@@ -262,7 +272,14 @@ def fuGaiChaXun(request, oper_type, o_id):
                         ws2.cell(row=row_two, column=6, value="{search}".format(search=data_detail['search_engine']))
                         row_two += 1
 
-            wb.save('./1.xlsx')
+            randInt = random.randint(1, 100)
+            nowDateTime = int(time.time())
+            excel_name = str(randInt) + str(nowDateTime)
+            wb.save(os.path.join(os.getcwd(), 'statics', 'zhugedanao', 'fuGaiExcel', '{}.xlsx'.format(excel_name)))
+            response.code = 200
+            response.msg = '生成成功'
+            response.data = {'excel_name': excel_name}
+            return JsonResponse(response.__dict__)
 
             # root = Tk()
             # root.withdraw()

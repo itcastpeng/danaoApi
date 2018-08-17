@@ -25,10 +25,11 @@ urlpatterns = [
 
     url(r'^shouLuChaxun/(?P<oper_type>\w+)/(?P<o_id>\d+)', shoulu_chauxn.shouLuChaxun),          # 收录查询 - 操作
     url(r'^shouLuChaXunShow', shoulu_chauxn.shouLuChaXunShow),                                   # 收录查询 - 查看数据
+    url(r'^shouluHuoQuRenWu', access_task.shouluHuoQuRenWu),                                     # 收录查询 - 查看数据
+
 
     url(r'^fuGaiChaXun/(?P<oper_type>\w+)/(?P<o_id>\d+)', fugai_chaxun.fuGaiChaXun),             # 覆盖查询 - 操作
     url(r'^fuGaiChaxunShow', fugai_chaxun.fuGaiChaxunShow),                                      # 覆盖查询 - 查看数据
-
 
 
 ]

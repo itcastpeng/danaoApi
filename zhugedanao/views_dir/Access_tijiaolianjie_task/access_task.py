@@ -8,7 +8,8 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
 
 response = Response.ResponseObj()
-# 判断是否还有任务
+# 链接提交 判断是否还有任务
+@csrf_exempt
 def decideIsTask(request):
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0)
     flag = False
@@ -20,7 +21,8 @@ def decideIsTask(request):
     return JsonResponse(response.__dict__)
 
 
-# api 返回十条任务
+# 链接提交 api 返回十条任务
+@csrf_exempt
 def set_task_access(request):
     data_list = []
     now_time_stamp = int(time.time())
@@ -45,7 +47,7 @@ def set_task_access(request):
     return JsonResponse(response.__dict__)
 
 
-# 获取id 更改状态
+# 连接提交 获取id 更改状态
 @csrf_exempt
 def get_task_for(request):
     now_date =  datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
@@ -71,7 +73,8 @@ def get_task_for(request):
     return JsonResponse(response.__dict__)
 
 
-# 判断链接提交 当前时间大于创建时间+30分钟
+# 连接提交 判断链接提交 当前时间大于创建时间+30分钟
+@csrf_exempt
 def panduan_shijian(request):
     q = Q()
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
@@ -84,7 +87,11 @@ def panduan_shijian(request):
 
 
 
-# 查询收录获取任务
+
+
+
+# 收录查询 查询收录获取任务
+@csrf_exempt
 def shouluHuoQuRenWu(request):
     q = Q()
     now_time = int(time.time())
@@ -103,7 +110,8 @@ def shouluHuoQuRenWu(request):
     return JsonResponse(response.__dict__)
 
 
-# 查询完收录 返回数据
+# 收录查询 查询完收录 返回数据
+@csrf_exempt
 def shouluTiJiaoRenWu(request):
     o_id = request.GET.get('o_id')
     title = request.GET.get('title')
@@ -120,3 +128,6 @@ def shouluTiJiaoRenWu(request):
     response.code = 200
     response.msg = '完成'
     return JsonResponse(response.__dict__)
+
+
+
