@@ -9,9 +9,14 @@ import datetime
 
 response = Response.ResponseObj()
 # 链接提交 判断是否还有任务
+now_time_stamp = int(time.time())
+time_stampadd30 = now_time_stamp + 600
+next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
 @csrf_exempt
 def decideIsTask(request):
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0)
+    q = Q()
+    q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).filter(is_zhixing=0)
     flag = False
     if objs:
         flag = True
@@ -24,10 +29,6 @@ def decideIsTask(request):
 # 链接提交 api 返回十条任务
 @csrf_exempt
 def set_task_access(request):
-    data_list = []
-    now_time_stamp = int(time.time())
-    time_stampadd30 = now_time_stamp + 600
-    next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
     q = Q()
     q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time_stamp), Q.AND)
@@ -58,8 +59,7 @@ def get_task_for(request):
     print('urlId----> ', urlId)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
     objs.update(
-        is_zhixing=1,
-        status=1
+        is_zhixing=1
     )
     models.zhugedanao_lianjie_tijiao_log.objects.create(
         zhugedanao_lianjie_tijiao_id=objs[0].id,
@@ -73,7 +73,7 @@ def get_task_for(request):
     return JsonResponse(response.__dict__)
 
 
-# 连接提交 判断链接提交 当前时间大于创建时间+30分钟
+# 连接提交 判断链接提交 当前时间大于创建时间+30分钟 celery定时更新
 @csrf_exempt
 def panduan_shijian(request):
     q = Q()
@@ -85,6 +85,20 @@ def panduan_shijian(request):
     response.code = 200
     return JsonResponse(response.__dict__)
 
+
+# 链接提交 收录查询
+@csrf_exempt
+def linksToSubmitShouLu(request):
+    q = Q()
+    q.add(Q(status=1) & Q(is_zhixing=1), Q.AND)
+    objs = models.zhugedanao_shoulu_chaxun.objects.filter(q)
+
+
+
+# 链接提交 收录查询返回数据
+@csrf_exempt
+def linksShouLuReturnData(request):
+    pass
 
 
 

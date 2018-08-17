@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
 from zhugedanao.forms.shoulu_chaxun import AddForm, SelectForm
 import json
-import random
+import random, requests
 import multiprocessing
 from zhugedanao.views_dir.threading_task_pachong import threading_task
 
@@ -216,10 +216,9 @@ def shouLuChaxun(request, oper_type, o_id):
             nowDateTime = int(time.time())
             excel_name = str(randInt) + str(nowDateTime)
             wb.save(os.path.join(os.getcwd(), 'statics', 'zhugedanao', 'shouLuExcel' , '{}.xlsx'.format(excel_name)))
-            print('==========>', '/' + os.path.join('statics', 'zhugedanao', 'shouLuExcel' , '{}.xlsx'.format(excel_name)))
             response.code = 200
             response.msg = '生成成功'
-            response.data = {'excel_name':'/' + os.path.join('statics', 'zhugedanao', 'shouLuExcel' , '{}.xlsx'.format(excel_name))}
+            response.data = {'excel_name':'http://api.zhugeyingxiao.com/' + os.path.join('statics', 'zhugedanao', 'shouLuExcel' , '{}.xlsx'.format(excel_name))}
             return JsonResponse(response.__dict__)
 
     else:
