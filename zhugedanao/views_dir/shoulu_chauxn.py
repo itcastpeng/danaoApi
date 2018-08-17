@@ -128,9 +128,12 @@ def shouLuChaxun(request, oper_type, o_id):
                             )
                         )
                 models.zhugedanao_shoulu_chaxun.objects.bulk_create(querysetlist)
-                multiprocessing.Process(target=threading_task.shoulu_func, args=())
+                # process = multiprocessing.Process(target=threading_task.shoulu_func, args=(user_id, len_url))
+                # print('开始执行进程------------')
+                # process.start()
                 response.code = 200
                 response.msg = "添加成功"
+                response.data = {"url_list":url_list}
             else:
                 print("验证不通过")
                 response.code = 301
@@ -146,6 +149,8 @@ def shouLuChaxun(request, oper_type, o_id):
             return JsonResponse(response.__dict__)
 
             # 生成报表
+
+        # 生成excel
         elif oper_type == 'generateExcel':
             now_date = datetime.datetime.today().strftime('%Y-%m-%d %H-%M-%S')
             wb = Workbook()
