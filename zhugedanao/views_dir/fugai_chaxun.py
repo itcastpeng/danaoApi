@@ -104,8 +104,8 @@ def fuGaiChaxunShow(request):
 @account.is_token(models.zhugedanao_userprofile)
 def fuGaiChaXun(request, oper_type, o_id):
     response = Response.ResponseObj()
+    user_id = request.GET.get('user_id')
     if request.method == "POST":
-        user_id = request.GET.get('user_id')
         # 增加收录任务
         if oper_type == "add":
             form_data = {
@@ -144,8 +144,10 @@ def fuGaiChaXun(request, oper_type, o_id):
                 response.code = 301
                 response.msg = json.loads(forms_obj.errors.as_json())
 
+
+    elif request.method == 'GET':
         # 点击返回 删除任务
-        elif oper_type == 'clickReturn':
+        if oper_type == 'clickReturn':
             models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id).delete()
             response.code = 200
             response.msg = "退出成功"
@@ -234,8 +236,6 @@ def fuGaiChaXun(request, oper_type, o_id):
             ws2['D2'].alignment = Alignment(horizontal='right', vertical='center')
             ws2['F2'].alignment = Alignment(horizontal='left', vertical='center')
 
-
-
             objs = models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id)
             row = 9
             row_two = 4
@@ -275,27 +275,13 @@ def fuGaiChaXun(request, oper_type, o_id):
             randInt = random.randint(1, 100)
             nowDateTime = int(time.time())
             excel_name = str(randInt) + str(nowDateTime)
+            download_excel_path = 'http://api.zhugeyingxiao.com/' + os.path.join('statics', 'zhugedanao', 'fuGaiExcel', '{}.xlsx'.format(excel_name))
             wb.save(os.path.join(os.getcwd(), 'statics', 'zhugedanao', 'fuGaiExcel', '{}.xlsx'.format(excel_name)))
             response.code = 200
             response.msg = '生成成功'
-            response.data = {'excel_name': excel_name}
+            # download_excel_path = 'http://127.0.0.1:8000/' + os.path.join('statics', 'zhugedanao', 'fuGaiExcel', '{}.xlsx'.format(excel_name))
+            response.data = {'excel_name': download_excel_path}
             return JsonResponse(response.__dict__)
-
-            # root = Tk()
-            # root.withdraw()
-            # dirname = askdirectory(parent=root, initialdir="/", title='Pick a directory')
-            # task_name = '收录查询'
-            # if dirname:
-            #     if dirname == 'C:/':
-            #         tkinter.messagebox.showerror('错误', '请选择路径 !')
-            #     else:
-            #         file_name = dirname.replace('\\', '/') + '/' + '{}.xls' \
-            #                                                        'x'.format(task_name + '_' + now_date)
-            #         wb.save(file_name)
-            #         tkinter.messagebox.showinfo('提示', '生成完毕 !')
-            # else:
-            #     print('点击取消')
-            # root.destroy()  # 销毁
 
     else:
         response.code = 402
