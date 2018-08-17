@@ -81,10 +81,11 @@ def shouLuChaXunShow(request):
                 'count_obj': dataCount,     # 任务总数
                 'shoulushu':shouluCount,    # 收录数
                 'shoululv':shouLuLv,        # 收录率
-                'yiwancheng_obj':yiWanCheng_num,     # 已完成数量
+                # 'yiwancheng_obj':yiWanCheng_num,     # 已完成数量
+                'yiwancheng_obj':10,     # 已完成数量
                 'whether_complete':whether_complete, # 是否全部完成
-                'chongfu_num':0,
-                'query_progress':0,
+                'chongfu_num':5,
+                'query_progress':9,
             }
         else:
             response.code = 402
