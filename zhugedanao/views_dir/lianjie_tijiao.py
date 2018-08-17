@@ -42,18 +42,24 @@ def lianjie_tijiao(request):
             # 返回的数据
             ret_data = []
             for obj in objs:
-                print(type(datetime.datetime.now()))
+                # print(type(datetime.datetime.now()))
                 next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30))
-                print(type(next_datetime_addoneday))
-                print('=========next--->',next_datetime_addoneday, type(next_datetime_addoneday))
+                # print(type(next_datetime_addoneday))
+                # print('=========next--->',next_datetime_addoneday, type(next_datetime_addoneday))
                 if obj.create_date < next_datetime_addoneday:
                     obj.is_update = 1
                     obj.save()
                 detail_task_count = models.zhugedanao_lianjie_tijiao.objects.filter(tid=obj.id)
                 # 该任务 详情总数
                 detail_task_count_num = detail_task_count.count()
-                # 该任务未执行总数
-                detail_count = detail_task_count.filter(is_zhixing=0).count()
+                # 该任务执行总数
+                detail_count = detail_task_count.filter(is_zhixing=1).count()
+                if detail_count:
+                    obj.task_progress = int((int(detail_count) / int(detail_task_count_num)) * 100)
+                    obj.save()
+                if detail_count == detail_task_count_num:
+                    obj.task_status = True
+                    obj.save()
                 zhuangtai = '未完成'
                 if obj.task_status:
                     zhuangtai = '已完成'
@@ -61,14 +67,14 @@ def lianjie_tijiao(request):
                 if count != 0:
                     yiwancheng_obj = detail_task_count_num - detail_count
                 ret_data.append({
-                    'id': obj.id,
-                    'task_name': obj.task_name,
-                    'task_status':zhuangtai,
-                    'task_progress': obj.task_progress,
-                    'create_date': obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),
-                    'count_taskList':obj.count_taskList,
-                    'yiwancheng_obj': yiwancheng_obj,  # 已完成数量
-                    'is_update':int(obj.is_update)
+                    'id': obj.id,                                            # 任务id
+                    'task_name': obj.task_name,                              # 任务名称
+                    'task_status':zhuangtai,                                 # 任务状态 完成 未完成
+                    'task_progress': obj.task_progress,                      # 进度条
+                    'create_date': obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),# 创建时间
+                    'count_taskList':obj.count_taskList,                     # 详情数量
+                    'yiwancheng_obj': yiwancheng_obj,                        # 已完成数量
+                    'is_update':int(obj.is_update)                           # 是否可以修改和删除 1不可以 0可以
                 })
             response.code = 200
             response.msg = '查询成功'
@@ -117,6 +123,11 @@ def lianjie_tijiao_detail(request):
             ret_data = []
             print('objs-> ',objs    )
             for obj in objs:
+                tijiaocishu = models.zhugedanao_lianjie_tijiao_log.objects.filter(
+                    zhugedanao_lianjie_tijiao_id=obj.id
+                ).count()
+                obj.count = tijiaocishu
+                obj.save()
                 #  将查询出来的数据 加入列表
                 ret_data.append({
                     'id': obj.id,
