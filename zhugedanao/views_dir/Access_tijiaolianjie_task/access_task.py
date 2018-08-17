@@ -9,6 +9,21 @@ import datetime
 
 response = Response.ResponseObj()
 
+# 连接提交 判断链接提交 当前时间大于创建时间+30分钟 celery定时更新
+@csrf_exempt
+def panduan_shijian(request):
+    q = Q()
+    next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
+    q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
+    objs = models.zhugedanao_lianjie_task_list.objects.filter(q)
+    for obj in objs:
+        obj.is_update = 1
+    response.code = 200
+    response.data = {}
+    return JsonResponse(response.__dict__)
+
+"""每个接口 都要判断是否还有任务 方便celery调度 节约资源"""
+
 # 链接提交 判断是否还有任务
 @csrf_exempt
 def decideIsTask(request):
@@ -22,19 +37,6 @@ def decideIsTask(request):
     response.code = 200
     response.msg = '查询成功'
     response.data = {'flag': flag}
-    return JsonResponse(response.__dict__)
-
-# 连接提交 判断链接提交 当前时间大于创建时间+30分钟 celery定时更新
-@csrf_exempt
-def panduan_shijian(request):
-    q = Q()
-    next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-    q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
-    objs = models.zhugedanao_lianjie_task_list.objects.filter(q)
-    for obj in objs:
-        obj.is_update = 1
-    response.code = 200
-    response.data = {}
     return JsonResponse(response.__dict__)
 
 # 链接提交 api 返回十条任务
@@ -88,6 +90,24 @@ def get_task_for(request):
 
 
 
+# 链接提交 判断是否有任务
+@csrf_exempt
+def tiJiaoLianJieDecideIsTask(request):
+    now_time = int(time.time())
+    now_time_stamp = int(time.time())
+    time_stamp20 = now_time + 20
+    q = Q()
+    q.add(Q(status=1) & Q(is_zhixing=1), Q.AND)
+    q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lt=now_time_stamp), Q.AND)
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)
+    print('objs---> ', objs)
+    flag = False
+    if objs:
+        flag = True
+    response.code = 200
+    response.msg = '查询成功'
+    response.data = {'flag':flag}
+
 # 链接提交 收录查询
 @csrf_exempt
 def linksToSubmitShouLu(request):
@@ -136,8 +156,22 @@ def linksShouLuReturnData(request):
 
 
 
-
-
+# 收录查询 判断是否有任务
+@csrf_exempt
+def shouLuChaXunDecideIsTask(request):
+    now_time = int(time.time())
+    time_stamp20 = now_time + 20
+    q = Q()
+    q.add(Q(is_zhixing=0), Q.AND)
+    q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=time_stamp20), Q.AND)
+    objs = models.zhugedanao_shoulu_chaxun.objects.filter(q)[0:1]
+    flag = False
+    if objs:
+        flag = True
+    response.code = 200
+    response.msg = '查询成功'
+    response.data = {'flag':flag}
+    return JsonResponse(response.__dict__)
 
 # 收录查询 查询收录获取任务
 @csrf_exempt
@@ -148,16 +182,18 @@ def shouluHuoQuRenWu(request):
     q.add(Q(is_zhixing=0), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=time_stamp20), Q.AND)
     objs = models.zhugedanao_shoulu_chaxun.objects.filter(q)[0:1]
-    objs[0].time_stamp = time_stamp20
-    objs[0].save()
+    if objs:
+        objs[0].time_stamp = time_stamp20
+        objs[0].save()
+        response.data = {
+            'o_id':objs[0].id,
+            'url':objs[0].url,
+            'search':objs[0].search,
+        }
+    else:
+        response.data = {}
     response.code = 200
-    response.data = {
-        'o_id':objs[0].id,
-        'url':objs[0].url,
-        'search':objs[0].search,
-    }
     return JsonResponse(response.__dict__)
-
 
 # 收录查询 查询完收录 返回数据
 @csrf_exempt
