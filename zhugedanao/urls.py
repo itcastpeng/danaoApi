@@ -15,21 +15,25 @@ urlpatterns = [
     url(r'^oper_log$', oper_log.oper_log),                                                       # 记录使用日志
     url(r'^tongji_data$', tongji_data.tongji_data),                                              # 微信公众号获取统计数据
 
-    url(r'^lianjie_tijiao_show', lianjie_tijiao.lianjie_tijiao),                                      # 提交链接 - 查看任务
-    url(r'^detail_lianjie_tijiao/', lianjie_tijiao.lianjie_tijiao_detail),                       # 提交链接 - 查看详情
-    url(r'^lianjie_tijiao/(?P<oper_type>\w+)/(?P<o_id>\d+)', lianjie_tijiao.lianjie_tijiao_oper),# 提交链接 - 操作
-    url(r'^decideIsTask', access_task.decideIsTask),                                             # 提交链接 - 判断是否还有任务
-    url(r'^set_task_access', access_task.set_task_access),                                       # 提交链接 - 获取提交链接数据
-    url(r'^get_task_for', access_task.get_task_for),                                             # 提交链接 - 接收返回的数据并改值
-    url(r'^panduan_shijian', access_task.panduan_shijian),                                             # 提交链接 - 接收返回的数据并改值
+    # 链接提交
+    url(r'^lianjie_tijiao_show', lianjie_tijiao.lianjie_tijiao),                                 # 查看任务
+    url(r'^detail_lianjie_tijiao/', lianjie_tijiao.lianjie_tijiao_detail),                       # 查看详情
+    url(r'^lianjie_tijiao/(?P<oper_type>\w+)/(?P<o_id>\d+)', lianjie_tijiao.lianjie_tijiao_oper),# 操作
+    url(r'^decideIsTask', access_task.decideIsTask),                                             # 判断是否还有任务
+    url(r'^set_task_access', access_task.set_task_access),                                       # 获取提交链接数据
+    url(r'^get_task_for', access_task.get_task_for),                                             # 接收返回的数据并改值
+    # url(r'^panduan_shijian', access_task.panduan_shijian),                                       # celery定时判断时间改值30分钟
+    url(r'^linksToSubmitShouLu', access_task.linksToSubmitShouLu),                               # 收录查看任务
+    url(r'^linksShouLuReturnData', access_task.linksShouLuReturnData),                           # 收录返回任务改状态
 
-    url(r'^shouLuChaxun/(?P<oper_type>\w+)/(?P<o_id>\d+)', shoulu_chauxn.shouLuChaxun),          # 收录查询 - 操作
-    url(r'^shouLuChaXunShow', shoulu_chauxn.shouLuChaXunShow),                                   # 收录查询 - 查看数据
-    url(r'^shouluHuoQuRenWu', access_task.shouluHuoQuRenWu),                                     # 收录查询 - 查看数据
+    # 收录功能
+    url(r'^shouLuChaxun/(?P<oper_type>\w+)/(?P<o_id>\d+)', shoulu_chauxn.shouLuChaxun),          # 操作
+    url(r'^shouLuChaXunShow', shoulu_chauxn.shouLuChaXunShow),                                   # 查看数据
+    url(r'^shouluHuoQuRenWu', access_task.shouluHuoQuRenWu),                                     # 收录获取任务
 
-
-    url(r'^fuGaiChaXun/(?P<oper_type>\w+)/(?P<o_id>\d+)', fugai_chaxun.fuGaiChaXun),             # 覆盖查询 - 操作
-    url(r'^fuGaiChaxunShow', fugai_chaxun.fuGaiChaxunShow),                                      # 覆盖查询 - 查看数据
+    # 覆盖功能
+    url(r'^fuGaiChaXun/(?P<oper_type>\w+)/(?P<o_id>\d+)', fugai_chaxun.fuGaiChaXun),             # 操作
+    url(r'^fuGaiChaxunShow', fugai_chaxun.fuGaiChaxunShow),                                      # 查看数据
 
 
 ]
