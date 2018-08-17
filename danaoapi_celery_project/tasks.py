@@ -44,7 +44,7 @@ def user_send_template_msg_to_customer(data):
 
     requests.get(url, params=get_data)
 
-@app.task
-def panduan_lianjie_tijiao_zhixingshijian():
-    url = 'http://api.zhugeyingxiao.com/zhugedanao/panduan_shijian'
-    requests.get(url)
+# @app.task
+# def panduan_lianjie_tijiao_zhixingshijian():
+#     url = 'http://api.zhugeyingxiao.com/zhugedanao/panduan_shijian'
+#     requests.get(url)

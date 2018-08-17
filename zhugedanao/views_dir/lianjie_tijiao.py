@@ -42,6 +42,10 @@ def lianjie_tijiao(request):
             # 返回的数据
             ret_data = []
             for obj in objs:
+                next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
+                if obj.create_date < next_datetime_addoneday:
+                    obj.is_update = 1
+                    obj.save()
                 detail_task_count = models.zhugedanao_lianjie_tijiao.objects.filter(tid=obj.id)
                 # 该任务 详情总数
                 detail_task_count_num = detail_task_count.count()
