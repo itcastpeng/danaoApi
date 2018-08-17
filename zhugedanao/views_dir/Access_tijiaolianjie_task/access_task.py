@@ -90,7 +90,7 @@ def get_task_for(request):
 
 
 
-# 链接提交 判断是否有任务
+# 链接提交 判断收录是否有任务
 @csrf_exempt
 def tiJiaoLianJieDecideIsTask(request):
     now_time = int(time.time())
