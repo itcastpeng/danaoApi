@@ -6,11 +6,10 @@ import time
 
 # 添加
 class AddForm(forms.Form):
-
     search_list = forms.CharField(
         required=True,
         error_messages={
-            'required': "任务名称不能为空"
+            'required': "搜索引擎不能为空"
         }
     )
     url_list = forms.CharField(

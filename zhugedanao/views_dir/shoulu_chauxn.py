@@ -128,9 +128,6 @@ def shouLuChaxun(request, oper_type, o_id):
                             )
                         )
                 models.zhugedanao_shoulu_chaxun.objects.bulk_create(querysetlist)
-                # process = multiprocessing.Process(target=threading_task.shoulu_func, args=(user_id, len_url))
-                # print('开始执行进程------------')
-                # process.start()
                 response.code = 200
                 response.msg = "添加成功"
                 response.data = {"url_list":url_list}
@@ -138,6 +135,7 @@ def shouLuChaxun(request, oper_type, o_id):
                 print("验证不通过")
                 response.code = 301
                 response.msg = json.loads(forms_obj.errors.as_json())
+                response.data = {'ooooo':form_data}
 
     elif request.method == 'GET':
 
