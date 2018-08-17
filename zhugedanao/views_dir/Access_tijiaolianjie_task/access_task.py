@@ -81,3 +81,42 @@ def panduan_shijian(request):
         obj.is_update = 1
     response.code = 200
     return JsonResponse(response.__dict__)
+
+
+
+# 查询收录获取任务
+def shouluHuoQuRenWu(request):
+    q = Q()
+    now_time = int(time.time())
+    time_stamp = now_time + 20
+    q.add(Q(is_zhixing=0), Q.AND)
+    q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=time_stamp), Q.AND)
+    objs = models.zhugedanao_shoulu_chaxun.objects.filter(q)[0:1]
+    objs[0].time_stamp = time_stamp
+    objs[0].save()
+    response.code = 200
+    response.data = {
+        'o_id':objs[0].id,
+        'url':objs[0].url,
+        'search':objs[0].search,
+    }
+    return JsonResponse(response.__dict__)
+
+
+# 查询完收录 返回数据
+def shouluTiJiaoRenWu(request):
+    o_id = request.GET.get('o_id')
+    title = request.GET.get('title')
+    kuaizhao_time = request.GET.get('kuaizhao_time')
+    status_code = request.GET.get('status_code')
+    is_shoulu = request.GET.get('is_shoulu')
+    models.zhugedanao_shoulu_chaxun.objects.filter(id=o_id).update(
+        title=title,
+        is_shoulu=is_shoulu,
+        kuaizhao_time=kuaizhao_time,
+        status_code=status_code,
+        is_zhixing='1',
+    )
+    response.code = 200
+    response.msg = '完成'
+    return JsonResponse(response.__dict__)

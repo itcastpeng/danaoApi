@@ -161,7 +161,7 @@ tid             GET         是                   父级id
 #### 收录查询 添加任务 说明：
 ``` 
 http请求方式： POST
-http请求url： http://127.0.0.1:8000/zhugedanao/shouLuChauxn/add/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+http请求url： http://127.0.0.1:8000/zhugedanao/shouLuChaxun/add/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
 参数   			请求方式		是否必须 		        说明
 search_list       POST      是                  搜索引擎
 url_list          POST      是                  需要操作的链接
@@ -177,7 +177,7 @@ url_list          POST      是                  需要操作的链接
 #### 收录查询 点击返回 说明：
 ``` 
 http请求方式： GET 
-http请求url： http://127.0.0.1:8000/zhugedanao/shouLuChauxn/clickReturn/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+http请求url： http://127.0.0.1:8000/zhugedanao/shouLuChaxun/clickReturn/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
 参数   			请求方式		是否必须 		        说明
 无
 
@@ -207,7 +207,7 @@ http请求url： http://127.0.0.1:8000/zhugedanao/shouLuChaxun/generateExcel/0?t
 ```
 
 #### 收录查询 展示所有数据 说明：
-``` 
+``` K
 http请求方式： GET
 http情求url： http://127.0.0.1:8000/zhugedanao/shouLuChaXunShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
 参数   			请求方式		是否必须 		        说明

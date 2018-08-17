@@ -1,6 +1,6 @@
 from openpyxl.styles import Font, Alignment
 from openpyxl import Workbook
-import sqlite3, os, json, time, datetime, threading, sys, requests, queue
+import sqlite3, os, json, time, datetime, threading, sys, queue
 from zhugedanao import models
 from publicFunc import Response
 from publicFunc import account
@@ -17,15 +17,16 @@ import json
 @account.is_token(models.zhugedanao_userprofile)
 def fuGaiChaxunShow(request):
     response = Response.ResponseObj()
+    user_id = request.GET.get('user_id')
     if request.method == "GET":
 
         forms_obj = SelectForm(request.GET)
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
-            objs = models.zhugedanao_fugai_chaxun.objects.all()
+            objs = models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id)
             dataCount = objs.count()        # 覆盖总数
-            objs_eidt = models.zhugedanao_fugai_chaxun.objects.filter(is_zhixing=1)
+            objs_eidt = objs.filter(is_zhixing=1)
             fugai_objs =objs_eidt.filter(paiming_detail__isnull=False)
             paiming_num = fugai_objs.count()
             fugai_num = 0
@@ -95,6 +96,7 @@ def fuGaiChaxunShow(request):
 def fuGaiChaXun(request, oper_type, o_id):
     response = Response.ResponseObj()
     if request.method == "POST":
+        user_id = request.GET.get('user_id')
         # 增加收录任务
         if oper_type == "add":
             form_data = {
@@ -117,6 +119,7 @@ def fuGaiChaXun(request, oper_type, o_id):
                         print(search, keyword, conditions_list)
                         querysetlist.append(
                             models.zhugedanao_fugai_chaxun(
+                                user_id_id=user_id,
                                 keyword=keyword,
                                 search_engine=search,
                                 sousuo_guize=conditions_list,
@@ -133,7 +136,7 @@ def fuGaiChaXun(request, oper_type, o_id):
 
         # 点击返回 删除任务
         elif oper_type == 'clickReturn':
-            models.zhugedanao_fugai_chaxun.objects.all().delete()
+            models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id).delete()
             response.code = 200
             response.msg = "删除成功"
             return JsonResponse(response.__dict__)
@@ -223,7 +226,7 @@ def fuGaiChaXun(request, oper_type, o_id):
 
 
 
-            objs = models.zhugedanao_fugai_chaxun.objects.all()
+            objs = models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id)
             row = 9
             row_two = 4
             for obj in objs:
