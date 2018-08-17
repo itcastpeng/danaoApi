@@ -117,7 +117,7 @@ def shouLuChaxun(request, oper_type, o_id):
                 search_list = forms_obj.cleaned_data.get('search_list')
                 querysetlist = []
                 now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                for search in search_list.split(','):
+                for search in json.loads(search_list):
                     for url in url_list:
                         querysetlist.append(
                             models.zhugedanao_shoulu_chaxun(
