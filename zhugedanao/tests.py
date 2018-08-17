@@ -221,11 +221,15 @@ class shouluChaXun():
         status_code = data_dict['resultObj']['status_code'],
         o_id = data_dict['tid'],
         # url = 'http://api.zhugeyingxiao.com/zhugedanao/shouluTiJiaoRenWu'
-
+        content_dict = {
+            'o_id' : o_id,
+            'title' : title,
+            'kuaizhao_time' : kuaizhao,
+            'status_code' : status_code,
+            'is_shoulu' : shoulu,
+        }
         url = 'http://127.0.0.1:8000/zhugedanao/shouluTiJiaoRenWu'
-        ret = requests.get(url)
-
-
+        requests.post(url, data=content_dict)
 
     # 开始
     def start(self):
@@ -246,11 +250,9 @@ class shouluChaXun():
         #     pass
 
         self.start()
-# if __name__ == '__main__':
-#     objs = shouluChaXun()
-#     objs.main()
-
-    # 获取页面访问状态和标题
+if __name__ == '__main__':
+    objs = shouluChaXun()
+    objs.main()
 
 
 
@@ -269,8 +271,7 @@ class shouluChaXun():
 
 
 
-
-
+# 链接提交 收录查询
 class lianjieshoulu():
 
     def getPageInfo(self, url):
@@ -366,24 +367,24 @@ class lianjieshoulu():
         url = 'http://127.0.0.1:8000/zhugedanao/linksToSubmitShouLu '
         ret = requests.get(url)
         json_data = json.loads(ret.text)['data']
+        print('json_data--获取数据--> ',json_data)
         resultObjPc = self.baiduShouLuPC(json_data['url'])
         resultObjMobiel = self.baiduShouLuMobeil(json_data['url'])
-        print('resultObjPc------------> ',resultObjPc)
-        print('============>',resultObjMobiel)
         is_shoulu = 0
         if resultObjMobiel['shoulu'] != 0:
             is_shoulu = int(resultObjMobiel['shoulu'])
         else:
             is_shoulu = int(resultObjPc['shoulu'])
+        data_dict = {
+            'o_id':json_data['o_id'],
+            'is_shoulu':is_shoulu
+        }
+        print('返回数据 ------data_dict---> ', data_dict)
         fanhui_url = 'http://127.0.0.1:8000/zhugedanao/linksShouLuReturnData'
-        requests.POST()
-
-
-
-
-if __name__ == '__main__':
-    obj = lianjieshoulu()
-    obj.lianjieshouluchauxn()
+        requests.post(fanhui_url, data=data_dict)
+# if __name__ == '__main__':
+#     obj = lianjieshoulu()
+#     obj.lianjieshouluchauxn()
 
 
 

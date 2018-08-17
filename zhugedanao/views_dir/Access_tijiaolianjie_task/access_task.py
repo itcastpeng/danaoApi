@@ -24,7 +24,6 @@ def decideIsTask(request):
     response.data = {'flag': flag}
     return JsonResponse(response.__dict__)
 
-
 # 连接提交 判断链接提交 当前时间大于创建时间+30分钟 celery定时更新
 @csrf_exempt
 def panduan_shijian(request):
@@ -35,8 +34,8 @@ def panduan_shijian(request):
     for obj in objs:
         obj.is_update = 1
     response.code = 200
+    response.data = {}
     return JsonResponse(response.__dict__)
-
 
 # 链接提交 api 返回十条任务
 @csrf_exempt
@@ -63,7 +62,6 @@ def set_task_access(request):
     response.msg = '查询成功'
     return JsonResponse(response.__dict__)
 
-
 # 连接提交 获取id 更改状态
 @csrf_exempt
 def get_task_for(request):
@@ -83,10 +81,11 @@ def get_task_for(request):
         address=address,
         create_date=now_date,
     )
-
+    response.data = {}
     response.code = 200
     response.msg = '请求成功'
     return JsonResponse(response.__dict__)
+
 
 
 # 链接提交 收录查询
@@ -114,7 +113,6 @@ def linksToSubmitShouLu(request):
     response.msg = '已完成'
     return JsonResponse(response.__dict__)
 
-
 # 链接提交 收录查询返回数据
 @csrf_exempt
 def linksShouLuReturnData(request):
@@ -133,6 +131,7 @@ def linksShouLuReturnData(request):
     else:
         response.code = 401
         response.msg = '请求异常'
+    response.data = {}
     return JsonResponse(response.__dict__)
 
 
@@ -163,21 +162,24 @@ def shouluHuoQuRenWu(request):
 # 收录查询 查询完收录 返回数据
 @csrf_exempt
 def shouluTiJiaoRenWu(request):
-    o_id = request.GET.get('o_id')
-    title = request.GET.get('title')
-    kuaizhao_time = request.GET.get('kuaizhao_time')
-    status_code = request.GET.get('status_code')
-    is_shoulu = request.GET.get('is_shoulu')
-    models.zhugedanao_shoulu_chaxun.objects.filter(id=o_id).update(
-        title=title,
-        is_shoulu=is_shoulu,
-        kuaizhao_time=kuaizhao_time,
-        status_code=status_code,
-        is_zhixing='1',
-    )
-    response.code = 200
-    response.msg = '完成'
-    return JsonResponse(response.__dict__)
+    if request.method == 'POST':
+        o_id = request.POST.get('o_id')
+        title = request.POST.get('title')
+        kuaizhao_time = request.POST.get('kuaizhao_time')
+        status_code = request.POST.get('status_code')
+        is_shoulu = request.POST.get('is_shoulu')
+        print('-----------', o_id, title, kuaizhao_time, status_code, is_shoulu)
+        models.zhugedanao_shoulu_chaxun.objects.filter(id=o_id).update(
+            title=title,
+            is_shoulu=is_shoulu,
+            kuaizhao_time=kuaizhao_time,
+            status_code=status_code,
+            is_zhixing = 1,
+        )
+        response.code = 200
+        response.msg = '完成'
+        response.data = {}
+        return JsonResponse(response.__dict__)
 
 
 

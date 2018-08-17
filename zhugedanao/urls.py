@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^shouLuChaxun/(?P<oper_type>\w+)/(?P<o_id>\d+)', shoulu_chauxn.shouLuChaxun),          # 操作
     url(r'^shouLuChaXunShow', shoulu_chauxn.shouLuChaXunShow),                                   # 查看数据
     url(r'^shouluHuoQuRenWu', access_task.shouluHuoQuRenWu),                                     # 收录获取任务
+    url(r'^shouluTiJiaoRenWu', access_task.shouluTiJiaoRenWu),                                   # 收录返回数据
 
     # 覆盖功能
     url(r'^fuGaiChaXun/(?P<oper_type>\w+)/(?P<o_id>\d+)', fugai_chaxun.fuGaiChaXun),             # 操作
