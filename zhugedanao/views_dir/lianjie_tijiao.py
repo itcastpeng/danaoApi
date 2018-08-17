@@ -42,7 +42,10 @@ def lianjie_tijiao(request):
             # 返回的数据
             ret_data = []
             for obj in objs:
-                next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
+                print(type(datetime.datetime.now()))
+                next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30))
+                print(type(next_datetime_addoneday))
+                print('=========next--->',next_datetime_addoneday, type(next_datetime_addoneday))
                 if obj.create_date < next_datetime_addoneday:
                     obj.is_update = 1
                     obj.save()

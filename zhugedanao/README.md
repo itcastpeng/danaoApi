@@ -239,10 +239,11 @@ http情求url： http://127.0.0.1:8000/zhugedanao/shouLuChaXunShow?timestamp=153
 }
 ```
 
+
 #### 覆盖查询 展示所有数据 说明：
 ``` 
 http请求方式： GET
-http情求url：
+http情求url： http://127.0.0.1:8000/zhugedanao/fuGaiChaxunShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
 参数   			请求方式		是否必须 		        说明
 无
 
@@ -255,10 +256,11 @@ http情求url：
             {
                 "id":61,                    # id
                 "otherData":"[              # 覆盖列表详情    
-                {"rank": 9,                 # 覆盖列表详情 排名
-                "title": "2012\u4e2d\u56fd\u4e0a\u6d77\u6297\u8870\u8001\u533b\u5b66\u7814\u8ba8\u4f1a\u7f8e\u8054\u81e3\u4e3e\u884c_\u7f51\u6613\u65b0\u95fb\u4e2d\u5fc3", "url": "http://news.163.com/12/0321/19/7T533I9S00014JB5.html?utf=1", "guize": "00", "keyword": "\u7f8e\u8054\u56fd\u9645\uff0c\u575a\u6301\u54c1\u8d28\u8d23\u4efb\u5851\u7f8e", 
-                "zhanwei": 1,               # 覆盖列表详情 是否占位
-                "search_engine": "3"}]",    # 覆盖列表详情 搜索引擎
+                    {"rank": 9,                 # 覆盖列表详情 排名
+                    "title": "2012\u4e2d\u56fd\u4e0a\u6d77\u6297\u8870\u8001\u533b\u5b66\u7814\u8ba8\u4f1a\u7f8e\u8054\u81e3\u4e3e\u884c_\u7f51\u6613\u65b0\u95fb\u4e2d\u5fc3", "url": "http://news.163.com/12/0321/19/7T533I9S00014JB5.html?utf=1", "guize": "00", "keyword": "\u7f8e\u8054\u56fd\u9645\uff0c\u575a\u6301\u54c1\u8d28\u8d23\u4efb\u5851\u7f8e", 
+                    "zhanwei": 1,               # 覆盖列表详情 是否占位
+                    "search_engine": "3"}       # 覆盖列表详情 搜索引擎
+                ]",    
                 "search_engine":"百度",      # 覆盖列表 搜索引擎 
                 "keyword":"sadf",           # 覆盖列表 关键词
                 "rank_info":""              # 覆盖列表 排名
@@ -276,12 +278,53 @@ http情求url：
 }
 ```
 
+#### 覆盖查询 添加任务 说明：
+``` 
+http请求方式： POST
+http请求url： http://127.0.0.1:8000/zhugedanao/fuGaiChaXun/add/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+searchEngineModel       POST                是                 搜索引擎
+editor_content          POST                是                 关键词
+fugai_tiaojian          POST                是                 搜索条件
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {},
+    "code": 200,
+    "msg": "添加成功"
+}
+```
 
+#### 覆盖查询 退出 说明：
+``` 
+http请求方式： GET
+http请求url： http://127.0.0.1:8000/zhugedanao/fuGaiChaXun/clickReturn/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+无
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "退出成功",
+    "data": {},
+    "code": 200
+}
+```
 
+#### 覆盖查询 生成覆盖excel 说明：
+``` 
+http请求方式： GET
+http请求url： http://127.0.0.1:8000/zhugedanao/fuGaiChaXun/generateExcel/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+无
 
-
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "生成成功",
+    "data": {
+        "excel_name": "941534492426"
+    },
+    "code": 200
+```
 
 
 
