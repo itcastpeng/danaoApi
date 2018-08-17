@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
 from zhugedanao.forms.shoulu_chaxun import AddForm, SelectForm
 import json
-import random
+import random, requests
 import multiprocessing
 from zhugedanao.views_dir.threading_task_pachong import threading_task
 
@@ -77,15 +77,15 @@ def shouLuChaXunShow(request):
             response.code = 200
             response.msg = '查询成功'
             response.data = {
-                'data': retData,         # 详情
-                'count_obj': dataCount,     # 任务总数
-                'shoulushu':shouluCount,    # 收录数
-                'shoululv':shouLuLv,        # 收录率
-                # 'yiwancheng_obj':yiWanCheng_num,     # 已完成数量
-                'yiwancheng_obj':10,     # 已完成数量
-                'whether_complete':whether_complete, # 是否全部完成
-                'chongfu_num':5,
-                'query_progress':9,
+                'data': retData,                        # 详情
+                'count_obj': dataCount,                 # 任务总数
+                'shoulushu':shouluCount,                # 收录数
+                'shoululv':shouLuLv,                    # 收录率
+                # 'yiwancheng_obj':yiWanCheng_num,      # 已完成数量
+                'yiwancheng_obj':10,                    # 已完成数量
+                'whether_complete':whether_complete,    # 是否全部完成
+                'chongfu_num':5,                        # 重复数
+                'query_progress':9,                     # 进度条
             }
         else:
             response.code = 402
@@ -218,7 +218,7 @@ def shouLuChaxun(request, oper_type, o_id):
             wb.save(os.path.join(os.getcwd(), 'statics', 'zhugedanao', 'shouLuExcel' , '{}.xlsx'.format(excel_name)))
             response.code = 200
             response.msg = '生成成功'
-            response.data = {'excel_name':excel_name}
+            response.data = {'excel_name':'http://api.zhugeyingxiao.com/' + os.path.join('statics', 'zhugedanao', 'shouLuExcel' , '{}.xlsx'.format(excel_name))}
             return JsonResponse(response.__dict__)
 
     else:

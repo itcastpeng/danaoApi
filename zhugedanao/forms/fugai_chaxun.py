@@ -26,15 +26,6 @@ class AddForm(forms.Form):
         }
     )
 
-    def clean_search_list(self):
-        search_list = []
-        for i in self.data.get('search_list').strip().split(','):
-            search_list.append(i.strip())
-        if len(search_list) == 0:
-            self.add_error('keyword', '关键词不能为空')
-        else:
-            return search_list
-
     def clean_keywords_list(self):
         keywords_data_list = []
         for i in self.data.get('keywords_list').strip().split():
@@ -51,7 +42,7 @@ class AddForm(forms.Form):
             if i:
                 conditions_list.append(i.strip())
         if len(conditions_list) == 0:
-            self.add_error('keyword', '关键词不能为空')
+            self.add_error('keyword', '搜索条件不能为空')
         else:
             return conditions_list
 
