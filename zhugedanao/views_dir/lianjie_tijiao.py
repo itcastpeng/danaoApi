@@ -108,10 +108,11 @@ def lianjie_tijiao_detail(request):
             field_dict = {
                 'id': '',
                 'url': '__contains',
+                'tid_id': tid
             }
             q = conditionCom(request, field_dict)
             print('q -->', q)
-            objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).filter(tid='{}'.format(tid)).order_by(order)
+            objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).order_by(order)
             count = objs.count()
             print('count----> ',count)
             if length != 0:
