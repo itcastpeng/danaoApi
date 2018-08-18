@@ -148,11 +148,8 @@ def linksToSubmitShouLu(request):
 def linksShouLuReturnData(request):
     if request.method == 'POST':
         o_id = request.POST.get('o_id')
-        is_shoulu = request.POST.get('is_shoulu')
+        is_shoulu = request.POST.get('shoulu')
         if is_shoulu and o_id:
-            is_shoulu = 2
-            if int(is_shoulu) == 1:
-                is_shoulu = 3
             models.zhugedanao_lianjie_tijiao.objects.filter(id=o_id).update(
                 status=is_shoulu
             )

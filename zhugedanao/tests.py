@@ -250,9 +250,9 @@ class shouluChaXun():
         #     pass
 
         self.start()
-if __name__ == '__main__':
-    objs = shouluChaXun()
-    objs.main()
+# if __name__ == '__main__':
+#     objs = shouluChaXun()
+#     objs.main()
 
 
 
@@ -363,28 +363,36 @@ class lianjieshoulu():
 
     # 链接收录查询
     def lianjieshouluchauxn(self):
-        # url = 'http://api.zhugeyingxiao.com/zhugedanao/linksToSubmitShouLu '
-        url = 'http://127.0.0.1:8000/zhugedanao/linksToSubmitShouLu '
+        url = 'http://api.zhugeyingxiao.com/zhugedanao/linksToSubmitShouLu '
+        # url = 'http://127.0.0.1:8000/zhugedanao/linksToSubmitShouLu '
         ret = requests.get(url)
         json_data = json.loads(ret.text)['data']
-        print('json_data--获取数据--> ',json_data)
-        resultObjPc = self.baiduShouLuPC(json_data['url'])
-        resultObjMobiel = self.baiduShouLuMobeil(json_data['url'])
-        is_shoulu = 0
-        if resultObjMobiel['shoulu'] != 0:
-            is_shoulu = int(resultObjMobiel['shoulu'])
-        else:
-            is_shoulu = int(resultObjPc['shoulu'])
-        data_dict = {
-            'o_id':json_data['o_id'],
-            'is_shoulu':is_shoulu
-        }
-        print('返回数据 ------data_dict---> ', data_dict)
-        fanhui_url = 'http://127.0.0.1:8000/zhugedanao/linksShouLuReturnData'
-        requests.post(fanhui_url, data=data_dict)
-# if __name__ == '__main__':
-#     obj = lianjieshoulu()
-#     obj.lianjieshouluchauxn()
+        if json_data:
+            resultObjPc = self.baiduShouLuPC(json_data['url'])
+            # resultObjPc = self.baiduShouLuPC(ppp)
+            if resultObjPc['shoulu'] != 0:
+                is_shoulu = int(resultObjPc['shoulu'])
+            else:
+                resultObjMobiel = self.baiduShouLuMobeil(json_data['url'])
+                # resultObjMobiel = self.baiduShouLuMobeil(ppp)
+                is_shoulu = int(resultObjMobiel['shoulu'])
+
+            print(is_shoulu, type(is_shoulu))
+            shoulu = 3
+            if is_shoulu == 1:
+                shoulu = 2
+
+            data_dict = {
+                'o_id':json_data['o_id'],
+                'is_shoulu':shoulu
+            }
+            print('返回数据 ------data_dict---> ', data_dict)
+            fanhui_url = 'http://127.0.0.1:8000/zhugedanao/linksShouLuReturnData'
+            requests.post(fanhui_url, data=data_dict)
+
+if __name__ == '__main__':
+    obj = lianjieshoulu()
+    obj.lianjieshouluchauxn()
 
 
 
