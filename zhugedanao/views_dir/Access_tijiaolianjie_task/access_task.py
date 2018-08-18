@@ -93,11 +93,11 @@ def get_task_for(request):
 # 链接提交 判断收录是否有任务
 @csrf_exempt
 def tiJiaoLianJieDecideIsTask(request):
-    now_time = int(time.time())
+    next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
     now_time_stamp = int(time.time())
-    time_stamp20 = now_time + 20
+    time_stamp20 = now_time_stamp + 20
     q = Q()
-    q.add(Q(status=1) & Q(is_zhixing=1), Q.AND)
+    q.add(Q(status=1) & Q(is_zhixing=1) & Q(submit_date__lte=next_datetime_addoneday), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lt=now_time_stamp), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)
     print('objs---> ', objs)
@@ -111,22 +111,27 @@ def tiJiaoLianJieDecideIsTask(request):
 # 链接提交 收录查询
 @csrf_exempt
 def linksToSubmitShouLu(request):
-    now_time = int(time.time())
     now_time_stamp = int(time.time())
-    time_stamp20 = now_time + 20
+    next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
+    time_stamp20 = now_time_stamp + 20
     q = Q()
-    q.add(Q(status=1) & Q(is_zhixing=1), Q.AND)
+    q.add(Q(status=1) & Q(is_zhixing=1) & Q(submit_date__lte=next_datetime_addoneday) & Q(status=1), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lt=now_time_stamp), Q.AND)
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     print('objs---> ',objs)
     if objs:
         obj = objs[0]
-        obj.time_stamp = time_stamp20
-        obj.save()
-        response.data = {
-            'o_id':obj.id,
-            'url':obj.url
-        }
+        count_obj = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=obj.id).count()
+        if count_obj <= 3:
+            obj.time_stamp = time_stamp20
+            obj.save()
+            response.data = {
+                'o_id':obj.id,
+                'url':obj.url
+            }
+        else:
+            obj.status = 2
+            obj.save()
     else:
         response.data = {}
     response.code = 200
