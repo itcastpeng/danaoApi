@@ -107,6 +107,7 @@ def tiJiaoLianJieDecideIsTask(request):
     response.code = 200
     response.msg = '查询成功'
     response.data = {'flag':flag}
+    return JsonResponse(response.__dict__)
 
 # 链接提交 收录查询
 @csrf_exempt
@@ -132,10 +133,11 @@ def linksToSubmitShouLu(request):
         else:
             obj.status = 2
             obj.save()
+        response.msg = '查询成功'
     else:
         response.data = {}
+        response.msg = '无任务'
     response.code = 200
-    response.msg = '已完成'
     return JsonResponse(response.__dict__)
 
 # 链接提交 收录查询返回数据
