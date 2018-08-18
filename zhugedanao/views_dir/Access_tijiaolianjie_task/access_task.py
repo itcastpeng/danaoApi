@@ -107,6 +107,7 @@ def tiJiaoLianJieDecideIsTask(request):
     response.code = 200
     response.msg = '查询成功'
     response.data = {'flag':flag}
+    return JsonResponse(response.__dict__)
 
 # 链接提交 收录查询
 @csrf_exempt
