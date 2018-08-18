@@ -120,7 +120,7 @@ class zhugedanao_lianjie_tijiao(models.Model):
         (3, "已收录"),
     )
     status = models.SmallIntegerField(verbose_name="收录状态", choices=status_choices, default=1)
-    get_task_date = models.DateTimeField(verbose_name='获取任务时间', null=True, blank=True)
+    # get_task_date = models.DateTimeField(verbose_name='获取任务时间', null=True, blank=True)
     is_zhixing = models.BooleanField(verbose_name='是否执行', default=False)
     time_stamp = models.IntegerField(verbose_name='取任务间隔时间', null=True,blank=True)
     create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, null=True, blank=True)
