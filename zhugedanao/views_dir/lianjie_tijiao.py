@@ -112,14 +112,16 @@ def lianjie_tijiao_detail(request):
             }
             q = conditionCom(request, field_dict)
             print('q -->', q)
+            print('-----------11111111111111111111111111----------------->')
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).order_by(order)
+            print('-----------2222222222222222222222222----------------->')
             count = objs.count()
             print('count----> ',count)
             if length != 0:
                 start_line = (current_page - 1) * length
                 stop_line = start_line + length
                 objs = objs[start_line: stop_line]
-
+            print('-----------333333333333333333333333333----------------->')
             # 返回的数据
             ret_data = []
             print('objs-> ',objs    )
