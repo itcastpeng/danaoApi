@@ -39,20 +39,22 @@ def decideIsTask(request):
     response.data = {'flag': flag}
     return JsonResponse(response.__dict__)
 
-# 链接提交 api 返回十条任务
+# 链接提交 api
 @csrf_exempt
 def set_task_access(request):
     now_time_stamp = int(time.time())
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-    time_stampadd30 = now_time_stamp + 600
+    time_stampadd600 = now_time_stamp + 600
+    now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
     q = Q()
     q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time_stamp), Q.AND)
     print('q------> ', q)
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0).filter(q)
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0).filter(q)[0:1]
     if objs:
         obj = objs[0]
-        obj.time_stamp = time_stampadd30
+        obj.submit_date = now_date
+        obj.time_stamp = time_stampadd600
         obj.save()
         response.data = {
             'tid': obj.id,
@@ -68,22 +70,21 @@ def set_task_access(request):
 @csrf_exempt
 def get_task_for(request):
     now_date =  datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-    print('请求-')
-    urlId = request.POST.get('urlId')
-    ip_addr= request.POST.get('ip_addr')
-    address= request.POST.get('address')
-    print('urlId----> ', urlId)
+    urlId = request.GET.get('urlId')
+    ip_addr= request.GET.get('ip_addr')
+    address= request.GET.get('address')
+    print('urlId----> ', urlId, ip_addr, address)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
-    objs.update(
-        is_zhixing=1
-    )
-    models.zhugedanao_lianjie_tijiao_log.objects.create(
-        zhugedanao_lianjie_tijiao_id=objs[0].id,
-        ip=ip_addr,
-        address=address,
-        create_date=now_date,
-    )
-    response.data = {}
+    if objs:
+        objs.update(
+            is_zhixing=1
+        )
+        models.zhugedanao_lianjie_tijiao_log.objects.create(
+            zhugedanao_lianjie_tijiao_id=objs[0].id,
+            ip=ip_addr,
+            address=address,
+            create_date=now_date,
+        )
     response.code = 200
     response.msg = '请求成功'
     return JsonResponse(response.__dict__)
@@ -97,6 +98,8 @@ def tiJiaoLianJieDecideIsTask(request):
     now_time_stamp = int(time.time())
     time_stamp20 = now_time_stamp + 20
     q = Q()
+    print(next_datetime_addoneday)
+    # status 收录状态
     q.add(Q(status=1) & Q(is_zhixing=1) & Q(submit_date__lte=next_datetime_addoneday), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lt=now_time_stamp), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)
@@ -123,7 +126,7 @@ def linksToSubmitShouLu(request):
     if objs:
         obj = objs[0]
         count_obj = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=obj.id).count()
-        if count_obj <= 3:
+        if count_obj < 3:
             obj.time_stamp = time_stamp20
             obj.save()
             response.data = {
