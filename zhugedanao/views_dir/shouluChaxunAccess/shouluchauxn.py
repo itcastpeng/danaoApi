@@ -19,10 +19,12 @@ def shouLuChaXunDecideIsTask(request):
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=time_stamp20), Q.AND)
     objs = models.zhugedanao_shoulu_chaxun.objects.filter(q)[0:1]
     flag = False
+    response.msg = '无任务'
+    response.code = 403
     if objs:
         flag = True
-    response.code = 200
-    response.msg = '查询成功'
+        response.code = 200
+        response.msg = '查询成功'
     response.data = {'flag':flag}
     return JsonResponse(response.__dict__)
 
@@ -43,8 +45,11 @@ def shouluHuoQuRenWu(request):
             'url':objs[0].url,
             'search':objs[0].search,
         }
+        response.msg = '查询成功'
     else:
+        response.code = 403
         response.data = {}
+        response.msg = '无任务'
     response.code = 200
     return JsonResponse(response.__dict__)
 
@@ -57,15 +62,16 @@ def shouluTiJiaoRenWu(request):
         kuaizhao_time = request.POST.get('kuaizhao_time')
         status_code = request.POST.get('status_code')
         is_shoulu = request.POST.get('is_shoulu')
-        print('-----------', o_id, title, kuaizhao_time, status_code, is_shoulu)
-        models.zhugedanao_shoulu_chaxun.objects.filter(id=o_id).update(
-            title=title,
-            is_shoulu=is_shoulu,
-            kuaizhao_time=kuaizhao_time,
-            status_code=status_code,
-            is_zhixing = 1,
-        )
-        response.code = 200
-        response.msg = '完成'
-        response.data = {}
-        return JsonResponse(response.__dict__)
+        if o_id and is_shoulu:
+            print('-----------', o_id, title, kuaizhao_time, status_code, is_shoulu)
+            models.zhugedanao_shoulu_chaxun.objects.filter(id=o_id).update(
+                title=title,
+                is_shoulu=is_shoulu,
+                kuaizhao_time=kuaizhao_time,
+                status_code=status_code,
+                is_zhixing = 1,
+            )
+            response.code = 200
+            response.msg = '完成'
+            response.data = {}
+            return JsonResponse(response.__dict__)

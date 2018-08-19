@@ -60,10 +60,11 @@ def set_task_access(request):
             'tid': obj.id,
             'url': obj.url
         }
+        response.msg = '查询成功'
     else:
         response.data = {}
+        response.msg = '无任务'
     response.code = 200
-    response.msg = '查询成功'
     return JsonResponse(response.__dict__)
 
 # 连接提交 获取id 更改状态
@@ -107,10 +108,12 @@ def tiJiaoLianJieDecideIsTask(request):
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lt=now_time_stamp), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     flag = False
+    response.code = 403
+    response.msg = '无任务'
     if objs:
         flag = True
-    response.code = 200
-    response.msg = '查询成功'
+        response.code = 200
+        response.msg = '查询成功'
     response.data = {'flag':flag}
     return JsonResponse(response.__dict__)
 
@@ -139,10 +142,11 @@ def linksToSubmitShouLu(request):
             obj.status = 2
             obj.save()
         response.msg = '查询成功'
+        response.code = 200
     else:
+        response.code = 403
         response.data = {}
         response.msg = '无任务'
-    response.code = 200
     return JsonResponse(response.__dict__)
 
 # 链接提交 收录查询返回数据

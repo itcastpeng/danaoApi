@@ -21,10 +21,12 @@ def fuGaiChaXunDecideIsTask(request):
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=time_stamp30),Q.AND)
     objs = models.zhugedanao_fugai_chaxun.objects.filter(q)
     flag = False
+    response.code = 403
+    response.msg = '无任务'
     if objs:
         flag = True
-    response.code = 200
-    response.msg = '查询成功'
+        response.code = 200
+        response.msg = '查询成功'
     response.data = {'flag':flag}
     return JsonResponse(response.__dict__)
 
@@ -40,14 +42,36 @@ def fuGaiHuoQuRenWu(request):
     if objs:
         objs[0].time_stamp = time_stamp30
         objs[0].save()
+        response.code = 200
+        response.msg = '查询成功'
         response.data = {
             'o_id':objs[0].id,
             'keyword':objs[0].keyword,
             'search':objs[0].search_engine,
-
+            'tiaojian':objs[0].sousuo_guize
         }
-
+    else:
+        response.code = 403
+        response.msg = '无任务'
+        response.data = {}
+    return JsonResponse(response.__dict__)
 
 @csrf_exempt
 def fuGaiTiJiaoRenWu(request):
     pass
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
