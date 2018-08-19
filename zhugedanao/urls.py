@@ -6,6 +6,8 @@ from zhugedanao.views_dir import oper_log
 from zhugedanao.views_dir import tongji_data
 from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun
 from zhugedanao.views_dir.Access_tijiaolianjie_task import access_task
+from zhugedanao.views_dir.shouluChaxunAccess import shouluchauxn
+from zhugedanao.views_dir.fugaiChaxunAccess import fugaichaxun
 urlpatterns = [
 
     # url(r'^w_login',login.w_login),
@@ -25,14 +27,14 @@ urlpatterns = [
     url(r'^linksShouLuReturnData', access_task.linksShouLuReturnData),                           # 收录返回任务改状态
     url(r'^set_task_access', access_task.set_task_access),                                       # 获取提交链接数据
     url(r'^get_task_for', access_task.get_task_for),                                             # 接收返回的数据并改值
-    # url(r'^panduan_shijian', access_task.panduan_shijian),                                       # celery定时判断时间改值30分钟
+    # url(r'^panduan_shijian', access_task.panduan_shijian),                                     # celery定时判断时间改值30分钟
 
     # 收录功能
     url(r'^shouLuChaxun/(?P<oper_type>\w+)/(?P<o_id>\d+)', shoulu_chauxn.shouLuChaxun),          # 操作
     url(r'^shouLuChaXunShow', shoulu_chauxn.shouLuChaXunShow),                                   # 查看数据
-    url(r'^shouLuChaXunDecideIsTask', access_task.shouLuChaXunDecideIsTask),                   # 判断是否还有任务
-    url(r'^shouluHuoQuRenWu', access_task.shouluHuoQuRenWu),                                     # 收录获取任务
-    url(r'^shouluTiJiaoRenWu', access_task.shouluTiJiaoRenWu),                                   # 收录返回数据
+    url(r'^shouLuChaXunDecideIsTask', shouluchauxn.shouLuChaXunDecideIsTask),                    # 判断是否还有任务
+    url(r'^shouluHuoQuRenWu', shouluchauxn.shouluHuoQuRenWu),                                    # 收录获取任务
+    url(r'^shouluTiJiaoRenWu', shouluchauxn.shouluTiJiaoRenWu),                                  # 收录返回数据
 
     # 覆盖功能
     url(r'^fuGaiChaXun/(?P<oper_type>\w+)/(?P<o_id>\d+)', fugai_chaxun.fuGaiChaXun),             # 操作
