@@ -124,7 +124,7 @@ def linksToSubmitShouLu(request):
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
     time_stamp20 = now_time_stamp + 20
     q = Q()
-    q.add(Q(status=1) & Q(is_zhixing=1) & Q(submit_date__lte=next_datetime_addoneday) & Q(status=1), Q.AND)
+    q.add(Q(status=1) & Q(is_zhixing=1) & Q(submit_date__lte=next_datetime_addoneday), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lt=now_time_stamp), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     print('objs---> ',objs)
@@ -156,9 +156,20 @@ def linksShouLuReturnData(request):
         o_id = request.POST.get('o_id')
         is_shoulu = request.POST.get('shoulu')
         if is_shoulu and o_id:
-            models.zhugedanao_lianjie_tijiao.objects.filter(id=o_id).update(
-                status=is_shoulu
-            )
+            objs = models.zhugedanao_lianjie_tijiao.objects.select_related('tid').filter(id=o_id)
+            if int(objs[0].count) < 3 and int(is_shoulu) == 3:
+                objs.update(status=1, time_stamp = None)
+            else:
+                tid = objs[0].tid_id
+                jindutiao = objs[0].tid.task_progress
+                objs.update(
+                    status=is_shoulu,
+                )
+                jindutiao += 1
+                models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(
+                    task_progress = jindutiao
+                )
+
         response.code = 200
         response.msg = '已完成'
     else:

@@ -120,19 +120,15 @@ def shouLuChaxun(request, oper_type, o_id):
                 querysetlist = []
                 now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
                 for search in json.loads(search_list):
-                    for url_re in url_list:
-                        pattern = re.compile(
-                            r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
-                        url = re.findall(pattern, url_re)
-                        if url:
-                            querysetlist.append(
-                                models.zhugedanao_shoulu_chaxun(
-                                    user_id_id=user_id,
-                                    url=url[0],
-                                    search=search,
-                                    createAndStart_time=now_date
-                                )
+                    for url in url_list:
+                        querysetlist.append(
+                            models.zhugedanao_shoulu_chaxun(
+                                user_id_id=user_id,
+                                url=url,
+                                search=search,
+                                createAndStart_time=now_date
                             )
+                        )
                 models.zhugedanao_shoulu_chaxun.objects.bulk_create(querysetlist)
                 response.code = 200
                 response.msg = "添加成功"
