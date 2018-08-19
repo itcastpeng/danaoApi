@@ -12,3 +12,4 @@ venv/
 tmp/
 qr_code/
 test.log
+tests.py

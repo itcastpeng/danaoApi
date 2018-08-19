@@ -390,9 +390,9 @@ class lianjieshoulu():
             fanhui_url = 'http://127.0.0.1:8000/zhugedanao/linksShouLuReturnData'
             requests.post(fanhui_url, data=data_dict)
 
-if __name__ == '__main__':
-    obj = lianjieshoulu()
-    obj.lianjieshouluchauxn()
+# if __name__ == '__main__':
+#     obj = lianjieshoulu()
+#     obj.lianjieshouluchauxn()
 
 
 
@@ -402,8 +402,16 @@ if __name__ == '__main__':
 
 
 
+import re
+# string = 'Its after 12 noon, do you know where your rooftops are? http://tinyurl.com/NYCRooftops '
+string = """htt://www.sohu.com/a/208330800_"""
 
 
+pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')    # 匹配模式
+url = re.findall(pattern,string)
+if url:
+
+    print(url)
 
 
 

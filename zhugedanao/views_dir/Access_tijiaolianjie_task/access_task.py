@@ -70,9 +70,9 @@ def set_task_access(request):
 @csrf_exempt
 def get_task_for(request):
     now_date =  datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-    urlId = request.GET.get('urlId')
-    ip_addr= request.GET.get('ip_addr')
-    address= request.GET.get('address')
+    urlId = request.POST.get('urlId')
+    ip_addr= request.POST.get('ip_addr')
+    address= request.POST.get('address')
     print('urlId----> ', urlId, ip_addr, address)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
     if objs:
