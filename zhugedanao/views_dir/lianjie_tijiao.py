@@ -9,7 +9,7 @@ import datetime
 from publicFunc.condition_com import conditionCom
 from zhugedanao.forms.lianjie_tijiao import AddForm, UpdateForm, SelectForm, UpdateTaskForm
 import json
-
+import re
 
 # cerf  token验证 用户展示模块
 @csrf_exempt
@@ -184,14 +184,18 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
                     count_taskList=len(url_list),
                     user_id_id=oper_user_id,
                 )
-                for url in url_list:
-                    querysetlist.append(
-                        models.zhugedanao_lianjie_tijiao(
-                            create_date=now_datetime,
-                            tid_id=objs_id.id,
-                            url=url
+                for url_re in url_list:
+                    pattern = re.compile(
+                        r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
+                    url = re.findall(pattern, url_re)
+                    if url:
+                        querysetlist.append(
+                            models.zhugedanao_lianjie_tijiao(
+                                create_date=now_datetime,
+                                tid_id=objs_id.id,
+                                url=url[0]
+                            )
                         )
-                    )
                 models.zhugedanao_lianjie_tijiao.objects.bulk_create(querysetlist)
                 response.code = 200
                 response.msg = "添加成功"
