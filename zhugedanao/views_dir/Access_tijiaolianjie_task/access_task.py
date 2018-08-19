@@ -74,17 +74,20 @@ def get_task_for(request):
     ip_addr= request.POST.get('ip_addr')
     address= request.POST.get('address')
     print('urlId----> ', urlId, ip_addr, address)
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
-    if objs:
-        objs.update(
-            is_zhixing=1
-        )
-        models.zhugedanao_lianjie_tijiao_log.objects.create(
-            zhugedanao_lianjie_tijiao_id=objs[0].id,
-            ip=ip_addr,
-            address=address,
-            create_date=now_date,
-        )
+    models.zhugedanao_lianjie_tijiao_log.objects.create(
+        zhugedanao_lianjie_tijiao_id=urlId,
+        ip=ip_addr,
+        address=address,
+        create_date=now_date,
+    )
+    log_count = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
+    if log_count:
+        objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
+        if objs:
+            objs.update(
+                is_zhixing=1,
+                count=log_count
+            )
     response.code = 200
     response.msg = '请求成功'
     return JsonResponse(response.__dict__)
