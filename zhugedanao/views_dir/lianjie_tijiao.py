@@ -54,9 +54,12 @@ def lianjie_tijiao(request):
                 # detail_task_count_num = detail_task_count.count()
                 # 该任务执行总数
                 detail_count = detail_task_count.filter(is_zhixing=0).count()
-                if detail_count:
-                    obj.task_progress = 100 - int((int(detail_count) / int(obj.count_taskList)) * 100)
-                    obj.save()
+                # if detail_count:
+                #     obj.task_progress = 100 - int((int(detail_count) / int(obj.count_taskList)) * 100)
+                #     obj.save()
+                jindu = 0
+                if obj.task_progress:
+                    jindu = int((int(obj.task_progress) / int(obj.count_taskList)) * 100)
                 yiwancheng_obj = 0
                 if count != 0:
                     yiwancheng_obj = obj.count_taskList - detail_count
@@ -70,7 +73,7 @@ def lianjie_tijiao(request):
                     'id': obj.id,                                            # 任务id
                     'task_name': obj.task_name,                              # 任务名称
                     'task_status':zhuangtai,                                 # 任务状态 完成 未完成
-                    'task_progress': obj.task_progress,                      # 进度条
+                    'task_progress': jindu,                                  # 进度条
                     'create_date': obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),# 创建时间
                     'count_taskList':obj.count_taskList,                     # 详情数量
                     'yiwancheng_obj': yiwancheng_obj,                        # 已完成数量
@@ -187,18 +190,14 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
                     count_taskList=len(url_list),
                     user_id_id=oper_user_id,
                 )
-                for url_re in url_list:
-                    pattern = re.compile(
-                        r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
-                    url = re.findall(pattern, url_re)
-                    if url:
-                        querysetlist.append(
-                            models.zhugedanao_lianjie_tijiao(
-                                create_date=now_datetime,
-                                tid_id=objs_id.id,
-                                url=url[0]
-                            )
+                for url in url_list:
+                    querysetlist.append(
+                        models.zhugedanao_lianjie_tijiao(
+                            create_date=now_datetime,
+                            tid_id=objs_id.id,
+                            url=url
                         )
+                    )
                 models.zhugedanao_lianjie_tijiao.objects.bulk_create(querysetlist)
                 response.code = 200
                 response.msg = "添加成功"

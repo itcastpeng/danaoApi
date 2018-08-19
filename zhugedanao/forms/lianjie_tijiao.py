@@ -1,5 +1,5 @@
 from django import forms
-
+import re
 from zhugedanao import models
 import time
 
@@ -35,7 +35,14 @@ class AddForm(forms.Form):
         if len(url_list) == 0:
             self.add_error('url', '提交链接不能为空')
         else:
-            return url_list
+            url_list_data = []
+            for url_re in url_list:
+                pattern = re.compile(
+                    r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
+                url = re.findall(pattern, url_re)
+                if url:
+                    url_list_data.append(url)
+                    return url_list_data
 
 
 # 更新
