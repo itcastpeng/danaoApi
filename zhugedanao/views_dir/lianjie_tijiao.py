@@ -111,40 +111,43 @@ def lianjie_tijiao_detail(request):
             field_dict = {
                 'id': '',
                 'url': '__contains',
+                'tid':tid
             }
-            q = conditionCom(request, field_dict)
-            print('q -->', q)
-            objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).filter(tid='{}'.format(tid)).order_by(order)
-            count = objs.count()
-            print('count----> ',count)
-            if length != 0:
-                start_line = (current_page - 1) * length
-                stop_line = start_line + length
-                objs = objs[start_line: stop_line]
+            print('tid---------> ',tid)
+            if tid:
+                q = conditionCom(request, field_dict)
+                print('q -->', q)
+                objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).order_by(order)
+                count = objs.count()
+                print('count----> ',count)
+                if length != 0:
+                    start_line = (current_page - 1) * length
+                    stop_line = start_line + length
+                    objs = objs[start_line: stop_line]
 
-            # 返回的数据
-            ret_data = []
-            print('objs-> ',objs    )
-            for obj in objs:
-                tijiaocishu = models.zhugedanao_lianjie_tijiao_log.objects.filter(
-                    zhugedanao_lianjie_tijiao_id=obj.id
-                ).count()
-                obj.count = tijiaocishu
-                obj.save()
-                #  将查询出来的数据 加入列表
-                ret_data.append({
-                    'id': obj.id,
-                    'url': obj.url,
-                    'count': obj.count,                         # 详情数据提交次数
-                    'status_text': obj.get_status_display(),    # 查询状态
-                })
-            #  查询成功 返回200 状态码
-            response.code = 200
-            response.msg = '查询成功'
-            response.data = {
-                'ret_data': ret_data,
-                'data_count': count,
-            }
+                # 返回的数据
+                ret_data = []
+                print('objs-> ',objs    )
+                for obj in objs:
+                    tijiaocishu = models.zhugedanao_lianjie_tijiao_log.objects.filter(
+                        zhugedanao_lianjie_tijiao_id=obj.id
+                    ).count()
+                    obj.count = tijiaocishu
+                    obj.save()
+                    #  将查询出来的数据 加入列表
+                    ret_data.append({
+                        'id': obj.id,
+                        'url': obj.url,
+                        'count': obj.count,                         # 详情数据提交次数
+                        'status_text': obj.get_status_display(),    # 查询状态
+                    })
+                #  查询成功 返回200 状态码
+                response.code = 200
+                response.msg = '查询成功'
+                response.data = {
+                    'ret_data': ret_data,
+                    'data_count': count,
+                }
         else:
             response.code = 301
             # response.msg = "请求异常"
