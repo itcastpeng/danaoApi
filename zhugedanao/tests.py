@@ -272,6 +272,10 @@ class shouluChaXun():
 
 
 # 链接提交 收录查询
+
+
+
+
 class lianjieshoulu():
 
     def getPageInfo(self, url):
@@ -390,9 +394,9 @@ class lianjieshoulu():
             fanhui_url = 'http://127.0.0.1:8000/zhugedanao/linksShouLuReturnData'
             requests.post(fanhui_url, data=data_dict)
 
-# if __name__ == '__main__':
-#     obj = lianjieshoulu()
-#     obj.lianjieshouluchauxn()
+if __name__ == '__main__':
+    obj = lianjieshoulu()
+    obj.lianjieshouluchauxn()
 
 
 
