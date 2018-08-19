@@ -42,9 +42,9 @@ class AddForm(forms.Form):
                 url = re.findall(pattern, url_re)
                 if url:
                     url_list_data.append(url[0])
-                    return url_list_data
                 else:
                     self.add_error('url', '请输入正确链接')
+            return url_list_data
 
 
 # 更新
