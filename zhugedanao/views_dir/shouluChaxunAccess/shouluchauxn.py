@@ -19,8 +19,8 @@ def shouLuChaXunDecideIsTask(request):
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=time_stamp20), Q.AND)
     objs = models.zhugedanao_shoulu_chaxun.objects.filter(q)[0:1]
     flag = False
-    response.msg = '无任务'
     response.code = 403
+    response.msg = '无任务'
     if objs:
         flag = True
         response.code = 200
@@ -73,5 +73,11 @@ def shouluTiJiaoRenWu(request):
             )
             response.code = 200
             response.msg = '完成'
-            response.data = {}
-            return JsonResponse(response.__dict__)
+        else:
+            response.code = 303
+            response.msg = '参数错误'
+    else:
+        response.code = 402
+        response.msg = '请求异常'
+    response.data = {}
+    return JsonResponse(response.__dict__)

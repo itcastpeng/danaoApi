@@ -27,16 +27,15 @@ def shouLuChaXunShow(request):
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
             objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id)
-            dataCount = objs.count()        # 收录总数
-            shoulu_objs = models.zhugedanao_shoulu_chaxun.objects.filter(is_shoulu=1)
-            shouluCount = shoulu_objs.count()
+            dataCount = objs.count()        # 收录数据总数
 
             # 已完成 进度条
             zhixingCount = objs.filter(is_zhixing=1)
             yiZhiXingCount = zhixingCount.count()
-            yiWanCheng_num = 0
+            shouluCount = zhixingCount.count()
+            query_progress = 0
             if yiZhiXingCount:
-                yiWanCheng_num = int((yiZhiXingCount / dataCount) * 100)
+                query_progress = int((yiZhiXingCount / dataCount) * 100)
 
             # 收录率
             shouLuLv = 0
@@ -82,11 +81,11 @@ def shouLuChaXunShow(request):
                 'count_obj': dataCount,                 # 任务总数
                 'shoulushu':shouluCount,                # 收录数
                 'shoululv':shouLuLv,                    # 收录率
-                # 'yiwancheng_obj':yiWanCheng_num,      # 已完成数量
-                'yiwancheng_obj':10,                    # 已完成数量
+                'yiwancheng_obj':yiZhiXingCount,      # 已完成数量
+                'query_progress':query_progress,       # 进度条
+                # 'yiwancheng_obj':10,                    # 已完成数量
                 'whether_complete':whether_complete,    # 是否全部完成
                 'chongfu_num':5,                        # 重复数
-                'query_progress':9,                     # 进度条
             }
         else:
             response.code = 402

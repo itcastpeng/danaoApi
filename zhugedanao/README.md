@@ -215,28 +215,28 @@ http情求url： http://127.0.0.1:8000/zhugedanao/shouLuChaXunShow?timestamp=153
 
 返回说明 （正常时返回的json数据 示例）
 {
-    "msg":"查询成功",
-    "data":{
-        "data":[
-            {   
-                "statusCode":null,                     # 状态码
-                "shoulu_status":"未收录",               # 是否收录
-                "search_engine":"百度",                 # 搜索引擎
-                "title":null,                          # 标题 
-                "kuaizhao_date":null,                  # 快照时间
-                "website":"sdfsadfsdaf"                # url
+    "msg": "查询成功",
+    "code": 200,
+    "data": {
+        "yiwancheng_obj": 68,               # 已完成百分比
+        "whether_complete": false,          # 是否全部完成 
+        "chongfu_num": 5,                   # 重复数
+        "shoulushu": 30,                    # 已收录数量
+        "count_obj": 32,                    # 数据总数
+        "shoululv": 100,                    # 收录率
+        query_progress: 90                  # 进度条
+        "data": [
+            {
+                "title": "大连新华美天周年庆变美抄底1折起  消费多少送多少_整形科_求医新闻-医学健康新闻-求医网",
+                "statusCode": 200,
+                "kuaizhao_date": "2017-12-4",
+                "website": "http://news.qiuyi.cn/html/2017/zhengxing_1204/63922.html",
+                "search_engine": "百度",
+                "shoulu_status": "未收录"
             }
-        ],
-        "whether_complete":false,                      # 是否全部完成 
-        "yiwancheng_obj":10,                           # 已查询数量
-        "chongfu_num":5,                               # 重复数
-        "shoulushu":0,                                 # 收录数
-        "shoululv":0,                                  # 收录率
-        "count_obj":1,                                 # 收录总数
-        "query_progress":9                             # 进度条
-    },
-    "code":200
-}
+        ]
+    }
+}}
 ```
 
 
@@ -248,34 +248,7 @@ http情求url： http://127.0.0.1:8000/zhugedanao/fuGaiChaxunShow?timestamp=1534
 无
 
 返回说明 （正常时返回的json数据 示例）
-{
-    "code":200,
-    "data":{
-        "query_progress":20,                # 进度条
-        "retData":[                         # 覆盖列表
-            {
-                "id":61,                    # id
-                "otherData":"[              # 覆盖列表详情    
-                    {"rank": 9,                 # 覆盖列表详情 排名
-                    "title": "2012\u4e2d\u56fd\u4e0a\u6d77\u6297\u8870\u8001\u533b\u5b66\u7814\u8ba8\u4f1a\u7f8e\u8054\u81e3\u4e3e\u884c_\u7f51\u6613\u65b0\u95fb\u4e2d\u5fc3", "url": "http://news.163.com/12/0321/19/7T533I9S00014JB5.html?utf=1", "guize": "00", "keyword": "\u7f8e\u8054\u56fd\u9645\uff0c\u575a\u6301\u54c1\u8d28\u8d23\u4efb\u5851\u7f8e", 
-                    "zhanwei": 1,               # 覆盖列表详情 是否占位
-                    "search_engine": "3"}       # 覆盖列表详情 搜索引擎
-                ]",    
-                "search_engine":"百度",      # 覆盖列表 搜索引擎 
-                "keyword":"sadf",           # 覆盖列表 关键词
-                "rank_info":""              # 覆盖列表 排名
-            }
-        ],
-        "yiwancheng_obj":0,                 # 已完成数量
-        "paiminglv":0,                      # 排名率
-        "whether_complete":true,            # 是否全部完成
-        "fugailv":0,                        # 覆盖率
-        "paiming_num":0,                    # 排名数量
-        "chongfu_num":10,                   # 重复数
-        "dataCount":1                       # 总数
-    },
-    "msg":"查询成功"
-}
+
 ```
 
 #### 覆盖查询 添加任务 说明：

@@ -36,7 +36,7 @@ class AddForm(forms.Form):
                 if url:
                     url_list_data.append(url[0])
                 else:
-                    self.add_error('url', '请输入正确链接')
+                    self.add_error('url_list', '请输入正确链接')
             return url_list_data
 
 
