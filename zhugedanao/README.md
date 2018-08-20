@@ -248,7 +248,30 @@ http情求url： http://127.0.0.1:8000/zhugedanao/fuGaiChaxunShow?timestamp=1534
 无
 
 返回说明 （正常时返回的json数据 示例）
-
+{
+    "data": {
+        "retData": [
+            {
+                "rank_num": 9,
+                "rank_info": "1,2,3,4,5,6,7,8,9",
+                "keyword": "合众康桥",
+                "id": 129,
+                "otherData": "[{'keyword': '合众康桥', 'url': 'http://www.baidu.com/link?url=slwxEwjledOJxW-PRPUQp9H5Ww_4m4t4ba1vViNiezLZ6YcWWS16A54hXfjGvbBC', 'guize': '合众康桥', 'search_engine': '1', 'zhanwei': 1, 'title': '北京合众康桥,互联网整合营销服务商', 'rank': 1}, {'keyword': '合众康桥', 'url': 'http://www.baidu.com/link?url=WULtmrY8RfkBGM2Fll1B0mkglLZSh8zAOAKQsQlH16W2Wqgwo4D9GIott0vMRkdegSLEtddu9T9ivdeYHzQPoq', 'guize': '合众康桥', 'search_engine': '1', 'zhanwei': 1, 'title': '北京合众康桥 - 熊掌号', 'rank': 2}, {'keyword': '合众康桥', 'url': 'http://www.baidu.com/link?url=sfzDaK5QUWMfe2gI3XvoYEVD-CLtOXgEVZDYrTFTOLXEFJnnhg4VHWCPNvaf28ADqEp3TFfcgty4FV3IGjZVWeY_6Ivr2wkhxTB9BSwjxhO', 'guize': '合众康桥', 'search_engine': '1', 'zhanwei': 1, 'title': '合众康桥王美平这个人怎么样_百度知道', 'rank': 3}, {'keyword': '合众康桥', 'url': 'http://www.baidu.com/link?url=6ROvZ8hUPsZUbNiE_HIL5Rmc601KysPUnVo6oozV0OqeldFgySDVWwbrnWr1K4Lw42z7TsNVtJtFoDDxhzRLreibCIurZf8NY4fitlfLiQEjwVOJ140ZAcWlzPIDrLuOSCOVC-5-qzxo-Z39qhstFrWf5Fe3aFbHxPmu2fIXisIwQZshBrrW9TyfzCva9CI6ldUqbF7gX0Z59vUyeYoqmien2AYDO0BJkTjsbsJxzGK', 'guize': '合众康桥', 'search_engine': '1', 'zhanwei': 1, 'title': '北京合众康桥科技发展有限公司_百度百科', 'rank': 4}, {'keyword': '合众康桥', 'url': 'http://www.baidu.com/link?url=C7CiISWQMQOen2cGe-QSVaDoH2A7qpa3eXyf89HD3dC85ih6dHlC0muVm12lq-EBfMduYeDuMWF2O6n45m48Rq', 'guize': '合众康桥', 'search_engine': '1', 'zhanwei': 1, 'title': '合众康桥王美平_Tencent Weibo', 'rank': 5}, {'keyword': '合众康桥', 'url': 'http://www.baidu.com/link?url=bFqPjvct2HHiM1pjmTE50gaESLhx9CxKzgl_Hj1SWWAXEKTB6P2PdGuMmJBXclsxyLrR4Vi6cxwhwuFGqcnyf_', 'guize': '合众康桥', 'search_engine': '1', 'zhanwei': 1, 'title': '北京合众康桥科技发展有限公司怎么样? - 职友集(一家做公司点评的...', 'rank': 6}, {'keyword': '合众康桥', 'url': 'http://www.baidu.com/link?url=yujgxkipq_MjE_6mR6uF_6V5NrXVWK3aPvGbQGwKvTXTn-w1sMXs7yzzStAmLb4MQ4AjCDR8DyAKZ8aZ4mh8vK', 'guize': '合众康桥', 'search_engine': '1', 'zhanwei': 1, 'title': '【北京合众康桥科技发展有限公司2018招聘信息】_猎聘网', 'rank': 7}, {'keyword': '合众康桥', 'url': 'http://www.baidu.com/link?url=EecZEVbfUOIWYlsWoDHOMgAlTWvKTF9fc9EipefjEiRIF8YL3006HuVybfMwvn7CRzjTgLqkEyBDKS791vUZwK', 'guize': '合众康桥', 'search_engine': '1', 'zhanwei': 1, 'title': '【合众康桥怎么样?】-看准网', 'rank': 8}, {'keyword': '合众康桥', 'url': 'http://www.baidu.com/link?url=jb4ziul5ijXkINheL11CcpXEim12yXhwylduyb99tJVOEPKyUS5gvqAyE_bQV2m9', 'guize': '合众康桥', 'search_engine': '1', 'zhanwei': 1, 'title': '【合众康桥_合众康桥招聘】北京合众康桥科技发展有限公司..._拉勾网', 'rank': 9}]",
+                "search_engine": "百度"
+            },
+        ],
+        "query_progress": 20,
+        "whether_complete": false,
+        "dataCount": 6,
+        "yiwancheng_obj": 100,
+        "chongfu_num": 10,
+        "paiminglv": 100,
+        "fugailv": 90,
+        "paiming_num": 6
+    },
+    "code": 200,
+    "msg": "查询成功"
+}
 ```
 
 #### 覆盖查询 添加任务 说明：

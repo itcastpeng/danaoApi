@@ -75,8 +75,12 @@ def fuGaiChaxunShow(request):
                     'keyword':obj.keyword,
                     'search_engine':yinqing,
                     'rank_info':obj.paiming_detail,
-                    'otherData':detail_obj_json
+                    'otherData':detail_obj_json,
+                    'rank_num':len(obj.paiming_detail.split(','))
                 })
+            query_progress = 0
+            if yiZhiXingCount:
+                query_progress = int((yiZhiXingCount / dataCount) * 100)
             response.code = 200
             response.msg = '查询成功'
             response.data = {
@@ -88,7 +92,7 @@ def fuGaiChaxunShow(request):
                 'yiwancheng_obj':yiWanCheng, # 已完成数量
                 'chongfu_num':10,            # 重复数
                 'whether_complete':whether_complete,    # 是否全部完成
-                'query_progress':20         # 进度条
+                'query_progress':query_progress         # 进度条
             }
         else:
             response.code = 402
