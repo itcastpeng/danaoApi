@@ -409,6 +409,8 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.getcwd()))
 print("sys.path -->", sys.path)
+from urllib import parse
+
 
 # 收录查询
 
@@ -451,7 +453,8 @@ class shouLuPcChongCha():
             "title": '',
             "status_code": ''
         }
-        domain = domain.strip()
+        # 编码成url格式
+        domain = parse.quote_plus(domain.strip())
         zhidao_url = 'http://www.baidu.com/s?wd={domain}'.format(domain=domain)
         headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)]}
         ret_domain = requests.get(zhidao_url, headers=headers, timeout=10)
@@ -461,20 +464,25 @@ class shouLuPcChongCha():
         else:
             div_tags = soup_domain.find_all('div', class_='result c-container ')
             if div_tags and div_tags[0].attrs.get('id'):
-                panduan_url = div_tags[0].find('a').attrs['href']
+                panduan_url = div_tags[0].find('a')['href']
                 f13_div = div_tags[0].find('div', class_='f13')
-                if f13_div.find('a'):
-                    yuming = f13_div.find('a').get_text()[:-5].split('/')[0]  # 获取域名
-                    status_code, title, ret_two_url = self.getPageInfo(panduan_url)
+                status_code, title, ret_two_url = self.getPageInfo(panduan_url)
+                # 解码
+                domain = parse.unquote_plus(domain)
+                if domain in ret_two_url or domain == ret_two_url:
+                    if f13_div.find('a'):
+                        resultObj["title"] = title
+                        resultObj["status_code"] = status_code
+                        resultObj["shoulu"] = 1
+                else:
+                    status_code, title, ret_two_url = self.getPageInfo(domain)
                     resultObj["title"] = title
                     resultObj["status_code"] = status_code
-                    if div_tags[0].find('span', class_='newTimeFactor_before_abs'):
-                        resultObj["kuaizhao_time"] = div_tags[0].find('span',
-                            class_='newTimeFactor_before_abs').get_text().strip().replace('-', '').replace('年',
-                            '-').replace('月', '-').replace('日', '').strip()
-                    if yuming in domain:
-                        if domain in ret_two_url:
-                            resultObj["shoulu"] = 1
+                    resultObj["shoulu"] = 0
+                if div_tags[0].find('span', class_='newTimeFactor_before_abs'):
+                    resultObj["kuaizhao_time"] = div_tags[0].find('span',
+                        class_='newTimeFactor_before_abs').get_text().strip().replace('-', '').replace('年',
+                        '-').replace('月', '-').replace('日', '').strip()
         return resultObj
 
     # 百度移动端收录查询
@@ -485,11 +493,14 @@ class shouLuPcChongCha():
             "title": '',
             "status_code": ''
         }
-        domain = domain.strip()
+        # 编码成url格式
+        domain = parse.quote_plus(domain.strip())
         zhidao_url = 'https://m.baidu.com/from=844b/pu=sz@1320_2001/s?tn=iphone&usm=2&word={}'.format(domain)
         headers = {
             'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'}
         ret_domain = requests.get(zhidao_url, headers=headers, timeout=10)
+        print('zhidao_url=======> ', zhidao_url)
+
         soup_domain = BeautifulSoup(ret_domain.text, 'lxml')
         if not soup_domain.find_all('div', class_='result c-result'):
             resultObj["status_code"] = ret_domain.status_code
@@ -500,10 +511,18 @@ class shouLuPcChongCha():
                 url = dict_data_clog['mu']
                 if url.strip():
                     status_code, title, ret_two_url = self.getPageInfo(url)
-                    resultObj["status_code"] = status_code
-                    resultObj["title"] = title
-                    if domain == url or url[:-1] == domain:
+                    # 解码
+                    domain_jiema = parse.unquote_plus(domain)
+                    print(domain_jiema, ret_two_url)
+                    if domain_jiema == ret_two_url or domain_jiema in ret_two_url:
+                        resultObj["status_code"] = status_code
+                        resultObj["title"] = title
                         resultObj["shoulu"] = 1
+                    else:
+                        status_code, title, ret_two_url = self.getPageInfo(domain_jiema)
+                        resultObj["status_code"] = status_code
+                        resultObj["title"] = title
+                        resultObj["shoulu"] = 0
         return resultObj
 
     # 360pc端收录查询
@@ -515,9 +534,12 @@ class shouLuPcChongCha():
             "status_code": '',
             "rank_num": 0
         }
+        # 编码成url格式
+        domain = parse.quote_plus(domain.strip())
         headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)]}
         pc_360url = 'https://so.com/s?src=3600w&q={domain}'.format(domain=domain)
         ret_domain = requests.get(pc_360url, headers=headers, timeout=10)
+        print('pc_360url============> ', pc_360url)
         soup = BeautifulSoup(ret_domain.text, 'lxml')
         if soup.find('div', class_='so-toptip'):
             resultObj['shoulu'] = '0'
@@ -531,14 +553,19 @@ class shouLuPcChongCha():
                     data_url = li_tags[0].find('a').attrs.get('data-url')
                 else:
                     data_url = zongti_xinxi.attrs['href']
-                yuming = yuming_canshu.find('cite').get_text()
-                yuming_deal = yuming.split('/')[0].rstrip('...').split('>')[0]
                 status_code, title, ret_two_url = self.getPageInfo(data_url)
-                resultObj["status_code"] = status_code
-                resultObj["title"] = title
-                if yuming_deal in domain:
-                    if domain in ret_two_url:
-                        resultObj['shoulu'] = '1'
+                # 解码
+                domain_jiema = parse.unquote_plus(domain)
+                print(domain_jiema, ret_two_url)
+                if domain_jiema in ret_two_url or domain_jiema == ret_two_url:
+                    resultObj["status_code"] = status_code
+                    resultObj["title"] = title
+                    resultObj['shoulu'] = '1'
+                else:
+                    status_code, title, ret_two_url = self.getPageInfo(domain_jiema)
+                    resultObj["status_code"] = status_code
+                    resultObj["title"] = title
+                    resultObj['shoulu'] = '0'
         return resultObj
 
     # 360移动端收录查询
@@ -550,7 +577,10 @@ class shouLuPcChongCha():
             "status_code": '',
             "rank_num": 0
         }
+        # 编码成url格式
+        domain = parse.quote_plus(domain.strip())
         PC_360_url = 'https://m.so.com/s?src=3600w&q={}'.format(domain)
+        print('PC_360_url------> ', PC_360_url)
         headers = {
             'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'}
         ret = requests.get(PC_360_url, headers=headers, timeout=10)
@@ -563,10 +593,17 @@ class shouLuPcChongCha():
             if len(div_tags) > 0:
                 url_data = div_tags[0].attrs.get('data-pcurl')
                 status_code, title, ret_two_url = self.getPageInfo(url_data)
-                resultObj["status_code"] = status_code
-                resultObj["title"] = title
-                if domain in ret_two_url:
+                # 解码
+                domain = parse.unquote_plus(domain)
+                if domain in ret_two_url or ret_two_url == domain:
+                    resultObj["status_code"] = status_code
+                    resultObj["title"] = title
                     resultObj['shoulu'] = '1'
+                else:
+                    status_code, title, ret_two_url = self.getPageInfo(domain)
+                    resultObj["status_code"] = status_code
+                    resultObj["title"] = title
+                    resultObj['shoulu'] = '0'
         return resultObj
 
     # 判断搜索引擎
@@ -661,9 +698,15 @@ class shouluChaXun():
         self.start()
 
 
-# if __name__ == '__main__':
-#     objs = shouluChaXun()
-#     objs.main()
+
+
+
+
+
+
+
+
+
 
 
 
@@ -853,15 +896,27 @@ class fugaichaxun():
                 url = 'http://127.0.0.1:8000/zhugedanao/fuGaiTiJiaoRenWu'
                 requests.post(url, data=data_list)
 
-if __name__ == '__main__':
-    obj = fugaichaxun()
-    obj.start()
+# if __name__ == '__main__':
+#     obj = fugaichaxun()
+#     obj.start()
 
 
 
 
 
 
+
+
+
+
+
+# import base64
+# s = '啥积分呢'
+#
+# p = base64.b16encode(s.encode('utf-8'))
+# print(p)
+#
+# base64.b16decode(p, 'utf-8')
 
 
 
