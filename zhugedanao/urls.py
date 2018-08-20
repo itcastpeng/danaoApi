@@ -39,6 +39,8 @@ urlpatterns = [
     # 覆盖功能
     url(r'^fuGaiChaXun/(?P<oper_type>\w+)/(?P<o_id>\d+)', fugai_chaxun.fuGaiChaXun),             # 操作
     url(r'^fuGaiChaxunShow', fugai_chaxun.fuGaiChaxunShow),                                      # 查看数据
-
+    url(r'^fuGaiChaXunDecideIsTask', fugaichaxun.fuGaiChaXunDecideIsTask),                       # 判断是否有任务
+    url(r'^fuGaiHuoQuRenWu', fugaichaxun.fuGaiHuoQuRenWu),                                       # 获取任务
+    url(r'^fuGaiTiJiaoRenWu', fugaichaxun.fuGaiTiJiaoRenWu),                                     # 返回参数
 
 ]

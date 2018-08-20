@@ -159,7 +159,7 @@ class zhugedanao_fugai_chaxun(models.Model):
     is_zhixing = models.BooleanField(verbose_name='是否执行', default=False)
     time_stamp = models.IntegerField(verbose_name='任务间隔时间', default=0)
     paiming_detail = models.CharField(verbose_name='总体排名', max_length=64, null=True, blank=True)
-    zhanwei = models.BooleanField(verbose_name='占位', default=False)
+    # zhanwei = models.BooleanField(verbose_name='占位', default=False)
     json_detail_data = models.TextField(verbose_name='详情数据 json格式', null=True, blank=True)
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
 
