@@ -60,6 +60,7 @@ def lianjie_tijiao(request):
                 jindu = 0
                 if obj.task_progress:
                     jindu = int((int(obj.task_progress) / int(obj.count_taskList)) * 100)
+                print('jindu---------------------> ',jindu)
                 yiwancheng_obj = 0
                 if count != 0:
                     yiwancheng_obj = obj.count_taskList - detail_count
@@ -127,7 +128,6 @@ def lianjie_tijiao_detail(request):
 
                 # 返回的数据
                 ret_data = []
-                print('objs-> ',objs    )
                 for obj in objs:
                     tijiaocishu = models.zhugedanao_lianjie_tijiao_log.objects.filter(
                         zhugedanao_lianjie_tijiao_id=obj.id

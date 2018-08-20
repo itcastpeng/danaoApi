@@ -70,27 +70,43 @@ def set_task_access(request):
 # 连接提交 获取id 更改状态
 @csrf_exempt
 def get_task_for(request):
-    now_date =  datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-    urlId = request.POST.get('urlId')
-    ip_addr= request.POST.get('ip_addr')
-    address= request.POST.get('address')
-    print('urlId----> ', urlId, ip_addr, address)
-    models.zhugedanao_lianjie_tijiao_log.objects.create(
-        zhugedanao_lianjie_tijiao_id=urlId,
-        ip=ip_addr,
-        address=address,
-        create_date=now_date,
-    )
-    log_count = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
-    if log_count:
-        objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
-        if objs:
-            objs.update(
-                is_zhixing=1,
-                count=log_count
+    if request.method == 'POST':
+        now_date =  datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+        o_id = request.POST.get('o_id')
+        urlId = request.POST.get('urlId')
+        ip_addr = request.POST.get('ip_addr')
+        address = request.POST.get('address')
+        print('urlId----> ',o_id, urlId, ip_addr, address)
+        if urlId:
+            models.zhugedanao_lianjie_tijiao_log.objects.create(
+                zhugedanao_lianjie_tijiao_id=urlId,
+                ip=ip_addr,
+                address=address,
+                create_date=now_date,
             )
-    response.code = 200
-    response.msg = '请求成功'
+            log_count = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
+            if log_count:
+                objs = models.zhugedanao_lianjie_tijiao.objects.select_related('tid').filter(id=urlId)
+                if objs:
+                    tid=objs[0].tid.id
+                    jindutiao = objs[0].tid.task_progress
+                    print('===========> ', tid, jindutiao)
+                    objs.update(
+                        is_zhixing=1,
+                        count=log_count
+                    )
+                    jindutiao += 1
+                    models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(
+                        task_progress=jindutiao
+                    )
+            response.code = 200
+            response.msg = '请求成功'
+        else:
+            response.code = 303
+            response.msg = 'urlid不能为空'
+    else:
+        response.code = 403
+        response.msg = '请求异常'
     return JsonResponse(response.__dict__)
 
 
@@ -156,19 +172,15 @@ def linksShouLuReturnData(request):
         o_id = request.POST.get('o_id')
         is_shoulu = request.POST.get('shoulu')
         if is_shoulu and o_id:
-            objs = models.zhugedanao_lianjie_tijiao.objects.select_related('tid').filter(id=o_id)
-            if int(objs[0].count) < 3 and int(is_shoulu) == 3:
-                objs.update(status=1, time_stamp = None)
-            else:
-                tid = objs[0].tid_id
-                jindutiao = objs[0].tid.task_progress
-                objs.update(
-                    status=is_shoulu,
-                )
-                jindutiao += 1
-                models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(
-                    task_progress = jindutiao
-                )
+            objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=o_id)
+            if objs:
+                if int(objs[0].count) < 3 and int(is_shoulu) == 3:
+                    objs.update(status=1, time_stamp = None)
+                else:
+                    objs.update(
+                        status=is_shoulu,
+                    )
+
 
         response.code = 200
         response.msg = '已完成'
