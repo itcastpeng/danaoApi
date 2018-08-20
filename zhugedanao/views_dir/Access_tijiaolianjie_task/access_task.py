@@ -105,7 +105,7 @@ def get_task_for(request):
             response.code = 303
             response.msg = 'urlid不能为空'
     else:
-        response.code = 403
+        response.code = 402
         response.msg = '请求异常'
     return JsonResponse(response.__dict__)
 
@@ -180,12 +180,16 @@ def linksShouLuReturnData(request):
                     objs.update(
                         status=is_shoulu,
                     )
-
-
-        response.code = 200
-        response.msg = '已完成'
+                response.code = 200
+                response.msg = '已完成'
+            else:
+                response.code = 302
+                response.msg = '对应ID不存在'
+        else:
+            response.code = 303
+            response.msg = '参数错误'
     else:
-        response.code = 401
+        response.code = 402
         response.msg = '请求异常'
     response.data = {}
     return JsonResponse(response.__dict__)
