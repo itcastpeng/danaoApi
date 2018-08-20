@@ -53,9 +53,9 @@ def shouLuChaXunShow(request):
             # 返回的数据
             retData = []
             for obj in objs:
-                is_shoulu = '未收录'
+                is_shoulu = False
                 if obj.is_shoulu == '1':
-                    is_shoulu = '已收录'
+                    is_shoulu = True
                 if str(obj.search) == '1':
                     yinqing = '百度'
                 elif str(obj.search) == '4':
