@@ -70,27 +70,30 @@ def fuGaiChaxunShow(request):
                 detail_obj_json = ''
                 if obj.json_detail_data:
                     detail_obj_json = obj.json_detail_data
+                paiming_detail = 0
+                if obj.paiming_detail:
+                    paiming_detail = len(obj.paiming_detail.split(','))
                 data_list.append({
                     'id':obj.id,
                     'keyword':obj.keyword,
                     'search_engine':yinqing,
                     'rank_info':obj.paiming_detail,
                     'otherData':detail_obj_json,
-                    'rank_num':len(obj.paiming_detail.split(','))
-                })
+                    'rank_num':paiming_detail
+                    })
             query_progress = 0
             if yiZhiXingCount:
                 query_progress = int((yiZhiXingCount / dataCount) * 100)
             response.code = 200
             response.msg = '查询成功'
             response.data = {
-                'retData': data_list,         # 详情
-                'dataCount': dataCount,     # 任务总数
-                'paiming_num':paiming_num,  # 有排名数
-                'fugailv':fugailv,          # 覆盖率
-                'paiminglv':paiminglv,      # 排名率
-                'yiwancheng_obj':yiWanCheng, # 已完成数量
-                'chongfu_num':10,            # 重复数
+                'retData': data_list,                   # 详情
+                'dataCount': dataCount,                 # 任务总数
+                'paiming_num':paiming_num,              # 有排名数
+                'fugailv':fugailv,                      # 覆盖率
+                'paiminglv':paiminglv,                  # 排名率
+                'yiwancheng_obj':yiWanCheng,            # 已完成数量
+                'chongfu_num':0,                        # 重复数
                 'whether_complete':whether_complete,    # 是否全部完成
                 'query_progress':query_progress         # 进度条
             }

@@ -32,7 +32,7 @@ def shouLuChaXunShow(request):
             # 已完成 进度条
             zhixingCount = objs.filter(is_zhixing=1)
             yiZhiXingCount = zhixingCount.count()
-            shouluCount = zhixingCount.count()
+            shouluCount = zhixingCount.filter(is_shoulu=1).count()
             query_progress = 0
             if yiZhiXingCount:
                 query_progress = int((yiZhiXingCount / dataCount) * 100)
@@ -81,10 +81,10 @@ def shouLuChaXunShow(request):
                 'count_obj': dataCount,                 # 任务总数
                 'shoulushu':shouluCount,                # 收录数
                 'shoululv':shouLuLv,                    # 收录率
-                'yiwancheng_obj':yiZhiXingCount,      # 已完成数量
-                'query_progress':query_progress,       # 进度条
+                'yiwancheng_obj':yiZhiXingCount,        # 已完成数量
+                'query_progress':query_progress,        # 进度条
                 'whether_complete':whether_complete,    # 是否全部完成
-                'chongfu_num':5,                        # 重复数
+                'chongfu_num':0,                        # 重复数
             }
         else:
             response.code = 402
