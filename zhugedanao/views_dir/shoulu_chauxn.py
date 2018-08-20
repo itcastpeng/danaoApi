@@ -53,9 +53,9 @@ def shouLuChaXunShow(request):
             # 返回的数据
             retData = []
             for obj in objs:
-                is_shoulu = '未收录'
+                is_shoulu = False
                 if obj.is_shoulu == '1':
-                    is_shoulu = '已收录'
+                    is_shoulu = True
                 if str(obj.search) == '1':
                     yinqing = '百度'
                 elif str(obj.search) == '4':
@@ -83,7 +83,6 @@ def shouLuChaXunShow(request):
                 'shoululv':shouLuLv,                    # 收录率
                 'yiwancheng_obj':yiZhiXingCount,      # 已完成数量
                 'query_progress':query_progress,       # 进度条
-                # 'yiwancheng_obj':10,                    # 已完成数量
                 'whether_complete':whether_complete,    # 是否全部完成
                 'chongfu_num':5,                        # 重复数
             }

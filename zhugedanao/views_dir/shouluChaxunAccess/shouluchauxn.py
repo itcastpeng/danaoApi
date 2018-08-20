@@ -13,10 +13,9 @@ response = Response.ResponseObj()
 @csrf_exempt
 def shouLuChaXunDecideIsTask(request):
     now_time = int(time.time())
-    time_stamp20 = now_time + 20
     q = Q()
     q.add(Q(is_zhixing=0), Q.AND)
-    q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=time_stamp20), Q.AND)
+    q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time), Q.AND)
     objs = models.zhugedanao_shoulu_chaxun.objects.filter(q)[0:1]
     flag = False
     response.code = 403
@@ -35,7 +34,7 @@ def shouluHuoQuRenWu(request):
     time_stamp20 = now_time + 20
     q = Q()
     q.add(Q(is_zhixing=0), Q.AND)
-    q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=time_stamp20), Q.AND)
+    q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time), Q.AND)
     objs = models.zhugedanao_shoulu_chaxun.objects.filter(q)[0:1]
     if objs:
         objs[0].time_stamp = time_stamp20

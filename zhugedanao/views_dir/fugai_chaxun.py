@@ -126,13 +126,12 @@ def fuGaiChaXun(request, oper_type, o_id):
                 print('search_list-----------> ',search_list)
                 for search in json.loads(search_list):
                     for keyword in keywords_list:
-                        print(search, keyword, conditions_list)
                         querysetlist.append(
                             models.zhugedanao_fugai_chaxun(
                                 user_id_id=user_id,
                                 keyword=keyword,
                                 search_engine=search,
-                                sousuo_guize=conditions_list,
+                                sousuo_guize=','.join(conditions_list),
                                 createAndStart_time=now_date
                             )
                         )
