@@ -218,12 +218,13 @@ http情求url： http://127.0.0.1:8000/zhugedanao/shouLuChaXunShow?timestamp=153
     "msg": "查询成功",
     "code": 200,
     "data": {
-        "yiwancheng_obj": 68,               # 已完成百分比 进度条
+        "yiwancheng_obj": 68,               # 已完成百分比
         "whether_complete": false,          # 是否全部完成 
         "chongfu_num": 5,                   # 重复数
         "shoulushu": 30,                    # 已收录数量
         "count_obj": 32,                    # 数据总数
         "shoululv": 100,                    # 收录率
+        query_progress: 90                  # 进度条
         "data": [
             {
                 "title": "大连新华美天周年庆变美抄底1折起  消费多少送多少_整形科_求医新闻-医学健康新闻-求医网",

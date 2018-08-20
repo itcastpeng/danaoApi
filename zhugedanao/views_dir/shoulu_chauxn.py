@@ -33,9 +33,9 @@ def shouLuChaXunShow(request):
             zhixingCount = objs.filter(is_zhixing=1)
             yiZhiXingCount = zhixingCount.count()
             shouluCount = zhixingCount.count()
-            yiWanCheng_num = 0
+            query_progress = 0
             if yiZhiXingCount:
-                yiWanCheng_num = int((yiZhiXingCount / dataCount) * 100)
+                query_progress = int((yiZhiXingCount / dataCount) * 100)
 
             # 收录率
             shouLuLv = 0
@@ -81,7 +81,8 @@ def shouLuChaXunShow(request):
                 'count_obj': dataCount,                 # 任务总数
                 'shoulushu':shouluCount,                # 收录数
                 'shoululv':shouLuLv,                    # 收录率
-                'yiwancheng_obj':yiWanCheng_num,      # 已完成数量
+                'yiwancheng_obj':yiZhiXingCount,      # 已完成数量
+                'query_progress':query_progress,       # 进度条
                 # 'yiwancheng_obj':10,                    # 已完成数量
                 'whether_complete':whether_complete,    # 是否全部完成
                 'chongfu_num':5,                        # 重复数
