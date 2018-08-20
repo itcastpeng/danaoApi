@@ -215,40 +215,6 @@ http情求url： http://127.0.0.1:8000/zhugedanao/shouLuChaXunShow?timestamp=153
 
 返回说明 （正常时返回的json数据 示例）
 {
-    "msg":"查询成功",
-    "data":{
-        "data":[
-            {   
-                "statusCode":null,                     # 状态码
-                "shoulu_status":"未收录",               # 是否收录
-                "search_engine":"百度",                 # 搜索引擎
-                "title":null,                          # 标题 
-                "kuaizhao_date":null,                  # 快照时间
-                "website":"sdfsadfsdaf"                # url
-            }
-        ],
-        "whether_complete":false,                      # 是否全部完成 
-        "yiwancheng_obj":10,                           # 已查询数量
-        "chongfu_num":5,                               # 重复数
-        "shoulushu":0,                                 # 收录数
-        "shoululv":0,                                  # 收录率
-        "count_obj":1,                                 # 收录总数
-        "query_progress":9                             # 进度条
-    },
-    "code":200
-}
-```
-
-
-#### 覆盖查询 展示所有数据 说明：
-``` 
-http请求方式： GET
-http情求url： http://127.0.0.1:8000/zhugedanao/fuGaiChaxunShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
-参数   			请求方式		是否必须 		        说明
-无
-
-返回说明 （正常时返回的json数据 示例）
-{
     "msg": "查询成功",
     "code": 200,
     "data": {
@@ -270,6 +236,18 @@ http情求url： http://127.0.0.1:8000/zhugedanao/fuGaiChaxunShow?timestamp=1534
         ]
     }
 }}
+```
+
+
+#### 覆盖查询 展示所有数据 说明：
+``` 
+http请求方式： GET
+http情求url： http://127.0.0.1:8000/zhugedanao/fuGaiChaxunShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			请求方式		是否必须 		        说明
+无
+
+返回说明 （正常时返回的json数据 示例）
+
 ```
 
 #### 覆盖查询 添加任务 说明：

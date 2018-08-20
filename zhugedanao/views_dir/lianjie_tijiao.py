@@ -50,26 +50,25 @@ def lianjie_tijiao(request):
                     obj.is_update = 1
                     obj.save()
                 detail_task_count = models.zhugedanao_lianjie_tijiao.objects.filter(tid=obj.id)
-                # # 该任务 详情总数
-                # detail_task_count_num = detail_task_count.count()
+
                 # 该任务执行总数
                 detail_count = detail_task_count.filter(is_zhixing=0).count()
-                # if detail_count:
-                #     obj.task_progress = 100 - int((int(detail_count) / int(obj.count_taskList)) * 100)
-                #     obj.save()
+                detail_count_jindu = detail_task_count.filter(is_zhixing=1).count()
+
                 jindu = 0
-                if obj.task_progress:
-                    jindu = int((int(obj.task_progress) / int(obj.count_taskList)) * 100)
-                print('jindu---------------------> ',jindu)
+                if obj.count_taskList:
+                    jindu = int((int(detail_count_jindu) / int(obj.count_taskList)) * 100)
+
                 yiwancheng_obj = 0
                 if count != 0:
-                    yiwancheng_obj = obj.count_taskList - detail_count
+                    yiwancheng_obj = int(obj.count_taskList - detail_count)
                 if yiwancheng_obj == obj.count_taskList:
                     obj.task_status = True
                     obj.save()
                 zhuangtai = '未完成'
                 if obj.task_status:
                     zhuangtai = '已完成'
+
                 ret_data.append({
                     'id': obj.id,                                            # 任务id
                     'task_name': obj.task_name,                              # 任务名称
