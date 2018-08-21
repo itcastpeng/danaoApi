@@ -181,8 +181,9 @@ def linksShouLuReturnData(request):
         if is_shoulu and o_id:
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=o_id)
             if objs:
-                if int(objs[0].count) < 3 and int(is_shoulu) == 3:
-                    objs.update(status=1, time_stamp = None)
+                count_list = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=o_id).count()
+                if int(count_list) < 3 and int(is_shoulu) == 3:
+                    objs.update(status=1, is_zhixing=0, time_stamp = None)
                 else:
                     objs.update(
                         status=is_shoulu,

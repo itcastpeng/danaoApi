@@ -55,7 +55,7 @@ def shouLuChaXunShow(request):
                 is_shoulu = ''
                 if int(obj.is_shoulu) == 1:
                     is_shoulu = True
-                if int(obj.is_shoulu) == 2:
+                if int(obj.is_shoulu) == 0:
                     is_shoulu = False
                 if str(obj.search) == '1':
                     yinqing = '百度'
@@ -112,6 +112,7 @@ def shouLuChaxun(request, oper_type, o_id):
             #  创建 form验证 实例（参数默认转成字典）
             forms_obj = AddForm(form_data)
             if forms_obj.is_valid():
+                models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
                 # print("验证通过")
                 #  添加数据库
                 url_list = forms_obj.cleaned_data.get('url_list')
@@ -141,16 +142,16 @@ def shouLuChaxun(request, oper_type, o_id):
     elif request.method == 'GET':
 
         # 点击返回 删除任务
-        if oper_type == 'clickReturn':
-            response.code = 200
-            response.msg = '退出成功'
-            models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
-            return JsonResponse(response.__dict__)
+        # if oper_type == 'clickReturn':
+        #     response.code = 200
+        #     response.msg = '退出成功'
+        #     models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
+        #     return JsonResponse(response.__dict__)
 
             # 生成报表
 
         # 生成excel
-        elif oper_type == 'generateExcel':
+        if oper_type == 'generateExcel':
             now_date = datetime.datetime.today().strftime('%Y-%m-%d %H-%M-%S')
             wb = Workbook()
             ws = wb.active
