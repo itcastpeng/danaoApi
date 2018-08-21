@@ -21,7 +21,6 @@ def shouLuChaXunShow(request):
     response = Response.ResponseObj()
     user_id = request.GET.get('user_id')
     if request.method == "GET":
-        print('查询任务列表=========================', request.GET)
         forms_obj = SelectForm(request.GET)
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
@@ -53,9 +52,11 @@ def shouLuChaXunShow(request):
             # 返回的数据
             retData = []
             for obj in objs:
-                is_shoulu = False
+                is_shoulu = ''
                 if int(obj.is_shoulu) == 1:
                     is_shoulu = True
+                if int(obj.is_shoulu) == 2:
+                    is_shoulu = False
                 if str(obj.search) == '1':
                     yinqing = '百度'
                 elif str(obj.search) == '4':

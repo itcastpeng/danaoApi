@@ -730,6 +730,7 @@ class fugaipc_chaxun():
         order_list = []
         headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)], }
         zhidao_url = 'https://www.baidu.com/s?wd={keyword}'.format(keyword=self.keyword)
+        print('-=---------->', zhidao_url)
         ret = requests.get(zhidao_url, headers=headers, timeout=10)
         soup = BeautifulSoup(ret.text, 'lxml')
         div_tags = soup.find_all('div', class_='result c-container ')
@@ -741,6 +742,7 @@ class fugaipc_chaxun():
                 tiaojian_chaxun = div_tag.get_text()
                 panduan_url = div_tag.find('h3', class_='t').find('a').attrs['href']
                 title = div_tag.find('h3', class_='t').get_text()
+                print('tiaojian_chaxun-------> ', mohu_pipei, tiaojian_chaxun)
                 if mohu_pipei in tiaojian_chaxun:  # 表示有覆盖
                     order_num = int(rank_num)
                     order_list.append({
@@ -792,6 +794,7 @@ class fugaipc_chaxun():
         order_list = []
         headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)], }
         pc_360url = 'https://so.com/s?src=3600w&q={keyword}'.format(keyword=self.keyword)
+        print('pc_360url--------->', pc_360url)
         ret = requests.get(pc_360url, headers=headers, timeout=10)
         soup = BeautifulSoup(ret.text, 'lxml')
         div_tags = soup.find_all('li', class_='res-list')
@@ -845,28 +848,32 @@ class fugaipc_chaxun():
 
 
     def qufenyinqing(self):
+        print('search -------- > ',self.search)
         if str(self.search) == '1':
-            # print('pc端 -- 覆盖百度', int(time.time()))
+            print('pc端 -- 覆盖百度')
             resultObj = self.baiduFuGaiPC()
             # 移动端百度
         elif str(self.search) == '4':
-            # print('移动端 -- 覆盖百度', int(time.time()))
+            print('移动端 -- 覆盖百度')
             resultObj = self.baiduFuGaiMOBIEL()
             # pc360
         elif str(self.search) == '3':
-            # print('pc端 -- 覆盖360', int(time.time()))
+            print('pc端 -- 覆盖360')
             resultObj = self.pcFugai360()
             # # 移动端360
         elif str(self.search) == '6':
-            # print('移动端 -- 覆盖360 ', int(time.time()))
+            print('移动端 -- 覆盖360 ')
             resultObj = self.mobielFugai360()
+        print('resultObj-------> ',resultObj)
         return resultObj
+
 class fugaichaxun():
     def __init__(self):
         pass
 
     def huoqurenwu(self):
-        url = 'http://127.0.0.1:8000/zhugedanao/fuGaiHuoQuRenWu'
+        # url = 'http://127.0.0.1:8000/zhugedanao/fuGaiHuoQuRenWu'
+        url = 'http://api.zhugeyingxiao.com/zhugedanao/fuGaiHuoQuRenWu'
         ret = requests.get(url)
         if ret.text:
             ret_text = json.loads(ret.text)
@@ -881,7 +888,8 @@ class fugaichaxun():
             search = ret_text['data']['search']
             keyword = ret_text['data']['keyword']
             tiaojian = ret_text['data']['tiaojian']
-            obj = fugaipc_chaxun(search, keyword, tiaojian)
+            print('-----> ',o_id, search, keyword, eval(tiaojian))
+            obj = fugaipc_chaxun(search, keyword, eval(tiaojian))
             resultObj = obj.qufenyinqing()
             if resultObj:
                 data_list = {
@@ -890,7 +898,9 @@ class fugaichaxun():
                     'o_id':o_id,
                     'resultObj':str(resultObj)
                 }
-                url = 'http://127.0.0.1:8000/zhugedanao/fuGaiTiJiaoRenWu'
+                print(data_list)
+                # url = 'http://127.0.0.1:8000/zhugedanao/fuGaiTiJiaoRenWu'
+                url = 'http://api.zhugeyingxiao.com/zhugedanao/fuGaiTiJiaoRenWu'
                 requests.post(url, data=data_list)
 
 if __name__ == '__main__':

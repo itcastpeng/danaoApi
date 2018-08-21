@@ -55,10 +55,9 @@ def lianjie_tijiao(request):
                 detail_count = detail_task_count.filter(is_zhixing=0).count()
                 detail_count_jindu = detail_task_count.filter(is_zhixing=1).count()
 
-                jindu = 0
-                if obj.count_taskList:
-                    jindu = int((int(detail_count_jindu) / int(obj.count_taskList)) * 100)
-
+                # jindu = 0
+                # if obj.task_progress:
+                #     jindu = int((int(obj.task_progress) / int(obj.count_taskList)) * 100)
                 yiwancheng_obj = 0
                 if count != 0:
                     yiwancheng_obj = int(obj.count_taskList - detail_count)
@@ -73,7 +72,7 @@ def lianjie_tijiao(request):
                     'id': obj.id,                                            # 任务id
                     'task_name': obj.task_name,                              # 任务名称
                     'task_status':zhuangtai,                                 # 任务状态 完成 未完成
-                    'task_progress': jindu,                                  # 进度条
+                    'task_progress': obj.task_progress,                      # 进度条
                     'create_date': obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),# 创建时间
                     'count_taskList':obj.count_taskList,                     # 详情数量
                     'yiwancheng_obj': yiwancheng_obj,                        # 已完成数量
