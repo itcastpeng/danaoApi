@@ -117,11 +117,11 @@ def fuGaiChaXun(request, oper_type, o_id):
                 'keywords_list': request.POST.get('editor_content'),
                 'conditions_list':request.POST.get('fugai_tiaojian')
             }
+            models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id).delete()
             #  创建 form验证 实例（参数默认转成字典）
             forms_obj = AddForm(form_data)
             if forms_obj.is_valid():
                 print("验证通过")
-                models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id).delete()
                  # 添加数据库
                 search_list = forms_obj.cleaned_data.get('search_list')
                 keywords_list = forms_obj.cleaned_data.get('keywords_list')

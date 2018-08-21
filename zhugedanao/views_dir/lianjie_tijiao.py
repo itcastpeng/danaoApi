@@ -72,7 +72,9 @@ def lianjie_tijiao(request):
                 zhuangtai = '未完成'
                 if obj.task_status:
                     zhuangtai = '已完成'
-
+                shoulu_num = 0
+                if obj.shoulu_num:
+                    shoulu_num = obj.shoulu_num
                 ret_data.append({
                     'id': obj.id,                                            # 任务id
                     'task_name': obj.task_name,                              # 任务名称
@@ -81,7 +83,8 @@ def lianjie_tijiao(request):
                     'create_date': obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),# 创建时间
                     'count_taskList':obj.count_taskList,                     # 详情数量
                     'yiwancheng_obj': yiwancheng_obj,                        # 已完成数量
-                    'is_update':int(obj.is_update)                           # 是否可以修改和删除 1不可以 0可以
+                    'is_update':int(obj.is_update),                          # 是否可以修改和删除 1不可以 0可以
+                    'shoulu_num':shoulu_num
                 })
             response.code = 200
             response.msg = '查询成功'
