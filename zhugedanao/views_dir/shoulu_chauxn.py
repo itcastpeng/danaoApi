@@ -52,11 +52,11 @@ def shouLuChaXunShow(request):
             # 返回的数据
             retData = []
             for obj in objs:
-                is_shoulu = ''
+                is_shoulu = 0
                 if int(obj.is_shoulu) == 1:
-                    is_shoulu = True
+                    is_shoulu = 1
                 if int(obj.is_shoulu) == 0:
-                    is_shoulu = False
+                    is_shoulu = 2
                 if str(obj.search) == '1':
                     yinqing = '百度'
                 elif str(obj.search) == '4':
