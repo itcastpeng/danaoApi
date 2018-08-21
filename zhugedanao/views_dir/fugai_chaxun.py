@@ -42,7 +42,8 @@ def fuGaiChaxunShow(request):
             yiZhiXingCount = objs_eidt.count()
             yiWanCheng = 0
             if yiZhiXingCount:
-                yiWanCheng = int((yiZhiXingCount / dataCount) * 100)
+                # yiWanCheng = int((yiZhiXingCount / dataCount) * 100)
+                yiWanCheng = objs_eidt.count()
             whether_complete = False
             if dataCount == yiWanCheng:
                 whether_complete = True
@@ -124,6 +125,7 @@ def fuGaiChaXun(request, oper_type, o_id):
             forms_obj = AddForm(form_data)
             if forms_obj.is_valid():
                 print("验证通过")
+                models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id).delete()
                  # 添加数据库
                 search_list = forms_obj.cleaned_data.get('search_list')
                 keywords_list = forms_obj.cleaned_data.get('keywords_list')
@@ -144,7 +146,7 @@ def fuGaiChaXun(request, oper_type, o_id):
                         )
                 models.zhugedanao_fugai_chaxun.objects.bulk_create(querysetlist)
                 response.code = 200
-                response.msg = "添加成功"
+                response.msg = "删除原数据与添加新数据成功"
             else:
                 print("验证不通过")
                 response.code = 301
@@ -153,14 +155,14 @@ def fuGaiChaXun(request, oper_type, o_id):
 
     elif request.method == 'GET':
         # 点击返回 删除任务
-        if oper_type == 'clickReturn':
-            models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id).delete()
-            response.code = 200
-            response.msg = "退出成功"
-            return JsonResponse(response.__dict__)
+        # if oper_type == 'clickReturn':
+        #     models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id).delete()
+        #     response.code = 200
+        #     response.msg = "退出成功"
+        #     return JsonResponse(response.__dict__)
 
         # 生成报表
-        elif oper_type == 'generateExcel':
+        if oper_type == 'generateExcel':
             wb = Workbook()
             ws = wb.active
             ws.title = '关键词覆盖查询'

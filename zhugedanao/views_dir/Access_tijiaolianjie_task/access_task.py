@@ -88,17 +88,24 @@ def get_task_for(request):
             if log_count:
                 objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
                 if objs:
-                    # tid=objs[0].tid.id
-                    # jindutiao = objs[0].tid.task_progress
-                    # print('===========> ', tid, jindutiao)
+                    tid=objs[0].tid.id
+                    count_list = objs.filter(tid=tid).count()
+                    zhixing_count = objs.filter(is_zhixing=1).count()
+                    jindutiao = 0
+                    if zhixing_count:
+                        jindutiao = int((zhixing_count / count_list) * 100)
+                    print(count_list)
+                    task_status = 0
+                    if zhixing_count == count_list:
+                        task_status = 1
                     objs.update(
                         is_zhixing=1,
                         count=log_count
                     )
-                    # jindutiao += 1
-                    # models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(
-                    #     task_progress=jindutiao
-                    # )
+                    models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(
+                        task_progress=jindutiao,
+                        task_status=task_status
+                    )
             response.code = 200
             response.msg = '请求成功'
         else:
