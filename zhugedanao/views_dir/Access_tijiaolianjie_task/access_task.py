@@ -179,15 +179,23 @@ def linksShouLuReturnData(request):
         o_id = request.POST.get('o_id')
         is_shoulu = request.POST.get('shoulu')
         if is_shoulu and o_id:
-            objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=o_id)
+            objs_tijiaolianjie = models.zhugedanao_lianjie_tijiao.objects
+            objs = objs_tijiaolianjie.filter(id=o_id)
             if objs:
+                tid = objs[0].tid_id
+                shoulu_num = objs_tijiaolianjie.filter(tid=tid).filter(status=2).count()
+                print(shoulu_num, type(shoulu_num), tid)
+                models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(shoulu_num=shoulu_num)
                 count_list = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=o_id).count()
                 if int(count_list) < 3 and int(is_shoulu) == 3:
                     objs.update(status=1, is_zhixing=0, time_stamp = None)
+                elif int(count_list) >= 3 and int(is_shoulu) == 3:
+                    objs.update(status=3)
                 else:
                     objs.update(
                         status=is_shoulu,
                     )
+
                 response.code = 200
                 response.msg = '已完成'
             else:

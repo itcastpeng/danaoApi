@@ -816,6 +816,7 @@ class fugaipc_chaxun():
                             'sousuo_guize': mohu_pipei,
                             'search': self.search
                         })
+        print('rentur')
         return order_list
 
     # 360移动端覆盖查询

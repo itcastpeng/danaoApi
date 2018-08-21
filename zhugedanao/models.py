@@ -104,6 +104,7 @@ class zhugedanao_lianjie_task_list(models.Model):
     count_taskList = models.IntegerField(verbose_name='任务总数',default=0)
     is_update = models.BooleanField(verbose_name='是否可以修改', default=0)
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
+    shoulu_num = models.IntegerField(verbose_name='任务收录条数',null=True, blank=True ,default=0)
     class Meta:
         app_label = "zhugedanao"
 

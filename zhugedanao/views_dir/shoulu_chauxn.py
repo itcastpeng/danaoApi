@@ -52,11 +52,11 @@ def shouLuChaXunShow(request):
             # 返回的数据
             retData = []
             for obj in objs:
-                is_shoulu = 0
+                is_shoulu = ''
                 if int(obj.is_shoulu) == 1:
-                    is_shoulu = 1
+                    is_shoulu = True
                 if int(obj.is_shoulu) == 0:
-                    is_shoulu = 2
+                    is_shoulu = False
                 if str(obj.search) == '1':
                     yinqing = '百度'
                 elif str(obj.search) == '4':
@@ -105,6 +105,7 @@ def shouLuChaxun(request, oper_type, o_id):
     if request.method == "POST":
         # 增加收录任务
         if oper_type == "add":
+            models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
             form_data = {
                 'search_list': request.POST.get('search_list'),
                 'url_list': request.POST.get('url_list'),
@@ -112,7 +113,6 @@ def shouLuChaxun(request, oper_type, o_id):
             #  创建 form验证 实例（参数默认转成字典）
             forms_obj = AddForm(form_data)
             if forms_obj.is_valid():
-                models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
                 # print("验证通过")
                 #  添加数据库
                 url_list = forms_obj.cleaned_data.get('url_list')
