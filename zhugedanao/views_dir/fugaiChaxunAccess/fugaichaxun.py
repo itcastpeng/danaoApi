@@ -65,14 +65,15 @@ def fuGaiTiJiaoRenWu(request):
         if resultObj and o_id and keyword and search:
             json_detail_data = []
             order_list = []
-            for result in eval(resultObj):
+            for result in json.loads(resultObj):
                 order_list.append(result['paiming'])
+                title = result['title'].replace('\'', '').replace('"', '')
                 zhanwei = 0
                 if result['paiming']:
                     zhanwei = 1
                 json_detail_data.append({
                     'rank': result['paiming'],
-                    'title': result['title'].replace('\'', '').replace('"', ''),
+                    'title': title,
                     'url': result['title_url'],
                     'guize': result['sousuo_guize'],
                     'keyword': keyword,
@@ -85,7 +86,7 @@ def fuGaiTiJiaoRenWu(request):
             models.zhugedanao_fugai_chaxun.objects.filter(id=o_id).update(
                 is_zhixing=1,
                 paiming_detail=str_order,
-                json_detail_data=json_detail_data,
+                json_detail_data=json.dumps(json_detail_data)
             )
             response.code = 200
             response.msg = '完成'

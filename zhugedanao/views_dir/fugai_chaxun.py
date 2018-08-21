@@ -19,7 +19,6 @@ def fuGaiChaxunShow(request):
     response = Response.ResponseObj()
     user_id = request.GET.get('user_id')
     if request.method == "GET":
-
         forms_obj = SelectForm(request.GET)
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
@@ -68,9 +67,6 @@ def fuGaiChaxunShow(request):
                     yinqing = '手机360'
                 else:
                     yinqing = ''
-                detail_obj_json = ''
-                if obj.json_detail_data:
-                    detail_obj_json = obj.json_detail_data
                 paiming_detail = 0
                 if obj.paiming_detail:
                     paiming_detail = len(obj.paiming_detail.split(','))
@@ -79,7 +75,7 @@ def fuGaiChaxunShow(request):
                     'keyword':obj.keyword,
                     'search_engine':yinqing,
                     'rank_info':obj.paiming_detail,
-                    'otherData':detail_obj_json,
+                    'otherData':obj.json_detail_data,
                     'rank_num':paiming_detail
                     })
             query_progress = 0
@@ -270,9 +266,8 @@ def fuGaiChaXun(request, oper_type, o_id):
                 ws.cell(row=row, column=4, value="{search}".format(search=yinqing))
                 row += 1
                 if obj.json_detail_data:
-                    json_detail = json.loads(obj.json_detail_data)
-                    for data_detail in json_detail:
-                        ws2.cell(row=row_two, column=1, value="{keyword}".format(keyword=obj.keyword))
+                    for data_detail in json.loads(obj.json_detail_data):
+                        ws2.cell(row=row_two, column=1, value="{keyword}".format(keyword=data_detail['keyword']))
                         ws2.cell(row=row_two, column=2, value="{paiming}".format(paiming=data_detail['rank']))
                         ws2.cell(row=row_two, column=3, value="{title}".format(title=data_detail['title']))
                         ws2.cell(row=row_two, column=4, value="{title_url}".format(title_url=data_detail['url']))
