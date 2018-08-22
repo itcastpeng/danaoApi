@@ -322,5 +322,106 @@ http请求url： http://127.0.0.1:8000/zhugedanao/fuGaiChaXun/generateExcel/0?ti
     "code": 200
 ```
 
+#### 重点词监控 查询列表页 说明
+``` 
+http请求方式： GET
+http请求url： http://127.0.0.1:8000/zhugedanao/zhongDianCiShowTaskList?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+公共参数
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {
+        "data_list": [
+            {
+                "id": 16,                           任务id
+                "task_name": "任务",                 任务名称
+                "qiyong_status": true,              启用状态
+                "task_jindu": 0,                    任务进度
+                "task_start_time": "07:50:20",      任务开始时间
+                "search_engine": [                  搜索引擎
+                    "1",
+                    "3"
+                ],
+                "task_status": 3                    任务状态 0已查询 1未查询 3正在查询 
+            }
+        ]
+    },
+    "msg": "查询成功",
+    "code": 200
+}
+```
+
+#### 重点词监控 查询详情页 说明
+``` 
+http请求方式： GET
+http请求url：  http://127.0.0.1:8000/zhugedanao/zhongDianCiDetailShowTaskList?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11&tid=16
+参数   			        请求方式		        是否必须 		        说明
+公共参数                
+tid                     GET                 是                   任务列表id
+
+返回说明 （正常时返回的json数据 示例）
+ {
+    "data": {
+        "data_list": [
+            {
+                "id": 49,                                   详情id
+                "create_time": "2018-08-21T20:09:34",       创建时间
+                "search_engine": "1",                       搜索引擎
+                "lianjie": "http://www.bjhzkq.com",         链接
+                "keywords": "合众康桥",                      关键词
+                "mohupipei": "",                            模糊匹配条件
+                "tid": 16                                   父级id
+            }
+        ],
+                "count": 4                                  总数
+    },
+    "msg": "查询成功",
+    "code": 200
+}
+```
+
+#### 重点词监控 添加任务 说明
+``` 
+http请求方式： POST
+http请求url：  http://127.0.0.1:8000/zhugedanao/zhongDianCiOper/add/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+qiyong_status           POST                是                   启用状态
+task_name               POST                是                   任务名称
+task_jindu              POST                是                   任务进度
+task_start_time         POST                是                   任务开始时间
+search_engine           POST                是                   搜索引擎
+mohupipei               POST                否                   模糊匹配条件
+keywords                POST                是                   关键词 or (关键词 and 链接)
+task_status             POST                是                   任务状态
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {},
+    "msg": "添加成功",
+    "code": 200
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
