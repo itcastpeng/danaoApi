@@ -177,7 +177,7 @@ class zhugedanao_zhongdianci_jiankong_taskList(models.Model):
         (2, "未查询"),
         (3, "正在查询"),
     )
-    task_status = models.SmallIntegerField(verbose_name='任务状态', choices=status_choices, default=3)
+    task_status = models.SmallIntegerField(verbose_name='任务状态', choices=status_choices, default=2)
     search_engine = models.CharField(verbose_name='搜索引擎', max_length=64, default=0)
     mohupipei = models.CharField(verbose_name='模糊匹配', max_length=64)
     is_zhixing = models.BooleanField(verbose_name='是否执行', default=False)
@@ -196,7 +196,7 @@ class zhugedanao_zhongdianci_jiankong_taskDetail(models.Model):
     create_time = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
     task_start_time = models.DateTimeField(verbose_name='任务开始时间', null=True, blank=True)
     is_perform = models.BooleanField(verbose_name='是否执行', default=False)
-
+    time_stamp = models.IntegerField(verbose_name='时间戳', null=True, blank=True)
 
 # 重点词监控 详情数据
 class zhugedanao_zhongdianci_jiankong_taskDetailData(models.Model):
