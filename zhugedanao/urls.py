@@ -4,10 +4,11 @@ from django.conf.urls import url
 from zhugedanao.views_dir.wechat import wechat
 from zhugedanao.views_dir import oper_log
 from zhugedanao.views_dir import tongji_data
-from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun
+from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun, zhongdianci_jiankong
 from zhugedanao.views_dir.Access_tijiaolianjie_task import access_task
-from zhugedanao.views_dir.shouluChaxunAccess import shouluchauxn
-from zhugedanao.views_dir.fugaiChaxunAccess import fugaichaxun
+from zhugedanao.views_dir.Access_shouluChaxun import shouluchauxn
+from zhugedanao.views_dir.Access_fugaiChaxun import fugaichaxun
+from zhugedanao.views_dir.zhongDianCiJianKong import zhongdianci
 urlpatterns = [
 
     # url(r'^w_login',login.w_login),
@@ -42,5 +43,11 @@ urlpatterns = [
     url(r'^fuGaiChaXunDecideIsTask', fugaichaxun.fuGaiChaXunDecideIsTask),                       # 判断是否有任务
     url(r'^fuGaiHuoQuRenWu', fugaichaxun.fuGaiHuoQuRenWu),                                       # 获取任务
     url(r'^fuGaiTiJiaoRenWu', fugaichaxun.fuGaiTiJiaoRenWu),                                     # 返回参数
+
+    # 重点词监控
+    url(r'^zhongDianCiOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', zhongdianci.zhongDianCiOper),          # 操作
+    url(r'^zhongDianCiShowTaskList', zhongdianci.zhongDianCiShowTaskList),                           # 查看任务列表
+    url(r'^zhongDianCiDetailShowTaskList', zhongdianci.zhongDianCiDetailShowTaskList),               # 查看列表详情
+
 
 ]

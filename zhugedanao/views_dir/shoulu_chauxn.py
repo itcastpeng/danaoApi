@@ -1,6 +1,6 @@
 from openpyxl.styles import Font, Alignment
 from openpyxl import Workbook
-import sqlite3, os, json, time, datetime, threading, sys, queue
+import os, time
 from zhugedanao import models
 from publicFunc import Response
 from publicFunc import account
@@ -9,9 +9,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
 from zhugedanao.forms.shoulu_chaxun import AddForm, SelectForm
 import json
-import random, requests
-import multiprocessing
-import re
+import random
 
 
 # cerf  token验证 用户展示模块

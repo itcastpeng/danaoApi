@@ -62,27 +62,28 @@ def fuGaiTiJiaoRenWu(request):
         keyword = request.POST.get('keyword')
         o_id = request.POST.get('o_id')
         resultObj = request.POST.get('resultObj')
-        if resultObj and o_id and keyword and search:
+        if o_id:
             json_detail_data = []
             order_list = []
-            for result in json.loads(resultObj):
-                order_list.append(result['paiming'])
-                title = result['title'].replace('\'', '').replace('"', '')
-                zhanwei = 0
-                if result['paiming']:
-                    zhanwei = 1
-                json_detail_data.append({
-                    'rank': result['paiming'],
-                    'title': title,
-                    'url': result['title_url'],
-                    'guize': result['sousuo_guize'],
-                    'keyword': keyword,
-                    'zhanwei': zhanwei,
-                    'search_engine':search
-                })
-            str_order = '0'
-            if order_list:
-                str_order = ','.join(str(i) for i in set(order_list))
+            str_order = '-'
+            if resultObj:
+                for result in json.loads(resultObj):
+                    order_list.append(result['paiming'])
+                    title = result['title'].replace('\'', '').replace('"', '')
+                    zhanwei = 0
+                    if result['paiming']:
+                        zhanwei = 1
+                    json_detail_data.append({
+                        'rank': result['paiming'],
+                        'title': title,
+                        'url': result['title_url'],
+                        'guize': result['sousuo_guize'],
+                        'keyword': keyword,
+                        'zhanwei': zhanwei,
+                        'search_engine':search
+                    })
+                if order_list:
+                    str_order = ','.join(str(i) for i in set(order_list))
             models.zhugedanao_fugai_chaxun.objects.filter(id=o_id).update(
                 is_zhixing=1,
                 paiming_detail=str_order,
