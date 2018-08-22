@@ -62,10 +62,12 @@ def shouluTiJiaoRenWu(request):
         status_code = request.POST.get('status_code')
         is_shoulu = request.POST.get('is_shoulu')
         if o_id and is_shoulu:
-            print('-----------', o_id, title, kuaizhao_time, status_code, is_shoulu)
+            shoulu = 2
+            if int(is_shoulu) == 1:
+                shoulu = 1
             models.zhugedanao_shoulu_chaxun.objects.filter(id=o_id).update(
                 title=title,
-                is_shoulu=is_shoulu,
+                is_shoulu=shoulu,
                 kuaizhao_time=kuaizhao_time,
                 status_code=status_code,
                 is_zhixing = 1,
