@@ -1,13 +1,12 @@
 from openpyxl.styles import Font, Alignment
 from openpyxl import Workbook
-import sqlite3, os, json, time, datetime, threading, sys, queue
+import os, time
 from zhugedanao import models
 from publicFunc import Response
 from publicFunc import account
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
-from publicFunc.condition_com import conditionCom
 from zhugedanao.forms.fugai_chaxun import AddForm, SelectForm
 import json
 import random

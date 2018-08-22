@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 
 
@@ -66,8 +67,6 @@ class zhugedanao_userprofile(models.Model):
     city = models.CharField(verbose_name="城市", max_length=32, null=True, blank=True)
     subscribe_time = models.CharField(verbose_name="最后关注时间", max_length=32, null=True, blank=True)
 
-
-
     def __str__(self):
         return self.username
 
@@ -87,7 +86,6 @@ class zhugedanao_gongneng(models.Model):
 
 # 功能访问日志表
 class zhugedanao_oper_log(models.Model):
-
     user = models.ForeignKey('zhugedanao_userprofile', verbose_name="用户")
     gongneng = models.ForeignKey('zhugedanao_gongneng', verbose_name='使用功能')
     create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
@@ -95,16 +93,18 @@ class zhugedanao_oper_log(models.Model):
     class Meta:
         app_label = "zhugedanao"
 
+
 # 百度知道链接提交任务表
 class zhugedanao_lianjie_task_list(models.Model):
     task_name = models.CharField(verbose_name="任务名称", max_length=128)
     task_status = models.BooleanField(verbose_name='该任务是否完成', default=False)
     task_progress = models.IntegerField(verbose_name='任务进度', default=0)
     create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
-    count_taskList = models.IntegerField(verbose_name='任务总数',default=0)
+    count_taskList = models.IntegerField(verbose_name='任务总数', default=0)
     is_update = models.BooleanField(verbose_name='是否可以修改', default=0)
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
-    shoulu_num = models.IntegerField(verbose_name='任务收录条数',null=True, blank=True ,default=0)
+    shoulu_num = models.IntegerField(verbose_name='任务收录条数', null=True, blank=True, default=0)
+
     class Meta:
         app_label = "zhugedanao"
 
@@ -123,9 +123,10 @@ class zhugedanao_lianjie_tijiao(models.Model):
     status = models.SmallIntegerField(verbose_name="收录状态", choices=status_choices, default=1)
     # get_task_date = models.DateTimeField(verbose_name='获取任务时间', null=True, blank=True)
     is_zhixing = models.BooleanField(verbose_name='是否执行', default=False)
-    time_stamp = models.IntegerField(verbose_name='取任务间隔时间', null=True,blank=True)
+    time_stamp = models.IntegerField(verbose_name='取任务间隔时间', null=True, blank=True)
     create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, null=True, blank=True)
     submit_date = models.DateTimeField(verbose_name='提交时间', auto_now_add=True, null=True, blank=True)
+
     class Meta:
         app_label = "zhugedanao"
 
@@ -151,10 +152,11 @@ class zhugedanao_shoulu_chaxun(models.Model):
     createAndStart_time = models.DateTimeField(verbose_name='创建和开始时间', auto_now_add=True)
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
 
+
 # 覆盖查询
 class zhugedanao_fugai_chaxun(models.Model):
     keyword = models.CharField(verbose_name='关键词', max_length=64)
-    search_engine = models.IntegerField(verbose_name='搜索引擎', default=0)
+    search_engine = models.CharField(verbose_name='搜索引擎', max_length=64, default=0)
     sousuo_guize = models.CharField(verbose_name='搜索规则', max_length=64)
     createAndStart_time = models.DateTimeField(verbose_name='创建和开始时间', auto_now_add=True)
     is_zhixing = models.BooleanField(verbose_name='是否执行', default=False)
@@ -165,31 +167,40 @@ class zhugedanao_fugai_chaxun(models.Model):
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
 
 
+# 重点词监控 - 总
+class zhugedanao_zhongdianci_jiankong_taskList(models.Model):
+    qiyong_status = models.BooleanField(verbose_name='是否启用', default=False)
+    task_name = models.CharField(verbose_name='任务名称', max_length=128)
+    task_jindu = models.IntegerField(verbose_name='任务进度', default=0, null=True, blank=True)
+    status_choices = (
+        (1, "已查询"),
+        (2, "未查询"),
+        (3, "正在查询"),
+    )
+    task_status = models.SmallIntegerField(verbose_name='任务状态', choices=status_choices, default=3)
+    search_engine = models.CharField(verbose_name='搜索引擎', max_length=64, default=0)
+    mohupipei = models.CharField(verbose_name='模糊匹配', max_length=64)
+    is_zhixing = models.BooleanField(verbose_name='是否执行', default=False)
+    next_datetime = models.DateTimeField(verbose_name='下一次执行时间', null=True, blank=True)
+    task_start_time = models.CharField(verbose_name='任务开始时间', max_length=64, null=True, blank=True)
+    user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
 
 
+# 重点词监控 列表详情
+class zhugedanao_zhongdianci_jiankong_taskDetail(models.Model):
+    tid = models.ForeignKey(to='zhugedanao_zhongdianci_jiankong_taskList', verbose_name='任务列表', null=True, blank=True)
+    search_engine = models.CharField(verbose_name='搜索引擎', max_length=64, default=0)
+    lianjie = models.CharField(verbose_name='链接', max_length=128, null=True, blank=True)
+    keyword = models.CharField(verbose_name='关键词', max_length=64, null=True, blank=True)
+    mohupipei = models.CharField(verbose_name='模糊匹配', max_length=64)
+    create_time = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+    task_start_time = models.DateTimeField(verbose_name='任务开始时间', null=True, blank=True)
+    is_perform = models.BooleanField(verbose_name='是否执行', default=False)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# 重点词监控 详情数据
+class zhugedanao_zhongdianci_jiankong_taskDetailData(models.Model):
+    tid = models.ForeignKey(to='zhugedanao_zhongdianci_jiankong_taskDetail', verbose_name='任务列表', null=True, blank=True)
+    paiming = models.IntegerField(verbose_name='排名', default=0)
+    is_shoulu = models.BooleanField(verbose_name='收录', default=0)
+    create_time = models.DateField(verbose_name='创建时间', null=True, blank=True)

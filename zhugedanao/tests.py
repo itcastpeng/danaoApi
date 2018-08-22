@@ -704,21 +704,6 @@ from urllib import parse
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class fugaipc_chaxun():
     def __init__(self, search, keyword, mohu_pipei):
         self.search = search
@@ -735,6 +720,7 @@ class fugaipc_chaxun():
         soup = BeautifulSoup(ret.text, 'lxml')
         div_tags = soup.find_all('div', class_='result c-container ')
         for mohu_pipei in self.mohu_pipei.split(','):
+            print('mohu_pipei===> ',mohu_pipei)
             for div_tag in div_tags:
                 rank_num = div_tag.attrs.get('id')
                 if not rank_num:
@@ -873,8 +859,8 @@ class fugaichaxun():
         pass
 
     def huoqurenwu(self):
-        url = 'http://127.0.0.1:8000/zhugedanao/fuGaiHuoQuRenWu'
-        # url = 'http://api.zhugeyingxiao.com/zhugedanao/fuGaiHuoQuRenWu'
+        # url = 'http://127.0.0.1:8000/zhugedanao/fuGaiHuoQuRenWu'
+        url = 'http://api.zhugeyingxiao.com/zhugedanao/fuGaiHuoQuRenWu'
         ret = requests.get(url)
         if ret.text:
             ret_text = json.loads(ret.text)
@@ -890,7 +876,7 @@ class fugaichaxun():
             keyword = ret_text['data']['keyword']
             tiaojian = ret_text['data']['tiaojian']
             # print('-----> ',o_id, search, keyword, tiaojian)
-            obj = fugaipc_chaxun(search, keyword, tiaojian)
+            obj = fugaipc_chaxun(search, keyword, eval(tiaojian))
             resultObj = obj.qufenyinqing()
             if resultObj:
                 data_list = {
@@ -900,11 +886,53 @@ class fugaichaxun():
                     "resultObj":json.dumps(resultObj)
                 }
                 print(data_list)
-                url = 'http://127.0.0.1:8000/zhugedanao/fuGaiTiJiaoRenWu'
-                # url = 'http://api.zhugeyingxiao.com/zhugedanao/fuGaiTiJiaoRenWu'
+                # url = 'http://127.0.0.1:8000/zhugedanao/fuGaiTiJiaoRenWu'
+                url = 'http://api.zhugeyingxiao.com/zhugedanao/fuGaiTiJiaoRenWu'
                 requests.post(url, data=data_list)
 
 if __name__ == '__main__':
     obj = fugaichaxun()
     obj.start()
+
+
+
+
+
+
+
+
+
+
+
+# import datetime, time
+#
+#
+# now_date = datetime.date.today().strftime('%Y-%m-%d') # 当前年月日
+#
+#
+# canshu = now_date + ' ' + '07:50:20'
+# kaishishijian = datetime.datetime.today().strptime(canshu, "%Y-%m-%d %H:%M:%S")
+#
+# now = now_date + ' ' + time.strftime("%H:%M:%S")
+# now_time = datetime.datetime.today().strptime(now, "%Y-%m-%d %H:%M:%S")
+#
+# print('kaishishijian-------> ', kaishishijian, type(kaishishijian))
+# print('now_time--------> ', now_time, type(now_time))
+#
+# if kaishishijian < now_time:
+#     kaishishijian_add1 = (kaishishijian + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
+#     print('kaishishijian_add1-> ',kaishishijian_add1)
+
+#
+# import re
+# strt = '合众康桥http://www.bjhzkq.com'
+# str_re = re.findall("(.*)http", strt.replace('\t', ''))
+# print(str_re[0])
+# print(strt.split(str_re[0]))
+
+
+
+
+
+
 

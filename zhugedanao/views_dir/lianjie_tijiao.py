@@ -1,15 +1,12 @@
-from django.shortcuts import render
 from zhugedanao import models
 from publicFunc import Response
 from publicFunc import account
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
-import time
 import datetime
 from publicFunc.condition_com import conditionCom
 from zhugedanao.forms.lianjie_tijiao import AddForm, UpdateForm, SelectForm, UpdateTaskForm
 import json
-import re
 
 # cerf  token验证 用户展示模块
 @csrf_exempt
