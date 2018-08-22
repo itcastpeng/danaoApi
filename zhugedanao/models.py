@@ -141,7 +141,7 @@ class zhugedanao_lianjie_tijiao_log(models.Model):
 
 # 收录查询表
 class zhugedanao_shoulu_chaxun(models.Model):
-    is_shoulu = models.BooleanField(verbose_name='是否收录', default=0)
+    is_shoulu = models.IntegerField(verbose_name='是否收录', default=0)
     url = models.CharField(verbose_name='链接', max_length=128)
     time_stamp = models.IntegerField(verbose_name='任务间隔时间', default=0)
     title = models.CharField(verbose_name='网页标题', max_length=64, null=True, blank=True)

@@ -53,7 +53,7 @@ def shouLuChaXunShow(request):
                 is_shoulu = ''
                 if int(obj.is_shoulu) == 1:
                     is_shoulu = True
-                if int(obj.is_shoulu) == 0:
+                if int(obj.is_shoulu) == 2:
                     is_shoulu = False
                 if str(obj.search) == '1':
                     yinqing = '百度'
@@ -124,7 +124,7 @@ def shouLuChaxun(request, oper_type, o_id):
                                 user_id_id=user_id,
                                 url=url,
                                 search=search,
-                                createAndStart_time=now_date
+                                createAndStart_time=now_date,
                             )
                         )
                 models.zhugedanao_shoulu_chaxun.objects.bulk_create(querysetlist)
