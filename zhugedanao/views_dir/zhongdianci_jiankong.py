@@ -195,26 +195,33 @@ def zhongDianCiOper(request, oper_type, o_id):
                 response.code = 301
                 response.msg = json.loads(forms_obj.errors.as_json())
 
-        # 删除任务 or 清空任务
-        if oper_type == 'delete' or oper_type == 'empty':
-            print('进入')
-            objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(
-                user_id_id=user_id,
-                id=o_id
-            )
+        # 清空任务
+        if oper_type == 'empty':
             detail_objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid=o_id)
             for detail_obj in detail_objs:
                 detail_obj.zhugedanao_zhongdianci_jiankong_taskdetaildata_set.filter(tid=detail_obj.id).delete()
             detail_objs.delete()
-            print('oper------> ',oper_type)
-            if oper_type == 'delete':
-                objs.delete()
-                response.msg = '删除成功'
-            else:
-                response.msg = '清空成功'
+            response.msg = '清空成功'
             response.code = 200
-
             return JsonResponse(response.__dict__)
+
+        # 删除任务
+        if oper_type == 'delete':
+            id_list = request.POST.get('id_list')
+            json_id_list = json.loads(id_list)
+            for id in json_id_list:
+                detail_objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid=id)
+                for detail_obj in detail_objs:
+                    detail_obj.zhugedanao_zhongdianci_jiankong_taskdetaildata_set.filter(tid=detail_obj.id).delete()
+                objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(
+                    user_id_id=user_id,
+                    id=id
+                )
+                objs.delete()
+                detail_objs.delete()
+                response.msg = '删除成功'
+                response.code = 200
+
 
         # 查询修改前信息
         if oper_type == 'update_show':
