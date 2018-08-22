@@ -1398,8 +1398,6 @@ class zhongdianci_chaxun():
             data_list = self.PC_360_URL_MOBILE()
         return data_list
     def FuGai(self):
-        shoulu = '0'
-        str_order = '0'
         if self.search == '1':
             # print('pc端 -- 覆盖百度', int(time.time()))
             resultObj = self.baiduFuGaiPC(self.keywords, self.domain)
@@ -1415,8 +1413,10 @@ class zhongdianci_chaxun():
         elif self.search == '6':
             # print('移动端 -- 覆盖360 ', int(time.time()))
             resultObj = self.mobielFugai360(self.keywords, self.domain)
-        return resultObj
-
+        order_list = []
+        for result in resultObj:
+            order_list.append(result['paiming'])
+        return order_list
 def start():
     url = 'http://127.0.0.1:8000/zhugedanao/HuoQuRenWuzhongDianCi'
     # url = 'http://api.zhugeyingxiao.com/zhugedanao/HuoQuRenWuzhongDianCi'
@@ -1425,6 +1425,7 @@ def start():
     json_data = json.loads(ret_text)
     if json_data['data']:
         print('json_data===========> ',json_data)
+        tid = json_data['data']['tid']
         search_engine = json_data['data']['search_engine']
         keywords = json_data['data']['keywords']
         domain = json_data['data']['mohupipei']
@@ -1433,14 +1434,28 @@ def start():
         objs = zhongdianci_chaxun(lianjie, detail_id, keywords, domain, search_engine)
         if lianjie:
             resultObj = objs.ShouLu()
+            data_list = {
+                'tid': tid,
+                'resultObj': json.dumps(resultObj),
+                'judge':'shoulu'
+            }
         else:
             resultObj = objs.FuGai()
+            data_list = {
+                'tid': tid,
+                'resultObj': json.dumps(resultObj),
+                'judge': 'fugai'
+            }
         print('resultObj=====> ',resultObj)
+        url = 'http://127.0.0.1:8000/zhugedanao/TiJiaoRenWuzhongDianCi'
+        # url = 'http://api.zhugeyingxiao.com/zhugedanao/TiJiaoRenWuzhongDianCi'
+        requests.post(url, data=data_list)
+
     else:
         print('无任务')
+
 if __name__ == '__main__':
     start()
-
 
 
 
