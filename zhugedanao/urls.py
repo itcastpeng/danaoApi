@@ -8,7 +8,7 @@ from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun, zh
 from zhugedanao.views_dir.Access_tijiaolianjie_task import access_task
 from zhugedanao.views_dir.Access_shouluChaxun import shouluchauxn
 from zhugedanao.views_dir.Access_fugaiChaxun import fugaichaxun
-from zhugedanao.views_dir.zhongDianCiJianKong import zhongdianci
+from zhugedanao.views_dir.Access_zhongDianCiJianKong import zhongdianci
 urlpatterns = [
 
     # url(r'^w_login',login.w_login),
@@ -45,9 +45,9 @@ urlpatterns = [
     url(r'^fuGaiTiJiaoRenWu', fugaichaxun.fuGaiTiJiaoRenWu),                                     # 返回参数
 
     # 重点词监控
-    url(r'^zhongDianCiOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', zhongdianci.zhongDianCiOper),          # 操作
-    url(r'^zhongDianCiShowTaskList', zhongdianci.zhongDianCiShowTaskList),                           # 查看任务列表
-    url(r'^zhongDianCiDetailShowTaskList', zhongdianci.zhongDianCiDetailShowTaskList),               # 查看列表详情
+    url(r'^zhongDianCiOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', zhongdianci_jiankong.zhongDianCiOper),          # 操作
+    url(r'^zhongDianCiShowTaskList', zhongdianci_jiankong.zhongDianCiShowTaskList),                           # 查看任务列表
+    url(r'^zhongDianCiDetailShowTaskList', zhongdianci_jiankong.zhongDianCiDetailShowTaskList),               # 查看列表详情
 
 
 ]
