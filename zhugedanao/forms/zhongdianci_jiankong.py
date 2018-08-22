@@ -23,12 +23,12 @@ class AddForm(forms.Form):
             'required': "关键词不能为空"
         }
     )
-    task_status = forms.IntegerField(
-        required=True,
-        error_messages={
-            'required': "任务状态不能为空"
-        }
-    )
+    # task_status = forms.IntegerField(
+    #     required=True,
+    #     error_messages={
+    #         'required': "任务状态不能为空"
+    #     }
+    # )
 
     def clean_search_engine(self):
         search_engine = self.data.get('search_engine')

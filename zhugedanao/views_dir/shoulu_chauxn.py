@@ -191,8 +191,7 @@ def shouLuChaxun(request, oper_type, o_id):
             objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id)
             for obj in objs:
                 is_shoulu = '未收录'
-                search = ''
-                if obj.is_shoulu == '1':
+                if str(obj.is_shoulu) == '1':
                     is_shoulu = '已收录'
                 if str(obj.search) == '1':
                     yinqing = '百度'

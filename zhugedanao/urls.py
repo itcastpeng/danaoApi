@@ -45,9 +45,12 @@ urlpatterns = [
     url(r'^fuGaiTiJiaoRenWu', fugaichaxun.fuGaiTiJiaoRenWu),                                     # 返回参数
 
     # 重点词监控
-    url(r'^zhongDianCiOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', zhongdianci_jiankong.zhongDianCiOper),          # 操作
-    url(r'^zhongDianCiShowTaskList', zhongdianci_jiankong.zhongDianCiShowTaskList),                           # 查看任务列表
-    url(r'^zhongDianCiDetailShowTaskList', zhongdianci_jiankong.zhongDianCiDetailShowTaskList),               # 查看列表详情
+    url(r'^zhongDianCiOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', zhongdianci_jiankong.zhongDianCiOper),     # 操作
+    url(r'^zhongDianCiShowTaskList', zhongdianci_jiankong.zhongDianCiShowTaskList),                      # 查看任务列表
+    url(r'^zhongDianCiDetailShowTaskList', zhongdianci_jiankong.zhongDianCiDetailShowTaskList),          # 查看列表详情
+    url(r'^zhongDianCiChaXunDecideIsTask', zhongdianci.zhongDianCiChaXunDecideIsTask),                   # 判断是否有任务
+    url(r'^HuoQuRenWuzhongDianCi', zhongdianci.HuoQuRenWuzhongDianCi),                                   # 获取任务
+    url(r'^TiJiaoRenWuzhongDianCi', zhongdianci.TiJiaoRenWuzhongDianCi),                                 # 返回任务
 
 
 ]

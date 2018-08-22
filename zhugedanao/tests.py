@@ -701,7 +701,31 @@ from urllib import parse
 #
 
 
+# import datetime, time
+#
+#
+# now_date = datetime.date.today().strftime('%Y-%m-%d') # 当前年月日
+#
+#
+# canshu = now_date + ' ' + '07:50:20'
+# kaishishijian = datetime.datetime.today().strptime(canshu, "%Y-%m-%d %H:%M:%S")
+#
+# now = now_date + ' ' + time.strftime("%H:%M:%S")
+# now_time = datetime.datetime.today().strptime(now, "%Y-%m-%d %H:%M:%S")
+#
+# print('kaishishijian-------> ', kaishishijian, type(kaishishijian))
+# print('now_time--------> ', now_time, type(now_time))
+#
+# if kaishishijian < now_time:
+#     kaishishijian_add1 = (kaishishijian + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
+#     print('kaishishijian_add1-> ',kaishishijian_add1)
 
+#
+# import re
+# strt = '合众康桥http://www.bjhzkq.com'
+# str_re = re.findall("(.*)http", strt.replace('\t', ''))
+# print(str_re[0])
+# print(strt.split(str_re[0]))
 
 
 class fugaipc_chaxun():
@@ -890,9 +914,9 @@ class fugaichaxun():
                 url = 'http://api.zhugeyingxiao.com/zhugedanao/fuGaiTiJiaoRenWu'
                 requests.post(url, data=data_list)
 
-if __name__ == '__main__':
-    obj = fugaichaxun()
-    obj.start()
+# if __name__ == '__main__':
+#     obj = fugaichaxun()
+#     obj.start()
 
 
 
@@ -900,35 +924,6 @@ if __name__ == '__main__':
 
 
 
-
-
-
-
-# import datetime, time
-#
-#
-# now_date = datetime.date.today().strftime('%Y-%m-%d') # 当前年月日
-#
-#
-# canshu = now_date + ' ' + '07:50:20'
-# kaishishijian = datetime.datetime.today().strptime(canshu, "%Y-%m-%d %H:%M:%S")
-#
-# now = now_date + ' ' + time.strftime("%H:%M:%S")
-# now_time = datetime.datetime.today().strptime(now, "%Y-%m-%d %H:%M:%S")
-#
-# print('kaishishijian-------> ', kaishishijian, type(kaishishijian))
-# print('now_time--------> ', now_time, type(now_time))
-#
-# if kaishishijian < now_time:
-#     kaishishijian_add1 = (kaishishijian + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
-#     print('kaishishijian_add1-> ',kaishishijian_add1)
-
-#
-# import re
-# strt = '合众康桥http://www.bjhzkq.com'
-# str_re = re.findall("(.*)http", strt.replace('\t', ''))
-# print(str_re[0])
-# print(strt.split(str_re[0]))
 
 
 

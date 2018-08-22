@@ -3,7 +3,7 @@
 ```
 200 正常
 
-300 角色名已存在
+300 已存在
 301 数据类型验证失败
 302 对应ID不存在
 303 form 验证错误
@@ -402,8 +402,52 @@ task_status             POST                是                   任务状态
 }
 ```
 
+#### 重点词监控 删除任务 说明
+``` 
+http请求方式： POST
+http请求url： http://127.0.0.1:8000/zhugedanao/zhongDianCiOper/delete/16?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+id                      url                 是                   要删除的列表id
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {},
+    "code": 200,
+    "msg": "删除成功"
+}
+```
 
+#### 重点词监控 清空任务详情 说明
+``` 
+http请求方式： POST
+http请求url：  http://127.0.0.1:8000/zhugedanao/zhongDianCiOper/empty/16?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+id                      url                 是                   要清空的详情的列表id
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {},
+    "code": 200,
+    "msg": "清空成功"
+}
+```
+
+#### 重点词监控 生成excel表格 说明
+``` 
+http请求方式： POST
+http请求url： http://127.0.0.1:8000/zhugedanao/zhongDianCiOper/generateExcel/17?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11     
+参数   			        请求方式		        是否必须 		        说明
+id                      url                 是                   任务列表id
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "生成成功",      
+    "data": {
+        "excel_name": "http://api.zhugeyingxiao.com/statics\\zhugedanao\\zhongDianCiExcel\\任务阿萨德_1534916204.xlsx"   
+    },                  生成excel表格 路径 ↑ 
+    "code": 200
+}
+```
 
 
 
