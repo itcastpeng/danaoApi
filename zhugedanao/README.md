@@ -407,8 +407,7 @@ task_status             POST                是                   任务状态
 http请求方式： POST
 http请求url： http://127.0.0.1:8000/zhugedanao/zhongDianCiOper/delete/16?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
 参数   			        请求方式		        是否必须 		        说明
-id                      url                 是                   要删除的列表id
-
+id_list                 POST                是                  要删除的任务id列表
 返回说明 （正常时返回的json数据 示例）
 {
     "data": {},
