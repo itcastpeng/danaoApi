@@ -197,10 +197,6 @@ def zhongDianCiOper(request, oper_type, o_id):
 
         # 清空任务
         if oper_type == 'empty':
-            # objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(
-            #     user_id_id=user_id,
-            #     id=o_id
-            # )
             detail_objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid=o_id)
             for detail_obj in detail_objs:
                 detail_obj.zhugedanao_zhongdianci_jiankong_taskdetaildata_set.filter(tid=detail_obj.id).delete()
