@@ -61,22 +61,19 @@ def shouluTiJiaoRenWu(request):
         kuaizhao_time = request.POST.get('kuaizhao_time')
         status_code = request.POST.get('status_code')
         is_shoulu = request.POST.get('is_shoulu')
-        if o_id and is_shoulu:
-            shoulu = 2
-            if int(is_shoulu) == 1:
-                shoulu = 1
-            models.zhugedanao_shoulu_chaxun.objects.filter(id=o_id).update(
-                title=title,
-                is_shoulu=shoulu,
-                kuaizhao_time=kuaizhao_time,
-                status_code=status_code,
-                is_zhixing = 1,
-            )
-            response.code = 200
-            response.msg = '完成'
-        else:
-            response.code = 303
-            response.msg = '参数错误'
+        shoulu = 2
+        if int(is_shoulu) == 1:
+            shoulu = 1
+        models.zhugedanao_shoulu_chaxun.objects.filter(id=o_id).update(
+            title=title,
+            is_shoulu=shoulu,
+            kuaizhao_time=kuaizhao_time,
+            status_code=status_code,
+            is_zhixing = 1,
+        )
+        response.code = 200
+        response.msg = '完成'
+
     else:
         response.code = 402
         response.msg = '请求异常'

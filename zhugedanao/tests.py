@@ -664,41 +664,19 @@ class shouluChaXun():
     # 开始
     def start(self):
         result = self.shouLuHuoQuRenWu()
-        lianjie = result['data']['url']
-        tid = result['data']['o_id']
-        search = result['data']['search']
-        result = shouLuPcChongCha(lianjie, tid, search)
-        data_dict = result.judgmentSearchEngine()
-        self.shouLuReturnsTheResult(data_dict)
+        if result['data']:
+            lianjie = result['data']['url']
+            tid = result['data']['o_id']
+            search = result['data']['search']
+            result = shouLuPcChongCha(lianjie, tid, search)
+            data_dict = result.judgmentSearchEngine()
+            self.shouLuReturnsTheResult(data_dict)
+        else:
+            return
+if __name__ == '__main__':
 
-    # def vpsServerQiandao(self):
-    #     print('开始签到')
-        # params_data = {
-        #     "vpsName": settings.VPS_NAME,
-        #     "task_name": "大脑链接提交收录",
-        #     "area": settings.AREA
-        # }
-        # url = self.apiHost + "vpsServer"
-        # ret = requests.get(url, params=params_data)
-        # print(ret.text)
-        # post_data = {
-        #     'redisKey': 'wailianServer'
-        # }
-        # url = 'http://yjk.bjhzkq.com/api/setBohaoLastTime'
-        # requests.post(url, data=post_data)
-
-    def main(self):
-        # print("-" * 20 + "> 开始任务")
-        # self.adsl.reconnect()
-        # try:
-        #     self.accountApiOper.vpsServerQiandao()
-        # except requests_ConnectionError:
-        #     pass
-        # self.vpsServerQiandao()
-        self.start()
-#
-#
-#
+    objs = shouluChaXun()
+    objs.start()
 
 
 # import datetime, time
@@ -883,8 +861,8 @@ class fugaichaxun():
         pass
 
     def huoqurenwu(self):
-        # url = 'http://127.0.0.1:8000/zhugedanao/fuGaiHuoQuRenWu'
-        url = 'http://api.zhugeyingxiao.com/zhugedanao/fuGaiHuoQuRenWu'
+        url = 'http://127.0.0.1:8000/zhugedanao/fuGaiHuoQuRenWu'
+        # url = 'http://api.zhugeyingxiao.com/zhugedanao/fuGaiHuoQuRenWu'
         ret = requests.get(url)
         if ret.text:
             ret_text = json.loads(ret.text)
@@ -910,36 +888,13 @@ class fugaichaxun():
                     "resultObj":json.dumps(resultObj)
                 }
                 print(data_list)
-                # url = 'http://127.0.0.1:8000/zhugedanao/fuGaiTiJiaoRenWu'
-                url = 'http://api.zhugeyingxiao.com/zhugedanao/fuGaiTiJiaoRenWu'
+                url = 'http://127.0.0.1:8000/zhugedanao/fuGaiTiJiaoRenWu'
+                # url = 'http://api.zhugeyingxiao.com/zhugedanao/fuGaiTiJiaoRenWu'
                 requests.post(url, data=data_list)
 
 # if __name__ == '__main__':
 #     obj = fugaichaxun()
 #     obj.start()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1454,8 +1409,8 @@ def start():
     else:
         print('无任务')
 
-if __name__ == '__main__':
-    start()
+# if __name__ == '__main__':
+#     start()
 
 
 

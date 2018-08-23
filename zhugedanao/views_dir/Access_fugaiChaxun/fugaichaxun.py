@@ -65,7 +65,7 @@ def fuGaiTiJiaoRenWu(request):
         if o_id:
             json_detail_data = []
             order_list = []
-            str_order = '-'
+            str_order = 0
             if resultObj:
                 for result in json.loads(resultObj):
                     order_list.append(result['paiming'])

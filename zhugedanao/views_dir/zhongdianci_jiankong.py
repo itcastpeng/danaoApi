@@ -56,10 +56,11 @@ def zhongDianCiShowTaskList(request):
                 response.code = 200
                 response.data = {'data_list':data_list}
             else:
+                response.code = 403
                 response.msg = '无任务'
         else:
             response.code = 402
-            response.msg = "请求异常"
+            response.msg = "数据类型验证失败"
             response.data = json.loads(forms_obj.errors.as_json())
     return JsonResponse(response.__dict__)
 
@@ -105,10 +106,11 @@ def zhongDianCiDetailShowTaskList(request):
             response.msg = '查询成功'
             response.data = {'data_dict':data_dict}
         else:
+            response.code = 403
             response.msg = '无任务'
     else:
         response.code = 402
-        response.msg = "请求异常"
+        response.msg = "数据类型验证失败"
         response.data = json.loads(forms_obj.errors.as_json())
     return JsonResponse(response.__dict__)
 
