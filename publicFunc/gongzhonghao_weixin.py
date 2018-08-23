@@ -196,7 +196,7 @@ class WeChatPublicSendMsg(object):
     # 删除自定义菜单
     def delMenu(self):
         print("=" * 50 + "删除自定义菜单" + "=" * 50)
-        url = "https://api.weixin.qq.com/cgi-bin/menu/delete?access_token={ACCESS_TOKEN}".format(
+        url = "https://api.weixin.qq.com/cgi-bin/menu/exct_delete?access_token={ACCESS_TOKEN}".format(
             ACCESS_TOKEN=self.access_token
         )
 

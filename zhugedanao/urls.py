@@ -9,6 +9,7 @@ from zhugedanao.views_dir.Access_tijiaolianjie_task import access_task
 from zhugedanao.views_dir.Access_shouluChaxun import shouluchauxn
 from zhugedanao.views_dir.Access_fugaiChaxun import fugaichaxun
 from zhugedanao.views_dir.Access_zhongDianCiJianKong import zhongdianci
+from zhugedanao.views_dir.Access_gonggong import exit_delete
 urlpatterns = [
 
     # url(r'^w_login',login.w_login),
@@ -52,5 +53,7 @@ urlpatterns = [
     url(r'^HuoQuRenWuzhongDianCi', zhongdianci.HuoQuRenWuzhongDianCi),                                   # 获取任务
     url(r'^TiJiaoRenWuzhongDianCi', zhongdianci.TiJiaoRenWuzhongDianCi),                                 # 返回任务
 
+    # 公共功能
+    url(r'^gonggong_exit_delete', exit_delete.gonggong_exit_delete),                                 # 公共删除
 
 ]
