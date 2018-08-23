@@ -673,10 +673,10 @@ class shouluChaXun():
             self.shouLuReturnsTheResult(data_dict)
         else:
             return
-if __name__ == '__main__':
-
-    objs = shouluChaXun()
-    objs.start()
+# if __name__ == '__main__':
+#
+#     objs = shouluChaXun()
+#     objs.start()
 
 
 
@@ -1414,4 +1414,15 @@ def start():
 # str_re = re.findall("(.*)http", strt.replace('\t', ''))
 # print(str_re[0])
 # print(strt.split(str_re[0]))
+
+
+
+url = 'http://api.zhugeyingxiao.com/zhugedanao/gonggong_exit_delete?timestamp=1534892912986&rand_str=d8ba5392b85e56d9e3631aaf1822e7d8&user_id=10'
+# url = 'http://127.0.0.1:8000/zhugedanao/gonggong_exit_delete?timestamp=1534157927644&rand_str=326e44a7eee743971a17dd69eb39e1fc&user_id=10'
+
+# url = 'http://127.0.0.1:8000/zhugedanao/shouLuChaxun/clickReturn/0?timestamp=1534892912986&rand_str=d8ba5392b85e56d9e3631aaf1822e7d8&user_id=10'
+# url = 'http://127.0.0.1:8000/zhugedanao/shouLuChaxun/clickReturn/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11'
+ret = requests.get(url)
+print(ret.status_code)
+print(json.loads(ret.text))
 
