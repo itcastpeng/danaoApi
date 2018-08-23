@@ -673,10 +673,10 @@ class shouluChaXun():
             self.shouLuReturnsTheResult(data_dict)
         else:
             return
-if __name__ == '__main__':
+# if __name__ == '__main__':
 
-    objs = shouluChaXun()
-    objs.start()
+    # objs = shouluChaXun()
+    # objs.start()
 
 
 # import datetime, time
@@ -1415,3 +1415,12 @@ def start():
 
 
 
+
+p = """asdasda
+    saf 
+    asd a
+    
+    asd 
+    """
+for url in p.split('\r\n'):
+    print(url)

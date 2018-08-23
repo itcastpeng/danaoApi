@@ -29,9 +29,13 @@ class AddForm(forms.Form):
     def clean_url(self):
         url_list = []
         url = self.data.get('url')
-        for i in url.strip().split():
-            if i.strip():
+        url_num = 0
+        for i in url.split('\n'):
+            url_num += 1
+            if i:
                 url_list.append(i.strip())
+            else:
+                self.add_error('url', '第{}行不能为空!'.format(url_num))
         if len(url_list) == 0:
             self.add_error('url', '提交链接不能为空')
         else:
