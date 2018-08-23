@@ -163,11 +163,11 @@ def fuGaiChaXun(request, oper_type, o_id):
 
     elif request.method == 'GET':
         # 点击返回 删除任务
-        # if oper_type == 'clickReturn':
-        #     models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id).delete()
-        #     response.code = 200
-        #     response.msg = "退出成功"
-        #     return JsonResponse(response.__dict__)
+        if oper_type == 'clickReturn':
+            models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id).delete()
+            response.code = 200
+            response.msg = "退出成功"
+            return JsonResponse(response.__dict__)
 
         # 生成报表
         if oper_type == 'generateExcel':
