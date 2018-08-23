@@ -123,15 +123,15 @@ def zhongDianCiDetailShowTaskList(request):
                 'task_name':objs[0].tid.task_name,
                 'headers_list':headers_list,
             }
-            response.code = 200
-            response.msg = '查询成功'
             response.data = json.dumps(exit_data_list)
+        else:
+            response.data = {}
+        response.code = 200
+        response.msg = '查询成功'
     else:
         response.code = 402
         response.msg = "数据类型验证失败"
         response.data = json.loads(forms_obj.errors.as_json())
-    print('==============> ', response.data)
-
     return JsonResponse(response.__dict__)
 
 #  增删改
@@ -254,11 +254,13 @@ def zhongDianCiOper(request, oper_type, o_id):
             if objs:
                 task_name = objs[0].task_name
                 task_start_time = objs[0].task_start_time
+                qiyong_status = objs[0].qiyong_status
                 response.code = 200
                 response.msg = '修改查询成功'
                 response.data = {
                     'task_name':task_name,
-                    'task_start_time':task_start_time
+                    'task_start_time':task_start_time,
+                    'qiyong_status':qiyong_status
                 }
                 return JsonResponse(response.__dict__)
 
@@ -266,6 +268,7 @@ def zhongDianCiOper(request, oper_type, o_id):
         if oper_type == 'update':
             task_name = request.POST.get('task_name')
             task_start_time = request.POST.get('task_start_time')
+            qiyong_status = request.POST.get('qiyong_status')
             print('task_name=-======> ',task_name , task_start_time)
             objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(
                 user_id_id=user_id,
@@ -283,7 +286,8 @@ def zhongDianCiOper(request, oper_type, o_id):
             objs.update(
                 task_name=task_name,
                 task_start_time=task_start_time,
-                next_datetime=next_datetime
+                next_datetime=next_datetime,
+                qiyong_status=qiyong_status
             )
             response.code = 200
             response.msg = '修改成功'

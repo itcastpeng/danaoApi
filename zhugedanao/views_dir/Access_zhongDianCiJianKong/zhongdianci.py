@@ -6,17 +6,32 @@ import time
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
-import json
-
+import json, requests
 
 
 response = Response.ResponseObj()
+
+@csrf_exempt
+def zhongDianCiChaXunLiJiJianKong(request):
+    id_list = request.GET.get('id_list')
+    if id_list:
+        for id in id_list.split(','):
+            print(id)
+            url = 'http://127.0.0.1:8000/zhugedanao/zhongDianCiChaXunDecideIsTask?lijijiankong={}'.format(id)
+            # url = 'http://api.zhugeyingxiao.com/zhugedanao/zhongDianCiChaXunDecideIsTask?lijijiankong={}'.format(id)
+            requests.get(url)
+    response.code = 200
+    return JsonResponse(response.__dict__)
+
 @csrf_exempt
 def zhongDianCiChaXunDecideIsTask(request):
+    lijijiankong = request.GET.get('lijijiankong')
     start_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:59')
     q = Q()
     q.add(Q(qiyong_status=1) & Q(next_datetime__lte=start_time), Q.AND)
     objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(q)[:1]
+    if lijijiankong:
+        objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=lijijiankong)
     flag = False
     if objs:
         task_id = objs[0].id
