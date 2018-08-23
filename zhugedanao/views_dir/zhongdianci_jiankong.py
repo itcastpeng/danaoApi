@@ -72,9 +72,11 @@ def zhongDianCiDetailShowTaskList(request):
     user_id = request.GET.get('user_id')
     tid = request.GET.get('tid')
     forms_obj = SelectForm(request.GET)
+    exit_data_list = {}
     if forms_obj.is_valid():
         current_page = forms_obj.cleaned_data['current_page']
         length = forms_obj.cleaned_data['length']
+        # print('tid=============> ',tid)
         objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.select_related('tid__user_id').filter(
             tid__user_id=user_id,
             tid=tid
@@ -85,33 +87,51 @@ def zhongDianCiDetailShowTaskList(request):
             start_line = (current_page - 1) * length
             stop_line = start_line + length
             objs = objs[start_line: stop_line]
+        data_list = []
+        headers_list = []
         if objs:
-            data_list = []
             for obj in objs:
+                detail_objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.filter(tid_id=obj.id)[0:3]
+                sanci_chaxun = {}
+                if detail_objs:
+                    for detail_obj in detail_objs:
+                        shoulu = '否'
+                        if detail_obj.is_shoulu == 1:
+                            shoulu = '是'
+                        detail_create = detail_obj.create_time.strftime('%Y-%m-%d %H:%M:%S')
+                        if detail_create not in headers_list:
+                            headers_list.append(str(detail_create))
+                        sanci_chaxun[detail_create] = {
+                            'detail_create': detail_create,
+                            'shoulu': shoulu,
+                            'paiming': detail_obj.paiming
+                        }
                 data_list.append({
                     "id": obj.id,
-                    "tid": obj.tid_id,
+                    # "tid": obj.tid_id,
                     "search_engine": obj.search_engine,
                     "lianjie": obj.lianjie,
                     "keywords": obj.keyword,
                     "mohupipei": obj.mohupipei,
-                    "create_time": obj.create_time,
+                    # "create_time": obj.create_time,
+                    'sanci_chaxun':sanci_chaxun,
                 })
-            data_dict = {
+                # print('data_list====> ',data_list)
+            exit_data_list = {
                 'count_page':detail_task_count,
                 'data_list':data_list,
-                'task_name':objs[0].tid.task_name
+                'task_name':objs[0].tid.task_name,
+                'headers_list':headers_list,
             }
             response.code = 200
             response.msg = '查询成功'
-            response.data = {'data_dict':data_dict}
-        else:
-            response.code = 403
-            response.msg = '无任务'
+            response.data = json.dumps(exit_data_list)
     else:
         response.code = 402
         response.msg = "数据类型验证失败"
         response.data = json.loads(forms_obj.errors.as_json())
+    print('==============> ', response.data)
+
     return JsonResponse(response.__dict__)
 
 #  增删改
