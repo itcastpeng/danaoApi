@@ -91,7 +91,7 @@ def index(request):
                 else:
                     ret_obj = we_chat_public_send_msg_obj.get_user_info(openid=openid)
                     print('ret_obj -->', ret_obj)
-                    nickname = base64.b64encode(ret_obj['nickname'].encode(encoding='utf-8'))
+                    nickname = base64.b64encode(json.loads(ret_obj['nickname']).encode(encoding='utf-8'))
                     models.zhugedanao_userprofile.objects.create(
                         openid=openid,
                         token=get_token(timestamp),
