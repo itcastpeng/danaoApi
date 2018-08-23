@@ -1425,16 +1425,27 @@ def start():
 # ret = requests.get(url)
 # print(ret.status_code)
 # print(json.loads(ret.text))
-
-
 import base64
-p = '科技僧加速度'
-bp = base64.b16encode(p.encode('utf-8'))
-print(bp)
+copyright = 'Copyright (c) 2012 Doucube Inc. All rights reserved.'
+bytesString = copyright.encode(encoding="utf-8")
+print(bytesString)
 
-mp = str(bp, 'utf8')
+#base64 编码
+encodestr = base64.b64encode(bytesString)
+print(encodestr)
+print(encodestr.decode())
 
-m = base64.b16decode(mp).decode()
-print(m)
+#解码
+decodestr = base64.b64decode(encodestr)
+print(decodestr.decode())
 
 
+p = '字符串'
+m = p.encode(encoding="utf-8")
+encodestr = base64.b64encode(m)
+print(encodestr.decode())
+
+decodestr = base64.b64decode(encodestr)
+print(decodestr.decode())
+
+nickname = base64.b64encode(copyright.encode(encoding='utf-8'))

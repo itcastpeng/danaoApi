@@ -91,8 +91,7 @@ def index(request):
                 else:
                     ret_obj = we_chat_public_send_msg_obj.get_user_info(openid=openid)
                     print('ret_obj -->', ret_obj)
-                    nickname = base64.b16encode(ret_obj['nickname'].encode('utf-8'))
-                    str_nickname = str(nickname, 'utf8')
+                    nickname = base64.b64encode(ret_obj['nickname'].encode(encoding='utf-8'))
                     models.zhugedanao_userprofile.objects.create(
                         openid=openid,
                         token=get_token(timestamp),
@@ -103,7 +102,7 @@ def index(request):
                         city=ret_obj['city'],
                         subscribe_time=ret_obj['subscribe_time'],
                         set_avator=ret_obj['headimgurl'],
-                        username=str_nickname,
+                        username=nickname,
                     )
 
 
@@ -131,7 +130,7 @@ def wechat_login(request):
             'token': user_obj.token,
             'user_id': user_obj.id,
             'set_avator': user_obj.set_avator,
-            'username': base64.b16decode(user_obj.username).decode(),
+            'username': base64.b64decode(user_obj.username).decode(),
             'level_name': user_obj.level_name.name
         }
         response.msg = "登录成功"
