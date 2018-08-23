@@ -25,17 +25,6 @@ def fuGaiChaxunShow(request):
             objs = models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id)
             dataCount = objs.count()        # 覆盖总数
             objs_eidt = objs.filter(is_zhixing=1)
-            fugai_objs =objs_eidt.filter(paiming_detail__isnull=False)
-            paiming_num = fugai_objs.count()
-            fugai_num = 0
-            for fugai_obj in fugai_objs:
-                fugai_num += len(fugai_obj.paiming_detail.split(','))
-            fugailv = 0
-            if fugai_num:
-                fugailv = int((int(fugai_num) / int(dataCount * 10)) * 100)
-            paiminglv = 0
-            if paiming_num:
-                paiminglv = int((int(paiming_num) / int(dataCount)) * 100)
             # 已完成 进度条
             yiZhiXingCount = objs_eidt.count()
             yiWanCheng = 0
@@ -45,6 +34,17 @@ def fuGaiChaxunShow(request):
             whether_complete = False
             if dataCount == yiWanCheng:
                 whether_complete = True
+            # fugai_objs = objs_eidt.filter(paiming_detail__isnull=False)
+            # paiming_num = fugai_objs.count()
+            # fugai_num = 0
+            # for fugai_obj in fugai_objs:
+            #     fugai_num += len(fugai_obj.paiming_detail.split(','))
+            # fugailv = 0
+            # if fugai_num:
+            #     fugailv = int((int(fugai_num) / int(dataCount * 10)) * 100)
+            # paiminglv = 0
+            # if paiming_num:
+            #     paiminglv = int((int(paiming_num) / int(dataCount)) * 100)
             # 分页
             if length != 0:
                 start_line = (current_page - 1) * length
@@ -53,6 +53,7 @@ def fuGaiChaxunShow(request):
 
             # 返回的数据
             data_list = []
+            rank_num_count = 0
             for obj in objs:
                 if obj.json_detail_data:
                     pass
@@ -66,17 +67,29 @@ def fuGaiChaxunShow(request):
                     yinqing = '手机360'
                 else:
                     yinqing = ''
-                paiming_detail = 0
-                if obj.paiming_detail:
-                    paiming_detail = len(obj.paiming_detail.split(','))
+                rank_num = 0
+                paiming_detail = '-'
+                print(obj.paiming_detail, type(obj.paiming_detail))
+                if obj.paiming_detail != '0':
+                    if obj.paiming_detail:
+                        print('======')
+                        rank_num = len(obj.paiming_detail.split(','))
+                        paiming_detail = str(set(eval(obj.paiming_detail)))
+                rank_num_count += rank_num
                 data_list.append({
                     'id':obj.id,
                     'keyword':obj.keyword,
                     'search_engine':yinqing,
-                    'rank_info':set(obj.paiming_detail),
+                    'rank_info':paiming_detail,
                     'otherData':obj.json_detail_data,
-                    'rank_num':paiming_detail
+                    'rank_num':rank_num
                     })
+            paiminglv = 0
+            if rank_num_count:
+                paiminglv = int((int(rank_num_count) / (int(dataCount) * 10)) * 100)
+            fugailv = 0
+            if rank_num_count:
+                fugailv = int((int(rank_num_count) / int(dataCount * 10)) * 100)
             query_progress = 0
             if yiZhiXingCount:
                 query_progress = int((yiZhiXingCount / dataCount) * 100)
@@ -85,7 +98,7 @@ def fuGaiChaxunShow(request):
             response.data = {
                 'retData': data_list,                   # 详情
                 'dataCount': dataCount,                 # 任务总数
-                'paiming_num':paiming_num,              # 有排名数
+                'paiming_num':rank_num_count,           # 有排名数
                 'fugailv':fugailv,                      # 覆盖率
                 'paiminglv':paiminglv,                  # 排名率
                 'yiwancheng_obj':yiWanCheng,            # 已完成数量

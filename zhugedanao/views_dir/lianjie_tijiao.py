@@ -91,12 +91,11 @@ def lianjie_tijiao(request):
             }
         else:
             response.code = 301
-            # response.msg = "请求异常"
+            response.msg = "数据类型验证失败"
             response.data = json.loads(forms_obj.errors.as_json())
     else:
         response.code = 402
         response.msg = "请求异常"
-
     return JsonResponse(response.__dict__)
 
 
@@ -137,12 +136,15 @@ def lianjie_tijiao_detail(request):
                     ).count()
                     obj.count = tijiaocishu
                     obj.save()
+                    if int(tijiaocishu) >= 3 and int(obj.status) != 2:
+                        obj.status = 3
+                        obj.save()
                     #  将查询出来的数据 加入列表
                     ret_data.append({
                         'id': obj.id,
                         'url': obj.url,
                         'count': obj.count,                         # 详情数据提交次数
-                        'status_text': obj.get_status_display(),    # 查询状态
+                        'status_text':obj.get_status_display(),    # 查询状态
                     })
                 #  查询成功 返回200 状态码
                 response.code = 200
@@ -153,7 +155,7 @@ def lianjie_tijiao_detail(request):
                 }
         else:
             response.code = 301
-            # response.msg = "请求异常"
+            response.msg = "数据类型验证失败"
             response.data = json.loads(forms_obj.errors.as_json())
     else:
         response.code = 402

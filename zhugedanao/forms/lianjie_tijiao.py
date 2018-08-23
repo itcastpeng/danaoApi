@@ -36,14 +36,16 @@ class AddForm(forms.Form):
             self.add_error('url', '提交链接不能为空')
         else:
             url_list_data = []
+            num = 0
             for url_re in url_list:
+                num += 1
                 pattern = re.compile(
                     r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
                 url = re.findall(pattern, url_re)
                 if url:
                     url_list_data.append(url[0])
                 else:
-                    self.add_error('url', '请输入正确链接')
+                    self.add_error('url', '第{}行请输入正确链接'.format(num))
             return url_list_data
 
 
