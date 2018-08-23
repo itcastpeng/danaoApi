@@ -402,6 +402,39 @@ task_status             POST                是                   任务状态
 }
 ```
 
+#### 重点词监控 修改任务前查询 说明
+``` 
+http请求方式： POST
+http请求url：  http://127.0.0.1:8000/zhugedanao/zhongDianCiOper/update_show/17?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "修改查询成功",
+    "code": 200,
+    "data": {
+        "task_name": "任务",
+        "task_start_time": "07:50:20"
+    }
+}
+```
+
+#### 重点词监控 确认修改 说明
+``` 
+http请求方式：  POST
+http请求url： http://127.0.0.1:8000/zhugedanao/zhongDianCiOper/update/17?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11 
+参数   			        请求方式		        是否必须 		        说明
+task_name               POST                  否                 任务名称
+task_start_time         POST                  否                 任务开始时间
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "修改成功",
+    "code": 200,
+    "data": {}
+}
+```
+
 #### 重点词监控 删除任务 说明
 ``` 
 http请求方式： POST
