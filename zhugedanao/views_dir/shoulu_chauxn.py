@@ -140,11 +140,11 @@ def shouLuChaxun(request, oper_type, o_id):
     elif request.method == 'GET':
 
         # 点击返回 删除任务
-        # if oper_type == 'clickReturn':
-        #     response.code = 200
-        #     response.msg = '退出成功'
-        #     models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
-        #     return JsonResponse(response.__dict__)
+        if oper_type == 'clickReturn':
+            response.code = 200
+            response.msg = '退出成功'
+            models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
+            return JsonResponse(response.__dict__)
 
             # 生成报表
 
