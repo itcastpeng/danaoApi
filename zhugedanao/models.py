@@ -201,6 +201,6 @@ class zhugedanao_zhongdianci_jiankong_taskDetail(models.Model):
 # 重点词监控 详情数据
 class zhugedanao_zhongdianci_jiankong_taskDetailData(models.Model):
     tid = models.ForeignKey(to='zhugedanao_zhongdianci_jiankong_taskDetail', verbose_name='任务列表', null=True, blank=True)
-    paiming = models.IntegerField(verbose_name='排名', default=0)
+    paiming = models.CharField(verbose_name='排名', max_length=64, default=0)
     is_shoulu = models.BooleanField(verbose_name='收录', default=0)
-    create_time = models.DateField(verbose_name='创建时间', null=True, blank=True)
+    create_time = models.DateTimeField(verbose_name='创建时间', null=True, blank=True)

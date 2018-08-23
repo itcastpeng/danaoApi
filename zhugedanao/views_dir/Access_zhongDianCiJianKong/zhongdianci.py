@@ -71,6 +71,7 @@ def HuoQuRenWuzhongDianCi(request):
         response.code = 200
         response.msg = '查询成功'
         response.data = {
+            'tid':objs[0].id,
             'lianjie':objs[0].lianjie,
             'detail_id':objs[0].id,
             'search_engine':objs[0].search_engine,
@@ -86,15 +87,34 @@ def HuoQuRenWuzhongDianCi(request):
 @csrf_exempt
 def TiJiaoRenWuzhongDianCi(request):
     if request.method == 'POST':
-        pass
-
-
+        tid = request.POST.get('tid')
+        resultObj = request.POST.get('resultObj')
+        judge = request.POST.get('judge')
+        json_data = json.loads(resultObj)
+        now_data = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        if judge == 'shoulu':
+            models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
+                tid_id=tid,
+                create_time=now_data,
+                paiming=json_data['order'],
+                is_shoulu=json_data['shoulu']
+            )
+        else:
+            paiming = str(','.join(map(str, json_data)))
+            print(paiming, type(paiming))
+            models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
+                tid_id=tid,
+                create_time=now_data,
+                paiming=paiming,
+            )
+        response.code = 200
+        response.msg = '已完成'
     else:
         response.code = ''
         response.msg = ''
         response.data = {}
 
-
+    return JsonResponse(response.__dict__)
 
 
 
