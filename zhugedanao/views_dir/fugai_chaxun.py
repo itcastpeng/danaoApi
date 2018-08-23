@@ -11,6 +11,7 @@ from zhugedanao.forms.fugai_chaxun import AddForm, SelectForm
 import json
 import random
 
+chongfu = 0
 # cerf  token验证 用户展示模块
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
@@ -102,7 +103,7 @@ def fuGaiChaxunShow(request):
                 'fugailv':fugailv,                      # 覆盖率
                 'paiminglv':paiminglv,                  # 排名率
                 'yiwancheng_obj':yiWanCheng,            # 已完成数量
-                'chongfu_num':0,                        # 重复数
+                'chongfu_num':chongfu,                  # 重复数
                 'whether_complete':whether_complete,    # 是否全部完成
                 'query_progress':query_progress         # 进度条
             }
@@ -134,9 +135,12 @@ def fuGaiChaXun(request, oper_type, o_id):
             forms_obj = AddForm(form_data)
             if forms_obj.is_valid():
                 print("验证通过")
+                global chongfu
+
+                chongfu = int(len(forms_obj.cleaned_data.get('keywords_list'))) - int(len(set(forms_obj.cleaned_data.get('keywords_list'))))
                  # 添加数据库
                 search_list = forms_obj.cleaned_data.get('search_list')
-                keywords_list = forms_obj.cleaned_data.get('keywords_list')
+                keywords_list = set(forms_obj.cleaned_data.get('keywords_list'))
                 conditions_list = forms_obj.cleaned_data.get('conditions_list')
                 querysetlist = []
                 now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')

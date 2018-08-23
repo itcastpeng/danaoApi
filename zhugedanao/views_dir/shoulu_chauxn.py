@@ -11,6 +11,7 @@ from zhugedanao.forms.shoulu_chaxun import AddForm, SelectForm
 import json
 import random
 
+chongfu = 0
 
 # cerf  token验证 用户展示模块
 @csrf_exempt
@@ -18,14 +19,20 @@ import random
 def shouLuChaXunShow(request):
     response = Response.ResponseObj()
     user_id = request.GET.get('user_id')
+    difference_status = request.GET.get('difference_status')
     if request.method == "GET":
         forms_obj = SelectForm(request.GET)
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
             objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id)
-            dataCount = objs.count()        # 收录数据总数
+            if difference_status:
+                if int(difference_status) == 0:         # 已收录
+                    objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id, is_shoulu=1)
+                if int(difference_status) == 1:         # 未收录
+                    objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id, is_shoulu=2)
 
+            dataCount = objs.count()        # 收录数据总数
             # 已完成 进度条
             zhixingCount = objs.filter(is_zhixing=1)
             yiZhiXingCount = zhixingCount.count()
@@ -83,7 +90,7 @@ def shouLuChaXunShow(request):
                 'yiwancheng_obj':yiZhiXingCount,        # 已完成数量
                 'query_progress':query_progress,        # 进度条
                 'whether_complete':whether_complete,    # 是否全部完成
-                'chongfu_num':0,                        # 重复数
+                'chongfu_num':chongfu,                        # 重复数
             }
         else:
             response.code = 402
@@ -111,9 +118,12 @@ def shouLuChaxun(request, oper_type, o_id):
             #  创建 form验证 实例（参数默认转成字典）
             forms_obj = AddForm(form_data)
             if forms_obj.is_valid():
-                # print("验证通过")
+                global chongfu
+                print("验证通过")
                 #  添加数据库
-                url_list = forms_obj.cleaned_data.get('url_list')
+                print('-------->', forms_obj.cleaned_data.get('url_list'), type(forms_obj.cleaned_data.get('url_list')))
+                chongfu = int(len(forms_obj.cleaned_data.get('url_list'))) - int(len(set(forms_obj.cleaned_data.get('url_list'))))
+                url_list = set(forms_obj.cleaned_data.get('url_list'))
                 search_list = forms_obj.cleaned_data.get('search_list')
                 querysetlist = []
                 now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
@@ -130,12 +140,12 @@ def shouLuChaxun(request, oper_type, o_id):
                 models.zhugedanao_shoulu_chaxun.objects.bulk_create(querysetlist)
                 response.code = 200
                 response.msg = "添加成功"
-                response.data = {"url_list":url_list}
+                response.data = {}
             else:
                 print("验证不通过")
                 response.code = 301
                 response.msg = json.loads(forms_obj.errors.as_json())
-                response.data = {'ooooo':form_data}
+                response.data = {}
 
     elif request.method == 'GET':
 
@@ -143,6 +153,7 @@ def shouLuChaxun(request, oper_type, o_id):
         if oper_type == 'clickReturn':
             response.code = 200
             response.msg = '退出成功'
+            print('user_id=====> ',user_id)
             models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
             return JsonResponse(response.__dict__)
 

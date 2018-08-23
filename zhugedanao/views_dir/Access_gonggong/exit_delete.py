@@ -4,8 +4,11 @@ from publicFunc import Response
 import requests
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 response = Response.ResponseObj()
+from publicFunc import account
 
 
+@csrf_exempt
+@account.is_token(models.zhugedanao_userprofile)
 def gonggong_exit_delete(request):
     user_id = request.GET.get('user_id')
     timestamp = request.GET.get('timestamp')

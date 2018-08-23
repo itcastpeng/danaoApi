@@ -471,18 +471,18 @@ class shouLuPcChongCha():
                 domain = parse.unquote_plus(domain)
                 if domain in ret_two_url or domain == ret_two_url:
                     if f13_div.find('a'):
+                        resultObj["shoulu"] = 1
                         resultObj["title"] = title
                         resultObj["status_code"] = status_code
-                        resultObj["shoulu"] = 1
+                        if div_tags[0].find('span', class_='newTimeFactor_before_abs'):
+                            resultObj["kuaizhao_time"] = div_tags[0].find('span',
+                                class_='newTimeFactor_before_abs').get_text().strip().replace('-', '').replace('年',
+                                '-').replace('月', '-').replace('日', '').strip()
                 else:
                     status_code, title, ret_two_url = self.getPageInfo(domain)
                     resultObj["title"] = title
                     resultObj["status_code"] = status_code
                     resultObj["shoulu"] = 0
-                if div_tags[0].find('span', class_='newTimeFactor_before_abs'):
-                    resultObj["kuaizhao_time"] = div_tags[0].find('span',
-                        class_='newTimeFactor_before_abs').get_text().strip().replace('-', '').replace('年',
-                        '-').replace('月', '-').replace('日', '').strip()
         return resultObj
 
     # 百度移动端收录查询
@@ -673,10 +673,10 @@ class shouluChaXun():
             self.shouLuReturnsTheResult(data_dict)
         else:
             return
-if __name__ == '__main__':
-
-    objs = shouluChaXun()
-    objs.start()
+# if __name__ == '__main__':
+#
+#     objs = shouluChaXun()
+#     objs.start()
 
 
 
@@ -1414,4 +1414,27 @@ def start():
 # str_re = re.findall("(.*)http", strt.replace('\t', ''))
 # print(str_re[0])
 # print(strt.split(str_re[0]))
+
+
+
+# url = 'http://api.zhugeyingxiao.com/zhugedanao/gonggong_exit_delete?timestamp=1534892912986&rand_str=d8ba5392b85e56d9e3631aaf1822e7d8&user_id=10'
+# # url = 'http://127.0.0.1:8000/zhugedanao/gonggong_exit_delete?timestamp=1534157927644&rand_str=326e44a7eee743971a17dd69eb39e1fc&user_id=10'
+#
+# # url = 'http://127.0.0.1:8000/zhugedanao/shouLuChaxun/clickReturn/0?timestamp=1534892912986&rand_str=d8ba5392b85e56d9e3631aaf1822e7d8&user_id=10'
+# # url = 'http://127.0.0.1:8000/zhugedanao/shouLuChaxun/clickReturn/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11'
+# ret = requests.get(url)
+# print(ret.status_code)
+# print(json.loads(ret.text))
+
+
+import base64
+p = '科技僧加速度'
+bp = base64.b16encode(p.encode('utf-8'))
+print(bp)
+
+mp = str(bp, 'utf8')
+
+m = base64.b16decode(mp).decode()
+print(m)
+
 
