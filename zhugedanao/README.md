@@ -211,7 +211,7 @@ http请求url： http://127.0.0.1:8000/zhugedanao/shouLuChaxun/generateExcel/0?t
 http请求方式： GET
 http情求url： http://127.0.0.1:8000/zhugedanao/shouLuChaXunShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
 参数   			请求方式		是否必须 		        说明
-无
+difference_status  GET      否               difference_status 为0只看已收录 为1只看未收录
 
 返回说明 （正常时返回的json数据 示例）
 {

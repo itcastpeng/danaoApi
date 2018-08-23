@@ -19,14 +19,20 @@ chongfu = 0
 def shouLuChaXunShow(request):
     response = Response.ResponseObj()
     user_id = request.GET.get('user_id')
+    difference_status = request.GET.get('difference_status')
     if request.method == "GET":
         forms_obj = SelectForm(request.GET)
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
             objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id)
-            dataCount = objs.count()        # 收录数据总数
+            if difference_status:
+                if int(difference_status) == 0:         # 已收录
+                    objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id, is_shoulu=1)
+                if int(difference_status) == 1:         # 未收录
+                    objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id, is_shoulu=2)
 
+            dataCount = objs.count()        # 收录数据总数
             # 已完成 进度条
             zhixingCount = objs.filter(is_zhixing=1)
             yiZhiXingCount = zhixingCount.count()
