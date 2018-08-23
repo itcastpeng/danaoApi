@@ -125,17 +125,17 @@ def wechat_login(request):
     user_objs = models.zhugedanao_userprofile.objects.select_related('level_name').filter(timestamp=timestamp)
     if user_objs:
         user_obj = user_objs[0]
-        username = ''
-        print('user_obj.username---------1> ',user_obj.username)
-        if user_obj.username:
-            username = base64.b64decode(user_obj.username).decode()
-        print('user_obj.username---------2> ',user_obj.username)
+        # username = ''
+        # print('user_obj.username---------1> ',user_obj.username)
+        # if user_obj.username:
+        #     username = base64.b64decode(user_obj.username).decode()
+        # print('user_obj.username---------2> ',user_obj.username)
         response.code = 200
         response.data = {
             'token': user_obj.token,
             'user_id': user_obj.id,
             'set_avator': user_obj.set_avator,
-            'username': username,
+            'username': user_obj.username,
             'level_name': user_obj.level_name.name
         }
         response.msg = "登录成功"
