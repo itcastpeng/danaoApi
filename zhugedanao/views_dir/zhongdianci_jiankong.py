@@ -208,7 +208,7 @@ def zhongDianCiOper(request, oper_type, o_id):
             return JsonResponse(response.__dict__)
 
         # 删除任务
-        if oper_type == 'delete':
+        if oper_type == 'exct_delete':
             id_list = request.POST.get('id_list')
             json_id_list = json.loads(id_list)
             for id in json_id_list:
