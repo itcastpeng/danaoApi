@@ -10,6 +10,7 @@ from zhugedanao.views_dir.Access_shouluChaxun import shouluchauxn
 from zhugedanao.views_dir.Access_fugaiChaxun import fugaichaxun
 from zhugedanao.views_dir.Access_zhongDianCiJianKong import zhongdianci
 from zhugedanao.views_dir.Access_gonggong import exit_delete
+from zhugedanao.views_dir.Access_baiDuXiaLa import baiduxiala
 urlpatterns = [
 
     # url(r'^w_login',login.w_login),
@@ -60,6 +61,9 @@ urlpatterns = [
 
     # 百度下拉
     url(r'^baiDuXiaLa/(?P<oper_type>\w+)/(?P<o_id>\d+)', baidu_xiala.baiDuXiaLa),                # 操作
+    url(r'^baiDuXiaLaDecideIsTask', baiduxiala.baiDuXiaLaDecideIsTask),                           # 定时刷新更改状态
+    url(r'^baiDuXiaLaHuoQuRenWu', baiduxiala.baiDuXiaLaHuoQuRenWu),                           # 定时刷新更改状态
+    url(r'^baiDuXiaLaTiJiaoRenWu', baiduxiala.baiDuXiaLaTiJiaoRenWu),                           # 定时刷新更改状态
 
 
 ]
