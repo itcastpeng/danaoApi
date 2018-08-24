@@ -12,13 +12,15 @@ class AddForm(forms.Form):
             'required': "搜索引擎不能为空"
         }
     )
-    keywords = forms.CharField(
+    url_list = forms.CharField(
         required=True,
         error_messages={
             'required': "提交链接不能为空"
         }
     )
-
+    def clean_url_list(self):
+        url_list = self.data.get('url_list')
+        return url_list.split()
 
 
 # 判断是否是数字
