@@ -12,13 +12,14 @@ import json, requests
 response = Response.ResponseObj()
 
 @csrf_exempt
-def zhongDianCiChaXunLiJiJianKong(request):
+def zhongDianCiChaXunLiJiJianKong(request):    # 立即监控
     id_list = request.GET.get('id_list')
     if id_list:
-        for id in id_list.split(','):
-            print(id)
-            # url = 'http://127.0.0.1:8000/zhugedanao/zhongDianCiChaXunDecideIsTask?lijijiankong={}'.format(id)
-            url = 'http://api.zhugeyingxiao.com/zhugedanao/zhongDianCiChaXunDecideIsTask?lijijiankong={}'.format(id)
+        id_list = json.loads(id_list)
+        for id in id_list:
+            print('=============', id )
+            url = 'http://127.0.0.1:8000/zhugedanao/timeToRefreshZhgongDianCi?lijijiankong={}'.format(id)
+            # url = 'http://api.zhugeyingxiao.com/zhugedanao/timeToRefreshZhgongDianCi?lijijiankong={}'.format(id)
             requests.get(url)
         response.code = 200
         response.msg = '监控成功'
@@ -28,46 +29,53 @@ def zhongDianCiChaXunLiJiJianKong(request):
     return JsonResponse(response.__dict__)
 
 @csrf_exempt
-def zhongDianCiChaXunDecideIsTask(request):
+def timeToRefreshZhgongDianCi(request):     # 定时刷新 更改下一次执行时间
     lijijiankong = request.GET.get('lijijiankong')
     start_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:59')
-    # q = Q()
-    # q.add(Q(tid__qiyong_status=1) & Q(tid__next_datetime__lte=start_time), Q.AND)
-    # objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(q)[:1]
+    if lijijiankong:
+        print('=----------------》 ', lijijiankong)
+        task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=lijijiankong)
+    else:
+        objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(
+            tid__task_status=2,
+            tid__qiyong_status=1,
+            tid__next_datetime__lte=start_time,
+            is_perform=0
+        )[:1]
+        if objs:
+            task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=objs[0].tid.id)
+    if task_list_objs:
+        task_list_objs.update(
+            task_status=3,
+            is_zhixing=1
+        )
+        next_datetime = task_list_objs[0].next_datetime
+        now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
+        if next_datetime <= now_datetime:
+            next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
+            task_list_objs.update(next_datetime=next_datetime_addoneday)
+            models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=objs[0].tid.id).update(is_perform=1)
+        response.code = 200
+        response.msg = '查询成功'
+    else:
+        response.code = 403
+        response.msg = '无任务'
+    return JsonResponse(response.__dict__)
+
+
+@csrf_exempt
+def zhongDianCiChaXunDecideIsTask(request):     # 判断是否有任务
+    start_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:59')
     objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(
         tid__task_status=2,
         tid__qiyong_status=1,
         tid__next_datetime__lte=start_time,
         is_perform=0
     )[:1]
-    if lijijiankong:
-        objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=lijijiankong)
     flag = False
     if objs:
-        task_id = objs[0].id
-        detail_objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(
-            tid_id=task_id,
-        )
-        # 判断是任务列表是否有任务
-        if detail_objs:
-            task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=task_id)
-            task_list_objs.update(
-                task_status=3,
-                is_zhixing=1
-            )
-            next_datetime = objs[0].next_datetime
-            now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
-            if next_datetime <= now_datetime:
-                next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
-                task_list_objs.update(next_datetime=next_datetime_addoneday)
-            detail_objs.filter(tid=task_id).update(is_perform=1)
-            flag = True
-        # 任务列表没有数据任务列表改为 未启用
-        else:
-            models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=task_id).update(
-                qiyong_status=0
-            )
+        flag = True
     canshu = '无任务'
     response.code = 403
     response.data = {}
@@ -80,7 +88,7 @@ def zhongDianCiChaXunDecideIsTask(request):
 
 
 @csrf_exempt
-def HuoQuRenWuzhongDianCi(request):
+def HuoQuRenWuzhongDianCi(request):         # 获取任务
     now = int(time.time())
     q = Q()
     q.add(Q(is_perform=1), Q.AND)
@@ -109,7 +117,7 @@ def HuoQuRenWuzhongDianCi(request):
     return JsonResponse(response.__dict__)
 
 @csrf_exempt
-def TiJiaoRenWuzhongDianCi(request):
+def TiJiaoRenWuzhongDianCi(request):        # 返回任务
     if request.method == 'POST':
         tid = request.POST.get('tid')
         resultObj = request.POST.get('resultObj')

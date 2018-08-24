@@ -482,6 +482,20 @@ id                      url                 是                   任务列表id
 }
 ```
 
+#### 重点词监控  立即监控 说明
+``` 
+http请求方式： GET
+http请求url： http://127.0.0.1:8000/zhugedanao/zhongDianCiChaXunLiJiJianKong?id_list=[28,2]
+参数   			        请求方式		        是否必须 		        说明
+id_list                 GET                 是                   要监控的id列表
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "监控成功",
+    "data": {},
+    "code": 200
+}
+```
 
 #### 公共删除功能 说明
 ``` 
