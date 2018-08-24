@@ -1,7 +1,7 @@
 from django import forms
 import re
 from zhugedanao import models
-import time
+import time, json
 
 
 # 添加
@@ -15,10 +15,9 @@ class AddForm(forms.Form):
     keywords = forms.CharField(
         required=True,
         error_messages={
-            'required': "关键词不能为空"
+            'required': "提交链接不能为空"
         }
     )
-
 
 
 

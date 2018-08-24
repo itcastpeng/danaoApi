@@ -210,6 +210,9 @@ class zhugedanao_pingtaiwajue_keyword(models.Model):
     create_time = models.DateTimeField(verbose_name='创建时间', null=True, blank=True)
     search = models.IntegerField(verbose_name='搜索引擎', default=0)
     keyword = models.CharField(verbose_name='关键词', max_length=64, null=True, blank=True)
+    user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
+    is_perform = models.BooleanField(verbose_name='是否执行', default=False)
+    time_stamp = models.IntegerField(verbose_name='时间戳', null=True, blank=True)
 
 class zhugedanao_pingtaiwajue_yuming(models.Model):
     create_time = models.DateTimeField(verbose_name='创建时间', null=True, blank=True)

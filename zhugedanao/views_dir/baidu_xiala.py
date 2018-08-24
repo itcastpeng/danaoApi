@@ -113,7 +113,6 @@ def baiDuXiaLa(request, oper_type, o_id):
         if oper_type == "add":
             # models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
             form_data = {
-                'search_list': request.POST.get('search_list'),
                 'keywords': request.POST.get('keywords'),
             }
             #  创建 form验证 实例（参数默认转成字典）
@@ -122,23 +121,22 @@ def baiDuXiaLa(request, oper_type, o_id):
                 global chongfu
                 print("验证通过")
                 #  添加数据库
-                print('-------->', forms_obj.cleaned_data.get('url_list'), type(forms_obj.cleaned_data.get('url_list')))
-                chongfu = int(len(forms_obj.cleaned_data.get('url_list'))) - int(len(set(forms_obj.cleaned_data.get('url_list'))))
-                url_list = set(forms_obj.cleaned_data.get('url_list'))
-                search_list = forms_obj.cleaned_data.get('search_list')
+                chongfu = int(len(forms_obj.cleaned_data.get('keywords'))) - int(len(set(forms_obj.cleaned_data.get('keywords'))))
+                print('chongfu============> ',chongfu)
+                keywords_list = set(forms_obj.cleaned_data.get('keywords'))
                 querysetlist = []
-                now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                for search in json.loads(search_list):
-                    for url in url_list:
-                        querysetlist.append(
-                            models.zhugedanao_shoulu_chaxun(
-                                user_id_id=user_id,
-                                url=url,
-                                search=search,
-                                createAndStart_time=now_date,
-                            )
+                create_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+                search = 1
+                for keyword in keywords_list:
+                    querysetlist.append(
+                        models.zhugedanao_pingtaiwajue_keyword(
+                            user_id_id=user_id,
+                            search=search,
+                            keyword=keyword,
+                            create_time=create_time
                         )
-                models.zhugedanao_shoulu_chaxun.objects.bulk_create(querysetlist)
+                    )
+                models.zhugedanao_pingtaiwajue_keyword.objects.bulk_create(querysetlist)
                 response.code = 200
                 response.msg = "添加成功"
                 response.data = {}
