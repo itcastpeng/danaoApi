@@ -12,7 +12,7 @@ from celery.schedules import crontab
 app = Celery(
     broker='redis://redis_host:6379/2',
     backend='redis://redis_host:6379/2',
-    include=['zhugeapi_celery_project.tasks'],
+    include=['danaoapi_celery_project.tasks'],
 )
 
 app.conf.beat_schedule = {
