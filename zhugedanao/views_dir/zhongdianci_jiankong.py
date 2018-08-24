@@ -30,25 +30,36 @@ def zhongDianCiShowTaskList(request):
                 stop_line = start_line + length
                 objs = objs[start_line: stop_line]
             if objs:
-                is_zhixing_count = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(
-                    tid=objs[0].id
-                ).filter(
-                    is_perform=1
-                ).count()
-                baifenbi = 0
-                if is_zhixing_count:
-                    baifenbi = int((is_zhixing_count / objs.count()) * 100)
+                # is_zhixing_count = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(
+                #     tid=objs[0].id
+                # ).filter(
+                #     is_perform=1
+                # ).count()
                 data_list = []
                 for obj in objs:
+                    # 查询跑出来的任务 数量 判断百分比
+                    detail_objs_count = obj.zhugedanao_zhongdianci_jiankong_taskdetail_set.filter(
+                        tid_id=obj.id,
+                    )
+                    detail_count = detail_objs_count.filter(is_perform=1).count()
+                    baifenbi = 0
+                    if detail_count:
+                        baifenbi = int((detail_count / detail_objs_count.count()) * 100)
                     qiyongstatus = '未启用'
                     if obj.qiyong_status:
                         qiyongstatus = '已启用'
+                    task_status = '正在查询'
+                    if int(obj.task_status) == 2:
+                        task_status = '未查询'
+                    elif int(obj.task_status) == 1:
+                        task_status = '已查询'
                     data_list.append({
                         "id": obj.id,
+                        'is_zhixing':obj.is_zhixing,
                         "qiyong_status": qiyongstatus,
                         "task_name": obj.task_name,
                         "task_start_time": obj.task_start_time,
-                        "task_status": obj.task_status,
+                        "task_status": task_status,
                         "search_engine": obj.search_engine.split(','),
                         'task_jindu': int(baifenbi),
                     })
@@ -192,7 +203,7 @@ def zhongDianCiOper(request, oper_type, o_id):
                                     models.zhugedanao_zhongdianci_jiankong_taskDetail(
                                         tid_id=objs.id,
                                         search_engine=search,
-                                        lianjie=url,
+                                        lianjie=url.strip(),
                                         keyword=re_keyword[0],
                                         create_time=create_time
                                     )

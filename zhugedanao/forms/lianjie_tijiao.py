@@ -38,6 +38,8 @@ class AddForm(forms.Form):
                 self.add_error('url', '第{}行不能为空!'.format(url_num))
         if len(url_list) == 0:
             self.add_error('url', '提交链接不能为空')
+        if len(url_list) > 500:
+            self.add_error('url', '提交链接大于五百条!')
         else:
             url_list_data = []
             num = 0

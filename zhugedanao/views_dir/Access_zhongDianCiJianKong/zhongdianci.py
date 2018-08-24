@@ -17,19 +17,29 @@ def zhongDianCiChaXunLiJiJianKong(request):
     if id_list:
         for id in id_list.split(','):
             print(id)
-            url = 'http://127.0.0.1:8000/zhugedanao/zhongDianCiChaXunDecideIsTask?lijijiankong={}'.format(id)
-            # url = 'http://api.zhugeyingxiao.com/zhugedanao/zhongDianCiChaXunDecideIsTask?lijijiankong={}'.format(id)
+            # url = 'http://127.0.0.1:8000/zhugedanao/zhongDianCiChaXunDecideIsTask?lijijiankong={}'.format(id)
+            url = 'http://api.zhugeyingxiao.com/zhugedanao/zhongDianCiChaXunDecideIsTask?lijijiankong={}'.format(id)
             requests.get(url)
-    response.code = 200
+        response.code = 200
+        response.msg = '监控成功'
+    else:
+        response.code = 303
+        response.msg = 'ID不能为空'
     return JsonResponse(response.__dict__)
 
 @csrf_exempt
 def zhongDianCiChaXunDecideIsTask(request):
     lijijiankong = request.GET.get('lijijiankong')
     start_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:59')
-    q = Q()
-    q.add(Q(qiyong_status=1) & Q(next_datetime__lte=start_time), Q.AND)
-    objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(q)[:1]
+    # q = Q()
+    # q.add(Q(tid__qiyong_status=1) & Q(tid__next_datetime__lte=start_time), Q.AND)
+    # objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(q)[:1]
+    objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(
+        tid__task_status=2,
+        tid__qiyong_status=1,
+        tid__next_datetime__lte=start_time,
+        is_perform=0
+    )[:1]
     if lijijiankong:
         objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=lijijiankong)
     flag = False
@@ -86,7 +96,6 @@ def HuoQuRenWuzhongDianCi(request):
         response.code = 200
         response.msg = '查询成功'
         response.data = {
-            'tid':objs[0].id,
             'lianjie':objs[0].lianjie,
             'detail_id':objs[0].id,
             'search_engine':objs[0].search_engine,
@@ -108,20 +117,31 @@ def TiJiaoRenWuzhongDianCi(request):
         json_data = json.loads(resultObj)
         now_data = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         if judge == 'shoulu':
-            models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
+            objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
                 tid_id=tid,
                 create_time=now_data,
                 paiming=json_data['order'],
-                is_shoulu=json_data['shoulu']
+                is_shoulu=json_data['shoulu'],
             )
         else:
             paiming = str(','.join(map(str, json_data)))
             print(paiming, type(paiming))
-            models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
+            objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
                 tid_id=tid,
                 create_time=now_data,
                 paiming=paiming,
             )
+        # detail_objs_count = objs.zhugedanao_zhongdianci_jiankong_taskdetail_set.filter(
+        #     tid_id=objs.id,
+        # )
+        # detail_count = detail_objs_count.filter(is_perform=1).count()
+        # baifenbi = 0
+        # if detail_count:
+        #     baifenbi = int((detail_count / detail_objs_count.count()) * 100)
+        models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=tid).update(
+            task_status=1,
+            is_zhixing=0
+        )
         response.code = 200
         response.msg = '已完成'
     else:

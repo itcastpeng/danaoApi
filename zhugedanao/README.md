@@ -338,6 +338,7 @@ http请求url： http://127.0.0.1:8000/zhugedanao/zhongDianCiShowTaskList?timest
                 "qiyong_status": true,              启用状态
                 "task_jindu": 0,                    任务进度
                 "task_start_time": "07:50:20",      任务开始时间
+                "is_zhixing":1                      是否执行      0代表未执行 显示修改   1代表执行 显示转圈
                 "search_engine": [                  搜索引擎
                     "1",
                     "3"

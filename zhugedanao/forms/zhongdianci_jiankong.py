@@ -35,7 +35,14 @@ class AddForm(forms.Form):
         json_search = json.loads(search_engine)
         return json_search
 
-
+    def clean_keywords(self):
+        keywords = self.data.get('keywords')
+        if len(keywords.split()) == 0:
+            self.add_error('keywords', '关键词不能为空!')
+        if len(keywords.split()) > 500:
+            self.add_error('keywords', '关键词超过五百条!')
+        else:
+            return keywords
 
 
 

@@ -33,6 +33,8 @@ class AddForm(forms.Form):
                 keywords_data_list.append(i.strip())
         if len(keywords_data_list) == 0:
             self.add_error('keyword', '关键词不能为空')
+        if len(keywords_data_list) > 500:
+            self.add_error('keyword', '关键词超过五百条!')
         else:
             return keywords_data_list
 
