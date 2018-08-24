@@ -109,7 +109,7 @@ def zhongDianCiDetailShowTaskList(request):
                         shoulu = '否'
                         if detail_obj.is_shoulu == 1:
                             shoulu = '是'
-                        detail_create = detail_obj.create_time.strftime('%Y-%m-%d %H:%M:%S')
+                        detail_create = detail_obj.create_time.strftime('%Y-%m-%d')
                         if detail_create not in headers_list:
                             headers_list.append(str(detail_create))
                         sanci_chaxun[detail_create] = {

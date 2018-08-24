@@ -1392,8 +1392,8 @@ def start():
     else:
         print('无任务')
 
-if __name__ == '__main__':
-    start()
+# if __name__ == '__main__':
+#     start()
 
 
 
@@ -1474,7 +1474,170 @@ if __name__ == '__main__':
 
 
 
+    # # 360pc端覆盖查询
+    # def pcFugai360(self):
+    #     order_list = []
+    #     headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)], }
+    #     pc_360url = 'https://so.com/s?src=3600w&q={keyword}'.format(keyword=self.keyword)
+    #     print('pc_360url--------->', pc_360url)
+    #     ret = requests.get(pc_360url, headers=headers, timeout=10)
+    #     soup = BeautifulSoup(ret.text, 'lxml')
+    #     div_tags = soup.find_all('li', class_='res-list')
+    #     for mohu_pipei in self.mohu_pipei.split(','):
+    #         for div_tag in div_tags:
+    #             zongti_fugai = div_tag.get_text()
+    #             if mohu_pipei in zongti_fugai:
+    #                 if div_tag.find('a').attrs.get('data-res'):
+    #                     data_res = div_tag.find('a')
+    #                     paiming = data_res.attrs.get('data-res')
+    #                     dict_data_res = json.loads(paiming)
+    #                     panduan_url = data_res.attrs['href']
+    #                     title = data_res.get_text()
+    #                     order_num = int(dict_data_res['pos'])
+    #                     order_list.append({
+    #                         'paiming': order_num,
+    #                         'title': title,
+    #                         'title_url': panduan_url,
+    #                         'sousuo_guize': mohu_pipei,
+    #                         'search': self.search
+    #                     })
+    #     print('rentur')
+    #     return order_list
+    #
+    # # 360移动端覆盖查询
+    # def mobielFugai360(self):
+    #     PC_360_url = 'https://m.so.com/s?src=3600w&q={}'.format(self.keyword)
+    #     order_list = []
+    #     headers = {
+    #         'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'}
+    #     ret = requests.get(PC_360_url, headers=headers, timeout=10)
+    #     soup_browser = BeautifulSoup(ret.text, 'lxml')
+    #     div_tags = soup_browser.find_all('div', class_=" g-card res-list og ")
+    #     order = 0
+    #     for mohu_pipei in self.mohu_pipei.split(','):
+    #         for div_tag in div_tags:
+    #             order += 1
+    #             zongti_fugai = div_tag.get_text()
+    #             if mohu_pipei in zongti_fugai:
+    #                 a_tag = div_tag.find('a', class_='alink')
+    #                 title = a_tag.find('h3').get_text()
+    #                 panduan_url = a_tag.attrs['href']
+    #                 order_num = int(order)
+    #                 order_list.append({
+    #                     'paiming': order_num,
+    #                     'title': title,
+    #                     'title_url': panduan_url,
+    #                     'sousuo_guize': mohu_pipei,
+    #                     'search': self.search
+    #                 })
+    #     return order_list
+
+
+class pingtaiwajue_chaxun():
+    def __init__(self, search, keyword, mohu_pipei):
+        self.search = search
+        self.keyword = keyword
+        self.mohu_pipei = mohu_pipei
+
+    # 百度pc端覆盖查询
+    def baiduFuGaiPC(self):
+        order_list = []
+        headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)], }
+        zhidao_url = 'https://www.baidu.com/s?wd={keyword}'.format(keyword=self.keyword)
+        # print('-=---------->', zhidao_url)
+        ret = requests.get(zhidao_url, headers=headers, timeout=10)
+        soup = BeautifulSoup(ret.text, 'lxml')
+        div_tags = soup.find_all('div', class_='result c-container ')
+        for mohu_pipei in self.mohu_pipei.split(','):
+            print('mohu_pipei===> ',mohu_pipei)
+            for div_tag in div_tags:
+                rank_num = div_tag.attrs.get('id')
+                if not rank_num:
+                    continue
+                tiaojian_chaxun = div_tag.get_text()
+                panduan_url = div_tag.find('h3', class_='t').find('a').attrs['href']
+                title = div_tag.find('h3', class_='t').get_text()
+                # print('tiaojian_chaxun-------> ', mohu_pipei, tiaojian_chaxun)
+                if mohu_pipei in tiaojian_chaxun:  # 表示有覆盖
+                    order_num = int(rank_num)
+                    order_list.append({
+                        'paiming': order_num,
+                        'title': title,
+                        'title_url': panduan_url,
+                        'sousuo_guize': mohu_pipei,
+                        'search':self.search
+                    })
+        return order_list
+
+    # 百度移动端覆盖查询
+    def baiduFuGaiMOBIEL(self):
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'}
+        zhidao_url = 'https://m.baidu.com/s?word={}'.format(self.keyword)
+        ret = requests.get(zhidao_url, headers=headers, timeout=10)
+        soup_browser = BeautifulSoup(ret.text, 'lxml')
+        content_list_order = []
+        div_tags = soup_browser.find_all('div', class_='result c-result')
+        for div_tag in div_tags:
+            content_list_order.append(div_tag)
+        div_tags = soup_browser.find_all('div', class_='result c-result c-clk-recommend')
+        for div_tag in div_tags:
+            content_list_order.append(div_tag)
+        order_list = []
+        for mohu_pipei in self.mohu_pipei.split(','):
+            for data in content_list_order:
+                if data['data-log']:
+                    dict_data = eval(data['data-log'])
+                    url_title = dict_data['mu']  # 标题链接
+                    order = dict_data['order']  # 排名
+                    pipei_tiaojian = data.get_text()
+                    if mohu_pipei in pipei_tiaojian:
+                        if data.find('div', class_='c-container').find('a'):
+                            title = data.find('div', class_='c-container').find('a').get_text()
+                            order_num = int(order)
+                            order_list.append({
+                                'paiming': order_num,
+                                'title': title,
+                                'title_url': url_title,
+                                'sousuo_guize': mohu_pipei,
+                                'search': self.search
+                            })
+        return order_list
 
 
 
+    def qufenyinqing(self):
+        if str(self.search) == '1':
+            print('pc端 -- 覆盖百度')
+            resultObj = self.baiduFuGaiPC()
+            # 移动端百度
+        elif str(self.search) == '4':
+            print('移动端 -- 覆盖百度')
+            resultObj = self.baiduFuGaiMOBIEL()
+            # pc360
+        return resultObj
 
+
+
+# 百度pc端覆盖查询
+def baiduFuGaiPC(keyword):
+    order_list = []
+    headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)], }
+    zhidao_url = 'https://www.baidu.com/s?wd={keyword}'.format(keyword=keyword)
+    ret = requests.get(zhidao_url, headers=headers, timeout=10)
+    soup = BeautifulSoup(ret.text, 'lxml')
+    div_tags = soup.find_all('div', class_='result c-container ')
+    for div_tag in div_tags:
+        div_f13 = div_tag.find('div', class_='f13').get_text()
+        yuming = div_f13.split('-')[0].strip()
+    page = 1
+    while True:
+        a_next = soup.find('a', text='下一页>').attrs['href']
+        print('a_next=== 》','https://www.baidu.com' + a_next)
+        page += 1
+        if page == 3:
+            break
+
+
+keyword = '北京时间'
+baiduFuGaiPC(keyword)
