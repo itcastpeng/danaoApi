@@ -27,8 +27,8 @@ class AddForm(forms.Form):
                 url_data_list.append(i.strip())
         if len(url_data_list) == 0:
             self.add_error('url', '链接不能为空')
-        if len(url_data_list) > 500:
-            self.add_error('url', '链接大于五百条!')
+        # if len(url_data_list) > 500:
+        #     self.add_error('url', '链接大于五百条!')
         else:
             url_list_data = []
             for url_re in url_data_list:

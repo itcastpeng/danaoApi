@@ -24,11 +24,10 @@ app.conf.beat_schedule = {
     #     # 'args': (2, 2),                                     # 传递的参数
     # },
 
-#     'panduan_lianjie_tijiao_zhixingshijian':{
-#         'task':'panduan_lianjie_tijiao_zhixingshijian',
-#         'schedule': crontab("2/*", '*', '*', '*', '*'),
-#     }
-#
+    'timeToRefreshZhgongDianCi':{
+        'task':'timeToRefreshZhgongDianCi',
+        'schedule': crontab("2/*", '*', '*', '*', '*'),
+    }
 }
 
 # Optional configuration, see the application user guide.

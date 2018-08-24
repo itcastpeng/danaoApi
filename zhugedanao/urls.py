@@ -53,6 +53,7 @@ urlpatterns = [
     url(r'^HuoQuRenWuzhongDianCi', zhongdianci.HuoQuRenWuzhongDianCi),                                   # 获取任务
     url(r'^TiJiaoRenWuzhongDianCi', zhongdianci.TiJiaoRenWuzhongDianCi),                                 # 返回任务
     url(r'^zhongDianCiChaXunLiJiJianKong', zhongdianci.zhongDianCiChaXunLiJiJianKong),                   # 立即监控
+    url(r'^timeToRefreshZhgongDianCi', zhongdianci.timeToRefreshZhgongDianCi),                           # 定时刷新更改状态
 
     # 公共功能
     url(r'^gonggong_exit_delete', exit_delete.gonggong_exit_delete),                                 # 公共删除

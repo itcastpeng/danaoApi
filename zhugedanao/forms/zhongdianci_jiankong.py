@@ -39,8 +39,8 @@ class AddForm(forms.Form):
         keywords = self.data.get('keywords')
         if len(keywords.split()) == 0:
             self.add_error('keywords', '关键词不能为空!')
-        if len(keywords.split()) > 500:
-            self.add_error('keywords', '关键词超过五百条!')
+        # if len(keywords.split()) > 500:
+        #     self.add_error('keywords', '关键词超过五百条!')
         else:
             return keywords
 

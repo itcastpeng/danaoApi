@@ -109,7 +109,7 @@ def zhongDianCiDetailShowTaskList(request):
                         shoulu = '否'
                         if detail_obj.is_shoulu == 1:
                             shoulu = '是'
-                        detail_create = detail_obj.create_time.strftime('%Y-%m-%d %H:%M:%S')
+                        detail_create = detail_obj.create_time.strftime('%Y-%m-%d')
                         if detail_create not in headers_list:
                             headers_list.append(str(detail_create))
                         sanci_chaxun[detail_create] = {
@@ -233,7 +233,7 @@ def zhongDianCiOper(request, oper_type, o_id):
             detail_objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid=o_id)
             for detail_obj in detail_objs:
                 detail_obj.zhugedanao_zhongdianci_jiankong_taskdetaildata_set.filter(tid=detail_obj.id).delete()
-            detail_objs.delete()
+            # detail_objs.delete()
             response.msg = '清空成功'
             response.code = 200
             return JsonResponse(response.__dict__)
