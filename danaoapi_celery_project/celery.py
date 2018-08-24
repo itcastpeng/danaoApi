@@ -26,7 +26,7 @@ app.conf.beat_schedule = {
 
     'timeToRefreshZhgongDianCi':{
         'task':'timeToRefreshZhgongDianCi',
-        'schedule': crontab("2/*", '*', '*', '*', '*'),
+        'schedule': crontab("*/2", '*', '*', '*', '*'),
     }
 }
 
