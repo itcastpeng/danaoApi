@@ -4,7 +4,7 @@ from django.conf.urls import url
 from zhugedanao.views_dir.wechat import wechat
 from zhugedanao.views_dir import oper_log
 from zhugedanao.views_dir import tongji_data
-from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun, zhongdianci_jiankong
+from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun, zhongdianci_jiankong, baidu_xiala
 from zhugedanao.views_dir.Access_tijiaolianjie_task import access_task
 from zhugedanao.views_dir.Access_shouluChaxun import shouluchauxn
 from zhugedanao.views_dir.Access_fugaiChaxun import fugaichaxun
@@ -56,6 +56,10 @@ urlpatterns = [
     url(r'^timeToRefreshZhgongDianCi', zhongdianci.timeToRefreshZhgongDianCi),                           # 定时刷新更改状态
 
     # 公共功能
-    url(r'^gonggong_exit_delete', exit_delete.gonggong_exit_delete),                                 # 公共删除
+    url(r'^gonggong_exit_delete', exit_delete.gonggong_exit_delete),                                     # 公共删除
+
+    # 百度下拉
+    url(r'^baiDuXiaLa/(?P<oper_type>\w+)/(?P<o_id>\d+)', baidu_xiala.baiDuXiaLa),                # 操作
+
 
 ]
