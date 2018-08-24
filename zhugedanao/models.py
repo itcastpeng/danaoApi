@@ -206,7 +206,13 @@ class zhugedanao_zhongdianci_jiankong_taskDetailData(models.Model):
     create_time = models.DateField(verbose_name='创建时间', null=True, blank=True)
 
 # 平台挖掘
-class zhugedanao_pingtaiwajue(models.Model):
+class zhugedanao_pingtaiwajue_keyword(models.Model):
     create_time = models.DateTimeField(verbose_name='创建时间', null=True, blank=True)
     search = models.IntegerField(verbose_name='搜索引擎', default=0)
     keyword = models.CharField(verbose_name='关键词', max_length=64, null=True, blank=True)
+
+class zhugedanao_pingtaiwajue_yuming(models.Model):
+    create_time = models.DateTimeField(verbose_name='创建时间', null=True, blank=True)
+    tid = models.ForeignKey(to='zhugedanao_pingtaiwajue_keyword', verbose_name='关键词列表', null=True, blank=True)
+    yuming = models.CharField(verbose_name='域名', max_length=128, null=True, blank=True)
+    number = models.IntegerField(verbose_name='域名数量', default=0)

@@ -12,34 +12,14 @@ class AddForm(forms.Form):
             'required': "搜索引擎不能为空"
         }
     )
-    url_list = forms.CharField(
+    keywords = forms.CharField(
         required=True,
         error_messages={
-            'required': "提交链接不能为空"
+            'required': "关键词不能为空"
         }
     )
 
-    def clean_url_list(self):
-        url_data_list = []
-        url_list = self.data.get('url_list')
-        for i in url_list.strip().split():
-            if i.strip():
-                url_data_list.append(i.strip())
-        if len(url_data_list) == 0:
-            self.add_error('url', '链接不能为空')
-        # if len(url_data_list) > 500:
-        #     self.add_error('url', '链接大于五百条!')
-        else:
-            url_list_data = []
-            for url_re in url_data_list:
-                pattern = re.compile(
-                    r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
-                url = re.findall(pattern, url_re)
-                if url:
-                    url_list_data.append(url[0])
-                else:
-                    self.add_error('url_list', '请输入正确链接')
-            return url_list_data
+
 
 
 # 判断是否是数字

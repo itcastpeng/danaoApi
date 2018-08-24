@@ -63,12 +63,13 @@ def zhongDianCiShowTaskList(request):
                         "search_engine": obj.search_engine.split(','),
                         'task_jindu': int(baifenbi),
                     })
-                response.msg = '查询成功'
-                response.code = 200
                 response.data = {'data_list':data_list}
             else:
-                response.code = 403
-                response.msg = '无任务'
+                response.data = {}
+            response.msg = '查询成功'
+            response.code = 200
+                #     response.code = 403
+            #     response.msg = '无任务'
         else:
             response.code = 402
             response.msg = "数据类型验证失败"
@@ -157,8 +158,8 @@ def zhongDianCiOper(request, oper_type, o_id):
         if oper_type == "add":
             user_id = request.GET.get('user_id')
             qiyong_status =  request.POST.get('qiyong_status'),
-            mohupipei = request.POST.get('mohupipei')
             form_data = {
+                'mohupipei' : request.POST.get('mohupipei'),
                 'task_name' : request.POST.get('task_name'),
                 'search_engine' : request.POST.get('search_engine'),
                 'keywords' : request.POST.get('keywords'),
@@ -183,7 +184,6 @@ def zhongDianCiOper(request, oper_type, o_id):
                     next_datetime = (kaishishijian + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
                 objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.create(
                     task_name=forms_obj.cleaned_data.get('task_name'),
-                    # task_status=forms_obj.cleaned_data.get('task_status'),
                     search_engine=','.join(forms_obj.cleaned_data.get('search_engine')),
                     next_datetime=next_datetime,
                     task_start_time=form_data['task_start_time'],
@@ -208,20 +208,25 @@ def zhongDianCiOper(request, oper_type, o_id):
                                         create_time=create_time
                                     )
                                 )
+                                response.code = 200
+                                response.msg = "添加成功"
                         else:
-                            if mohupipei:
+                            if form_data['mohupipei']:
                                 querysetlist.append(
                                     models.zhugedanao_zhongdianci_jiankong_taskDetail(
                                         tid_id=objs.id,
                                         search_engine=search,
                                         keyword=keywords,
-                                        mohupipei=mohupipei,
+                                        mohupipei=form_data['mohupipei'],
                                         create_time=create_time
                                     )
                                 )
+                                response.code = 200
+                                response.msg = "添加成功"
+                            else:
+                                response.code = 301
+                                response.msg = '请填写正确数据'
                 models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.bulk_create(querysetlist)
-                response.code = 200
-                response.msg = "添加成功"
 
             else:
                 print("验证不通过")
