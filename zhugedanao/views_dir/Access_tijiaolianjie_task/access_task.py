@@ -29,7 +29,7 @@ def panduan_shijian(request):
 def decideIsTask(request):
     q = Q()
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-    q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
+    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).filter(is_zhixing=0)[0:1]
     flag = False
     if objs:
@@ -47,7 +47,7 @@ def set_task_access(request):
     time_stampadd600 = now_time_stamp + 600
     now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
     q = Q()
-    q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
+    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time_stamp), Q.AND)
     print('q------> ', q)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0).filter(q)[0:1]
@@ -153,7 +153,7 @@ def linksToSubmitShouLu(request):
     objs = objs_tijiao.filter(q)[0:1]
     if objs:
         obj = objs[0]
-        count_obj = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=objs[0].id).count()
+        count_obj = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=objs[0].tid.id).count()
         print('=========> ', objs[0].tid.id, count_obj)
         if count_obj <= 3:
             objs_tijiao.filter(id=obj.id).update(time_stamp=time_stamp20)
@@ -161,10 +161,6 @@ def linksToSubmitShouLu(request):
                 'o_id':objs[0].id,
                 'url':objs[0].url
             }
-        else:
-            objs.update(status=2)
-            # obj.status = 2
-            # obj.save()
         response.msg = '查询成功'
         response.code = 200
     else:
@@ -195,12 +191,12 @@ def linksShouLuReturnData(request):
             if objs:
                 tid = objs[0].tid_id  # 列表id
                 count_list = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=o_id).count()
-                print('返回数据----------> ', o_id, count_list, '是否收录---> ',is_shoulu)
+                # print('返回数据----------> ', o_id, count_list, '是否收录---> ',is_shoulu)
                 shoulu_num = objs_tijiaolianjie.filter(tid=tid).filter(status=2).count()
                 models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(shoulu_num=shoulu_num)
-
+                print('count_list=======> ',objs[0].id,  count_list)
                 if int(count_list) < 3 and int(is_shoulu) == 3:
-                    objs.update(status=3, is_zhixing=0, time_stamp = None)
+                    objs.update(status=1, is_zhixing=0, time_stamp = None)
                 elif int(count_list) >= 3 and int(is_shoulu) == 3:
                     objs.update(status=3)
                 else:

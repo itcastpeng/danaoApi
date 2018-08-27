@@ -114,6 +114,7 @@ def baiDuXiaLa(request, oper_type, o_id):
             # models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
             form_data = {
                 'keywords': request.POST.get('keywords'),
+                'page_number': request.POST.get('page_number'),
             }
             #  创建 form验证 实例（参数默认转成字典）
             forms_obj = AddForm(form_data)

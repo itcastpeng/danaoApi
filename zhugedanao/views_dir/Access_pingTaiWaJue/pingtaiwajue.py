@@ -11,6 +11,7 @@ import datetime
 response = Response.ResponseObj()
 import json
 
+
 # 覆盖查询 判断是否有任务
 @csrf_exempt
 def baiDuXiaLaDecideIsTask(request):
@@ -47,7 +48,7 @@ def baiDuXiaLaHuoQuRenWu(request):
             'task_keywords':objs[0].keyword,
             'task_id':objs[0].id,
             'task_type':objs[0].search,
-            'task_page':1
+            'task_page':objs[0].page_number
         }
     else:
         response.code = 403
@@ -61,20 +62,19 @@ def baiDuXiaLaTiJiaoRenWu(request):
         data = request.POST.get('data')
         task_id = request.POST.get('task_id')
         if task_id:
-            # json_data = json.loads(data)
-
+            json_data = eval(data)
+            jsonData = json_data['data']
             querysetlist = []
-            for yuming in data.split(','):
-                print(yuming)
-            # for yuming in json.loads(data):
-            #     print(yuming)
-            #     querysetlist.append(
-            #         models.zhugedanao_pingtaiwajue_yuming.objects(
-            #
-            # ))
-            #
-
-
+            for yuming, index in jsonData.items():
+                create_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                querysetlist.append(
+                    models.zhugedanao_pingtaiwajue_yuming(
+                        create_time = create_time,
+                        tid_id = task_id,
+                        yuming = yuming,
+                        number = index
+                ))
+            models.zhugedanao_pingtaiwajue_yuming.objects.bulk_create(querysetlist)
             response.code = 200
             response.msg = '完成'
         else:
