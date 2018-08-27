@@ -513,14 +513,94 @@ http请求url：  http://127.0.0.1:8000/zhugedanao/gonggong_exit_delete?timestam
 ```
 
 
+#### 平台挖掘 查询 说明
+``` 
+http请求方式 GET
+http请求url:  http://127.0.0.1:8000/zhugedanao/pingTaiWaJueShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+公共参数
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {
+        "exet_data": {
+            "data": [
+                {
+                    "number": 3,
+                    "yuming": "w.huanqiu.com"
+                },          
+            ],
+            "objs_count": 26
+        }
+    },
+    "code": 200,
+    "msg": "查询成功"
+}
+```
 
+#### 平台挖掘 添加 说明
+``` 
+http请求方式 POST
+http请求url： http://127.0.0.1:8000/zhugedanao/pingTaiWaJue/add/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+keywords                POST                 是                  要查询的关键词
+search                  POST                 否                  默认为百度
+page_number             POST                 否                  页码 默认为1
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {},
+    "code": 200,
+    "msg": "添加成功"
+}
+```
 
+#### 平台挖掘 退出 删除任务 说明
+``` 
+http请求方式 GET
+http请求url： http://127.0.0.1:8000/zhugedanao/pingTaiWaJue/clickReturn/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+公共参数
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {},
+    "msg": "退出成功",
+    "code": 200
+}
+```
 
+#### 平台挖掘 生成excel表格 说明
+``` 
+http请求方式 GET
+http请求url： http://127.0.0.1:8000/zhugedanao/pingTaiWaJue/generateExcel/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+公共参数
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {
+        "excel_name": "http://api.zhugeyingxiao.com/statics\\zhugedanao\\pingTaiWaJueExcel\\381535354045.xlsx"  下载地址
+    },
+    "msg": "生成成功",
+    "code": 200
+}
+```
 
+#### 平台挖掘 计算处理 说明
+``` 
+http请求方式 GET
+http请求url：  http://127.0.0.1:8000/zhugedanao/pingTaiWaJue/finalResult/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+公共参数
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {},
+    "msg": "计算结果完成",
+    "code": 200
+}
+```
 
 
 

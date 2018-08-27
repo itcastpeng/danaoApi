@@ -7,15 +7,15 @@ import time, json
 # 添加
 class AddForm(forms.Form):
     search_list = forms.CharField(
-        required=True,
+        required=False,
         error_messages={
             'required': "搜索引擎不能为空"
         }
     )
-    url_list = forms.CharField(
+    keywords = forms.CharField(
         required=True,
         error_messages={
-            'required': "提交链接不能为空"
+            'required': "关键词不能为空"
         }
     )
     page_number = forms.IntegerField(
@@ -24,9 +24,9 @@ class AddForm(forms.Form):
             'required': "页码数据类型错误"
         }
     )
-    def clean_url_list(self):
-        url_list = self.data.get('url_list')
-        return url_list.split()
+    def clean_keywords(self):
+        keywords = self.data.get('keywords')
+        return keywords.split()
 
 
 # 判断是否是数字
