@@ -29,7 +29,7 @@ def panduan_shijian(request):
 def decideIsTask(request):
     q = Q()
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-    q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
+    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).filter(is_zhixing=0)[0:1]
     flag = False
     if objs:
@@ -47,7 +47,7 @@ def set_task_access(request):
     time_stampadd600 = now_time_stamp + 600
     now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
     q = Q()
-    q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
+    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time_stamp), Q.AND)
     print('q------> ', q)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0).filter(q)[0:1]
@@ -149,21 +149,18 @@ def linksToSubmitShouLu(request):
     q = Q()
     q.add(Q(status=1) & Q(is_zhixing=1) & Q(submit_date__lte=next_datetime_addoneday), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lt=now_time_stamp), Q.AND)
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
-    print('objs---> ',objs)
+    objs_tijiao = models.zhugedanao_lianjie_tijiao.objects
+    objs = objs_tijiao.filter(q)[0:1]
     if objs:
         obj = objs[0]
-        count_obj = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=obj.id).count()
-        if count_obj < 3:
-            obj.time_stamp = time_stamp20
-            obj.save()
+        count_obj = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=objs[0].tid.id).count()
+        print('=========> ', objs[0].tid.id, count_obj)
+        if count_obj <= 3:
+            objs_tijiao.filter(id=obj.id).update(time_stamp=time_stamp20)
             response.data = {
-                'o_id':obj.id,
-                'url':obj.url
+                'o_id':objs[0].id,
+                'url':objs[0].url
             }
-        else:
-            obj.status = 2
-            obj.save()
         response.msg = '查询成功'
         response.code = 200
     else:
@@ -178,15 +175,26 @@ def linksShouLuReturnData(request):
     if request.method == 'POST':
         o_id = request.POST.get('o_id')
         is_shoulu = request.POST.get('shoulu')
+        ip_addr = request.POST.get('ip_addr')
+        address = request.POST.get('address')
         if is_shoulu and o_id:
+            # create_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+            # models.zhugedanao_lianjie_tijiao_log.objects.create(
+            #     zhugedanao_lianjie_tijiao_id=o_id,
+            #     ip=ip_addr,
+            #     address=address,
+            #     create_date=create_date
+            # )
+
             objs_tijiaolianjie = models.zhugedanao_lianjie_tijiao.objects
             objs = objs_tijiaolianjie.filter(id=o_id)
             if objs:
-                tid = objs[0].tid_id
-                shoulu_num = objs_tijiaolianjie.filter(tid=tid).filter(status=2).count()
-                print(shoulu_num, type(shoulu_num), tid)
-                models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(shoulu_num=shoulu_num)
+                tid = objs[0].tid_id  # 列表id
                 count_list = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=o_id).count()
+                # print('返回数据----------> ', o_id, count_list, '是否收录---> ',is_shoulu)
+                shoulu_num = objs_tijiaolianjie.filter(tid=tid).filter(status=2).count()
+                models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(shoulu_num=shoulu_num)
+                print('count_list=======> ',objs[0].id,  count_list)
                 if int(count_list) < 3 and int(is_shoulu) == 3:
                     objs.update(status=1, is_zhixing=0, time_stamp = None)
                 elif int(count_list) >= 3 and int(is_shoulu) == 3:

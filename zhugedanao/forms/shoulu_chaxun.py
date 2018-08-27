@@ -18,6 +18,12 @@ class AddForm(forms.Form):
             'required': "提交链接不能为空"
         }
     )
+    page_number = forms.IntegerField(
+        required=False,
+        error_messages={
+            'required': "页码数据类型错误"
+        }
+    )
     def clean_url_list(self):
         url_list = self.data.get('url_list')
         return url_list.split()

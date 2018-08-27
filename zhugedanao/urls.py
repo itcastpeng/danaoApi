@@ -4,13 +4,13 @@ from django.conf.urls import url
 from zhugedanao.views_dir.wechat import wechat
 from zhugedanao.views_dir import oper_log
 from zhugedanao.views_dir import tongji_data
-from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun, zhongdianci_jiankong, baidu_xiala
+from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun, zhongdianci_jiankong, pingtai_wajue
 from zhugedanao.views_dir.Access_tijiaolianjie_task import access_task
 from zhugedanao.views_dir.Access_shouluChaxun import shouluchauxn
 from zhugedanao.views_dir.Access_fugaiChaxun import fugaichaxun
 from zhugedanao.views_dir.Access_zhongDianCiJianKong import zhongdianci
 from zhugedanao.views_dir.Access_gonggong import exit_delete
-from zhugedanao.views_dir.Access_baiDuXiaLa import baiduxiala
+from zhugedanao.views_dir.Access_pingTaiWaJue import pingtaiwajue
 urlpatterns = [
 
     # url(r'^w_login',login.w_login),
@@ -60,10 +60,10 @@ urlpatterns = [
     url(r'^gonggong_exit_delete', exit_delete.gonggong_exit_delete),                                     # 公共删除
 
     # 百度下拉
-    url(r'^baiDuXiaLa/(?P<oper_type>\w+)/(?P<o_id>\d+)', baidu_xiala.baiDuXiaLa),                # 操作
-    url(r'^baiDuXiaLaDecideIsTask', baiduxiala.baiDuXiaLaDecideIsTask),                           # 定时刷新更改状态
-    url(r'^baiDuXiaLaHuoQuRenWu', baiduxiala.baiDuXiaLaHuoQuRenWu),                           # 定时刷新更改状态
-    url(r'^baiDuXiaLaTiJiaoRenWu', baiduxiala.baiDuXiaLaTiJiaoRenWu),                           # 定时刷新更改状态
+    url(r'^baiDuXiaLa/(?P<oper_type>\w+)/(?P<o_id>\d+)', pingtai_wajue.baiDuXiaLa),                # 操作
+    url(r'^baiDuXiaLaDecideIsTask', pingtaiwajue.baiDuXiaLaDecideIsTask),                           # 定时刷新更改状态
+    url(r'^baiDuXiaLaHuoQuRenWu', pingtaiwajue.baiDuXiaLaHuoQuRenWu),                           # 定时刷新更改状态
+    url(r'^baiDuXiaLaTiJiaoRenWu', pingtaiwajue.baiDuXiaLaTiJiaoRenWu),                           # 定时刷新更改状态
 
 
 ]
