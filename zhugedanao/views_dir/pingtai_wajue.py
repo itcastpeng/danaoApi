@@ -24,14 +24,24 @@ def pingTaiWaJueShow(request):
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
+            task_objs = models.zhugedanao_pingtaiwajue_keyword.objects.filter(user_id_id=user_id)
             objs = models.zhugedanao_pingtaiwajue_finalResult.objects.filter(user_id_id=user_id)
+            task_count = task_objs.count()
             objs_count = objs.count()
+            yiwancheng = task_objs.filter(is_perform=1).count()
+            query_progress = 0
+            if yiwancheng:
+                query_progress = int((int(yiwancheng) / int(task_count)) * 100)
+            whether_complete = False
+            if yiwancheng == task_count:
+                whether_complete = True
             # 分页
             if length != 0:
                 start_line = (current_page - 1) * length
                 stop_line = start_line + length
                 objs = objs[start_line: stop_line]
             data_list = []
+
             for obj in objs:
                 if str(obj.search) == '1':
                     yinqing = '百度'
@@ -48,8 +58,13 @@ def pingTaiWaJueShow(request):
                     'number':obj.number,
                     'search':yinqing
                 })
-            exet_data = {'objs_count':objs_count,
-                         'data':data_list}
+            exet_data = {
+                'data': data_list,                  # 详情
+                'objs_count':objs_count,            # 总数
+                'query_progress':query_progress,    # 进度
+                'whether_complete':whether_complete,# 是否完成
+                'yiwancheng_obj':yiwancheng,
+            }
             response.code = 200
             response.msg = '查询成功'
             response.data = {'exet_data':exet_data}

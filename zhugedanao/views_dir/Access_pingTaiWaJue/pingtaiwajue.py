@@ -12,7 +12,7 @@ response = Response.ResponseObj()
 import json
 
 
-# 覆盖查询 判断是否有任务
+# 平台挖掘 判断是否有任务
 @csrf_exempt
 def baiDuXiaLaDecideIsTask(request):
     now_time = int(time.time())
@@ -62,6 +62,9 @@ def baiDuXiaLaTiJiaoRenWu(request):
         data = request.POST.get('data')
         task_id = request.POST.get('task_id')
         if task_id:
+            models.zhugedanao_pingtaiwajue_keyword.objects.filter(id=task_id).update(
+                is_perform = 1
+            )
             json_data = eval(data)
             jsonData = json_data['data']
             querysetlist = []
