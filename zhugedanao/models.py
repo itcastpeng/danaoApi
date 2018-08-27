@@ -205,7 +205,7 @@ class zhugedanao_zhongdianci_jiankong_taskDetailData(models.Model):
     is_shoulu = models.BooleanField(verbose_name='收录', default=0)
     create_time = models.DateField(verbose_name='创建时间', null=True, blank=True)
 
-# 平台挖掘
+# 平台挖掘  关键词表
 class zhugedanao_pingtaiwajue_keyword(models.Model):
     create_time = models.DateTimeField(verbose_name='创建时间', null=True, blank=True)
     search = models.IntegerField(verbose_name='搜索引擎', default=0)
@@ -213,7 +213,9 @@ class zhugedanao_pingtaiwajue_keyword(models.Model):
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
     is_perform = models.BooleanField(verbose_name='是否执行', default=False)
     time_stamp = models.IntegerField(verbose_name='时间戳', null=True, blank=True)
+    page_number = models.IntegerField(verbose_name='页码', default=1)
 
+# 平台挖掘  域名表
 class zhugedanao_pingtaiwajue_yuming(models.Model):
     create_time = models.DateTimeField(verbose_name='创建时间', null=True, blank=True)
     tid = models.ForeignKey(to='zhugedanao_pingtaiwajue_keyword', verbose_name='关键词列表', null=True, blank=True)

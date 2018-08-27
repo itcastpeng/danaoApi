@@ -18,8 +18,8 @@ def zhongDianCiChaXunLiJiJianKong(request):    # 立即监控
         id_list = json.loads(id_list)
         for id in id_list:
             print('=============', id )
-            url = 'http://127.0.0.1:8000/zhugedanao/timeToRefreshZhgongDianCi?lijijiankong={}'.format(id)
-            # url = 'http://api.zhugeyingxiao.com/zhugedanao/timeToRefreshZhgongDianCi?lijijiankong={}'.format(id)
+            # url = 'http://127.0.0.1:8000/zhugedanao/timeToRefreshZhgongDianCi?lijijiankong={}'.format(id)
+            url = 'http://api.zhugeyingxiao.com/zhugedanao/timeToRefreshZhgongDianCi?lijijiankong={}'.format(id)
             requests.get(url)
         response.code = 200
         response.msg = '监控成功'
