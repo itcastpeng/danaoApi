@@ -7,7 +7,7 @@ from publicFunc import account
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
-from zhugedanao.forms.shoulu_chaxun import AddForm, SelectForm
+from zhugedanao.forms.pingtai_wajue import AddForm, SelectForm
 import json
 import random
 from django.db.models import Count,Q, Sum
@@ -33,9 +33,20 @@ def pingTaiWaJueShow(request):
                 objs = objs[start_line: stop_line]
             data_list = []
             for obj in objs:
+                if str(obj.search) == '1':
+                    yinqing = '百度'
+                elif str(obj.search) == '4':
+                    yinqing = '手机百度'
+                elif str(obj.search) == '3':
+                    yinqing = '360'
+                elif str(obj.search) == '6':
+                    yinqing = '手机360'
+                else:
+                    yinqing = ''
                 data_list.append({
                     'yuming':obj.yuming,
-                    'number':obj.number
+                    'number':obj.number,
+                    'search':yinqing
                 })
             exet_data = {'objs_count':objs_count,
                          'data':data_list}
@@ -63,6 +74,7 @@ def pingTaiWaJue(request, oper_type, o_id):
         if oper_type == "add":
             # models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
             form_data = {
+                'search' : request.POST.get('search'),
                 'keywords': request.POST.get('keywords'),
                 'page_number': request.POST.get('page_number'),
             }
@@ -77,17 +89,19 @@ def pingTaiWaJue(request, oper_type, o_id):
                 keywords_list = set(forms_obj.cleaned_data.get('keywords'))
                 querysetlist = []
                 create_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                search = 1
-                for keyword in keywords_list:
-                    querysetlist.append(
-                        models.zhugedanao_pingtaiwajue_keyword(
-                            user_id_id=user_id,
-                            search=search,
-                            keyword=keyword,
-                            create_time=create_time,
-                            page_number=form_data['page_number']
+                print("form_data['search']===========> ",form_data['search'], type(json.loads(form_data['search'])))
+                for search in json.loads(form_data['search']):
+                    print('search=====> ',search)
+                    for keyword in keywords_list:
+                        querysetlist.append(
+                            models.zhugedanao_pingtaiwajue_keyword(
+                                user_id_id=user_id,
+                                search=search,
+                                keyword=keyword,
+                                create_time=create_time,
+                                page_number=json.loads(form_data['page_number'])
+                            )
                         )
-                    )
                 models.zhugedanao_pingtaiwajue_keyword.objects.bulk_create(querysetlist)
                 response.code = 200
                 response.msg = "添加成功"
@@ -188,22 +202,25 @@ def pingTaiWaJue(request, oper_type, o_id):
 
         # 处理后最终结果
         if oper_type == 'finalResult':
-            objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id_id=user_id).values('yuming').annotate(
+            objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id_id=user_id).values('yuming','tid__search').annotate(
                 Sum('number')
             )
             final_objs = models.zhugedanao_pingtaiwajue_finalResult.objects
             final_objs.filter(user_id_id=user_id).delete()
+            print(objs)
             for obj in objs:
                 final_objs.create(
                     user_id_id=user_id,
                     yuming=obj['yuming'],
-                    number=obj['number__sum']
+                    number=obj['number__sum'],
+                    search=obj['tid__search']
                 )
             response.code = 200
             response.msg = '计算结果完成'
     else:
         response.code = 402
         response.msg = "请求异常"
+
 
 
     return JsonResponse(response.__dict__)
