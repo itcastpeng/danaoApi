@@ -1640,4 +1640,9 @@ def baiduFuGaiPC(keyword):
 
 
 keyword = '北京时间'
-baiduFuGaiPC(keyword)
+# baiduFuGaiPC(keyword)
+
+
+p = '\\xa0'
+if '\\' in p:
+    print(p.split('\\')[0])

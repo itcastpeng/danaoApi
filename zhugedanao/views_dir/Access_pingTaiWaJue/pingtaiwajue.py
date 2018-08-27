@@ -59,17 +59,20 @@ def baiDuXiaLaHuoQuRenWu(request):
 @csrf_exempt
 def baiDuXiaLaTiJiaoRenWu(request):
     if request.method == 'POST':
-        data = request.POST.get('data')
+        print('request.POST--------> ',request.POST)
         task_id = request.POST.get('task_id')
+        data = request.POST.get('data')
         if task_id:
             models.zhugedanao_pingtaiwajue_keyword.objects.filter(id=task_id).update(
                 is_perform = 1
             )
-            json_data = eval(data)
-            jsonData = json_data['data']
+            print('task_id--> ',task_id)
+            print('data=-==========> ', data, type(data))
+            jsonData = json.loads(data)
             querysetlist = []
             for yuming, index in jsonData.items():
-                print(yuming, index)
+                if '\\' in yuming:
+                    yuming = yuming.split('\\')[0]
                 create_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 querysetlist.append(
                     models.zhugedanao_pingtaiwajue_yuming(
