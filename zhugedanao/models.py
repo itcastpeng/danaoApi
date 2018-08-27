@@ -221,3 +221,10 @@ class zhugedanao_pingtaiwajue_yuming(models.Model):
     tid = models.ForeignKey(to='zhugedanao_pingtaiwajue_keyword', verbose_name='关键词列表', null=True, blank=True)
     yuming = models.CharField(verbose_name='域名', max_length=128, null=True, blank=True)
     number = models.IntegerField(verbose_name='域名数量', default=0)
+
+# 最终计算结果
+class zhugedanao_pingtaiwajue_finalResult(models.Model):
+    yuming = models.CharField(verbose_name='域名', max_length=128, null=True, blank=True)
+    number = models.IntegerField(verbose_name='域名数量', default=0)
+    user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
+    search = models.IntegerField(verbose_name='搜索引擎', default=0)

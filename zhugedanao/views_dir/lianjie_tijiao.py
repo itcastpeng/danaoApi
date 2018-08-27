@@ -172,46 +172,50 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
     if request.method == "POST":
         print('进入------')
         if oper_type == "add":
-            print('链接提交  add')
             form_data = {
-                'oper_user_id': request.GET.get('user_id'),
+                'oper_user_id' :  request.GET.get('user_id'),
                 'name': request.POST.get('name'),
                 'url': request.POST.get('url')
             }
             #  创建 form验证 实例（参数默认转成字典）
-            forms_obj = AddForm(form_data)
-            if forms_obj.is_valid():
-                print("验证通过")
-                #  添加数据库
-                print('forms_obj.cleaned_data-->',forms_obj.cleaned_data)
-                url_list = forms_obj.cleaned_data.get('url')
-                name = forms_obj.cleaned_data.get('name')
-                oper_user_id = forms_obj.cleaned_data.get('oper_user_id')
-                now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                querysetlist = []
-                objs_id = models.zhugedanao_lianjie_task_list.objects.create(
-                    task_name = name,
-                    create_date = now_datetime,
-                    count_taskList=len(url_list),
-                    user_id_id=oper_user_id,
-                )
-                for url in url_list:
-                    querysetlist.append(
-                        models.zhugedanao_lianjie_tijiao(
-                            create_date=now_datetime,
-                            tid_id=objs_id.id,
-                            url=url
-                        )
+            task_list_count = models.zhugedanao_lianjie_task_list.objects.filter(user_id_id=form_data['oper_user_id']).count()
+            print('task_list_count======> ',task_list_count)
+            if int(task_list_count) <= 10:
+                forms_obj = AddForm(form_data)
+                if forms_obj.is_valid():
+                    #  添加数据库
+                    print('forms_obj.cleaned_data-->',forms_obj.cleaned_data)
+                    url_list = forms_obj.cleaned_data.get('url')
+                    name = forms_obj.cleaned_data.get('name')
+                    oper_user_id = forms_obj.cleaned_data.get('oper_user_id')
+                    now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+                    querysetlist = []
+                    objs_id = models.zhugedanao_lianjie_task_list.objects.create(
+                        task_name = name,
+                        create_date = now_datetime,
+                        count_taskList=len(url_list),
+                        user_id_id=oper_user_id,
                     )
-                models.zhugedanao_lianjie_tijiao.objects.bulk_create(querysetlist)
-                response.code = 200
-                response.msg = "添加成功"
+                    for url in url_list:
+                        querysetlist.append(
+                            models.zhugedanao_lianjie_tijiao(
+                                create_date=now_datetime,
+                                tid_id=objs_id.id,
+                                url=url
+                            )
+                        )
+                    models.zhugedanao_lianjie_tijiao.objects.bulk_create(querysetlist)
+                    response.code = 200
+                    response.msg = "添加成功"
+                else:
+                    print("验证不通过")
+                    # print(forms_obj.errors)
+                    response.code = 301
+                    # print(forms_obj.errors.as_json())
+                    response.msg = json.loads(forms_obj.errors.as_json())
             else:
-                print("验证不通过")
-                # print(forms_obj.errors)
                 response.code = 301
-                # print(forms_obj.errors.as_json())
-                response.msg = json.loads(forms_obj.errors.as_json())
+                response.msg = '任务列表创建超过限额!'
 
         # 删除任务
         elif oper_type == "delete":

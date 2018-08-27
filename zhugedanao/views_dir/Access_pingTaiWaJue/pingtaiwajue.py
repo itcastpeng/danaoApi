@@ -66,6 +66,7 @@ def baiDuXiaLaTiJiaoRenWu(request):
             jsonData = json_data['data']
             querysetlist = []
             for yuming, index in jsonData.items():
+                print(yuming, index)
                 create_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 querysetlist.append(
                     models.zhugedanao_pingtaiwajue_yuming(
