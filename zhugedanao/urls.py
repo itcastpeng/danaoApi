@@ -59,9 +59,9 @@ urlpatterns = [
     # 公共功能
     url(r'^gonggong_exit_delete', exit_delete.gonggong_exit_delete),                                     # 公共删除
 
-    # 百度下拉
-    url(r'^pingTaiWaJue/(?P<oper_type>\w+)/(?P<o_id>\d+)', pingtai_wajue.pingTaiWaJue),                # 操作
-    url(r'^pingTaiWaJueShow', pingtai_wajue.pingTaiWaJueShow),                            # 定时刷新更改状态
+    # 平台挖掘
+    url(r'^pingTaiWaJue/(?P<oper_type>\w+)/(?P<o_id>\d+)', pingtai_wajue.pingTaiWaJue),              # 操作
+    url(r'^pingTaiWaJueShow', pingtai_wajue.pingTaiWaJueShow),                                       # 定时刷新更改状态
     url(r'^baiDuXiaLaDecideIsTask', pingtaiwajue.baiDuXiaLaDecideIsTask),                            # 定时刷新更改状态
     url(r'^baiDuXiaLaHuoQuRenWu', pingtaiwajue.baiDuXiaLaHuoQuRenWu),                                # 定时刷新更改状态
     url(r'^baiDuXiaLaTiJiaoRenWu', pingtaiwajue.baiDuXiaLaTiJiaoRenWu),                              # 定时刷新更改状态
