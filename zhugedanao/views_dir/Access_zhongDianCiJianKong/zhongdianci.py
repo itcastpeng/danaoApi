@@ -123,7 +123,7 @@ def TiJiaoRenWuzhongDianCi(request):        # 返回任务
         resultObj = request.POST.get('resultObj')
         judge = request.POST.get('judge')
         json_data = json.loads(resultObj)
-        now_data = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        now_data = datetime.date.today().strftime('%Y-%m-%d')
         if judge == 'shoulu':
             objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
                 tid_id=tid,
@@ -132,6 +132,7 @@ def TiJiaoRenWuzhongDianCi(request):        # 返回任务
                 is_shoulu=json_data['shoulu'],
             )
         else:
+            print('=========================')
             paiming = str(','.join(map(str, json_data)))
             print(paiming, type(paiming))
             objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
