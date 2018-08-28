@@ -11,6 +11,7 @@ from zhugedanao.views_dir.Access_fugaiChaxun import fugaichaxun
 from zhugedanao.views_dir.Access_zhongDianCiJianKong import zhongdianci
 from zhugedanao.views_dir.Access_gonggong import exit_delete
 from zhugedanao.views_dir.Access_pingTaiWaJue import pingtaiwajue
+from zhugedanao.views_dir.temporary_file import  temporary
 urlpatterns = [
 
     # url(r'^w_login',login.w_login),
@@ -67,4 +68,6 @@ urlpatterns = [
     url(r'^baiDuXiaLaTiJiaoRenWu', pingtaiwajue.baiDuXiaLaTiJiaoRenWu),                              # 定时刷新更改状态
 
 
+
+    url(r'^linshi', temporary.linshi),                              # 定时刷新更改状态
 ]
