@@ -59,11 +59,11 @@ def pingTaiWaJueShow(request):
                     'search':yinqing
                 })
             exet_data = {
-                'data': data_list,                  # 详情
-                'objs_count':objs_count,            # 总数
-                'query_progress':query_progress,    # 进度
-                'whether_complete':whether_complete,# 是否完成
-                'yiwancheng_obj':yiwancheng,
+                'data': data_list,                      # 详情
+                'objs_count':objs_count,                # 总数
+                'query_progress':query_progress,        # 进度
+                'whether_complete':whether_complete,    # 是否完成
+                'yiwancheng_obj':yiwancheng,            # 已完成
             }
             response.code = 200
             response.msg = '查询成功'
@@ -100,11 +100,11 @@ def pingTaiWaJue(request, oper_type, o_id):
                 print("验证通过")
                 #  添加数据库
                 chongfu = int(len(forms_obj.cleaned_data.get('keywords'))) - int(len(set(forms_obj.cleaned_data.get('keywords'))))
-                print('chongfu============> ',chongfu)
+                print('chongfu============>',chongfu)
                 keywords_list = set(forms_obj.cleaned_data.get('keywords'))
                 querysetlist = []
                 create_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                print("form_data['search']===========> ",form_data['search'], type(json.loads(form_data['search'])))
+                print("form_data['search']===========>",form_data['search'], type(json.loads(form_data['search'])))
                 for search in json.loads(form_data['search']):
                     print('search=====> ',search)
                     for keyword in keywords_list:
