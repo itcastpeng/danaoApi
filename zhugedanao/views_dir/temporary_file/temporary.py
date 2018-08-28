@@ -16,7 +16,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
 import json, requests
 import urllib.request
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8')
+# sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8')
 
 def linshi(request):
     # for name in ['客户ID230', '客户ID34', '🌻李汉杰👵', '🌿张聪', '卢俊义', '公孙胜', '秦明', '假如', '关胜', '过客❤', 'ju do it',
