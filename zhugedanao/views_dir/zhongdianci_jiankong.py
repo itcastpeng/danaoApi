@@ -41,7 +41,7 @@ def zhongDianCiShowTaskList(request):
                     detail_objs_count = obj.zhugedanao_zhongdianci_jiankong_taskdetail_set.filter(
                         tid_id=obj.id,
                     )
-                    detail_count = detail_objs_count.filter(is_perform=1).filter(task_start_time__isnull=False).count()
+                    detail_count = detail_objs_count.filter(is_perform=0).filter(task_start_time__isnull=False).count()
                     baifenbi = 0
                     if detail_count:
                         baifenbi = int((detail_count / detail_objs_count.count()) * 100)
@@ -69,7 +69,7 @@ def zhongDianCiShowTaskList(request):
                 response.data = {'data_list':data_list}
             response.msg = '查询成功'
             response.code = 200
-                #     response.code = 403
+            #     response.code = 403
             #     response.msg = '无任务'
         else:
             response.code = 402
