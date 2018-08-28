@@ -11,8 +11,9 @@ import json, requests
 
 response = Response.ResponseObj()
 
+# 立即监控
 @csrf_exempt
-def zhongDianCiChaXunLiJiJianKong(request):    # 立即监控
+def zhongDianCiChaXunLiJiJianKong(request):
     id_list = request.GET.get('id_list')
     if id_list:
         id_list = json.loads(id_list)
@@ -28,8 +29,9 @@ def zhongDianCiChaXunLiJiJianKong(request):    # 立即监控
         response.msg = 'ID不能为空'
     return JsonResponse(response.__dict__)
 
+# 定时刷新 更改下一次执行时间
 @csrf_exempt
-def timeToRefreshZhgongDianCi(request):     # 定时刷新 更改下一次执行时间
+def timeToRefreshZhgongDianCi(request):
     lijijiankong = request.GET.get('lijijiankong')
     start_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:59')
     if lijijiankong:
@@ -63,15 +65,15 @@ def timeToRefreshZhgongDianCi(request):     # 定时刷新 更改下一次执行
         response.msg = '无任务'
     return JsonResponse(response.__dict__)
 
-
+# 判断是否有任务
 @csrf_exempt
-def zhongDianCiChaXunDecideIsTask(request):     # 判断是否有任务
+def zhongDianCiChaXunDecideIsTask(request):
     start_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:59')
     objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(
-        tid__task_status=2,
+        tid__task_status=3,
         tid__qiyong_status=1,
         tid__next_datetime__lte=start_time,
-        is_perform=0
+        is_perform=1
     )[:1]
     flag = False
     if objs:
@@ -86,12 +88,12 @@ def zhongDianCiChaXunDecideIsTask(request):     # 判断是否有任务
     response.msg = '{}'.format(canshu)
     return JsonResponse(response.__dict__)
 
-
+ # 获取任务
 @csrf_exempt
-def HuoQuRenWuzhongDianCi(request):         # 获取任务
+def HuoQuRenWuzhongDianCi(request):
     now = int(time.time())
     q = Q()
-    q.add(Q(is_perform=1), Q.AND)
+    q.add(Q(is_perform=1) & Q(tid__task_status=3) & Q(tid__qiyong_status=1), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now), Q.AND)
     objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(q)[:1]
     if objs:
@@ -116,8 +118,9 @@ def HuoQuRenWuzhongDianCi(request):         # 获取任务
         response.data = {}
     return JsonResponse(response.__dict__)
 
+ # 返回任务
 @csrf_exempt
-def TiJiaoRenWuzhongDianCi(request):        # 返回任务
+def TiJiaoRenWuzhongDianCi(request):
     if request.method == 'POST':
         tid = request.POST.get('tid')
         resultObj = request.POST.get('resultObj')
