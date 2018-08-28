@@ -65,7 +65,8 @@ def zhongDianCiShowTaskList(request):
                     })
                 response.data = {'data_list':data_list}
             else:
-                response.data = {}
+                data_list = []
+                response.data = {'data_list':data_list}
             response.msg = '查询成功'
             response.code = 200
                 #     response.code = 403
