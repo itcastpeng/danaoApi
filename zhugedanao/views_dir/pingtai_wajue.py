@@ -224,12 +224,21 @@ def pingTaiWaJue(request, oper_type, o_id):
             final_objs.filter(user_id_id=user_id).delete()
             print(objs)
             for obj in objs:
-                final_objs.create(
-                    user_id_id=user_id,
-                    yuming=obj['yuming'],
-                    number=obj['number__sum'],
-                    search=obj['tid__search']
-                )
+                is_yuming = final_objs.filter(yuming=obj['yuming'])
+                if is_yuming:
+                    final_objs.update(
+                        user_id_id=user_id,
+                        yuming=obj['yuming'],
+                        number=obj['number__sum'],
+                        search=obj['tid__search']
+                    )
+                else:
+                    final_objs.create(
+                        user_id_id=user_id,
+                        yuming=obj['yuming'],
+                        number=obj['number__sum'],
+                        search=obj['tid__search']
+                    )
             response.code = 200
             response.msg = '计算结果完成'
     else:

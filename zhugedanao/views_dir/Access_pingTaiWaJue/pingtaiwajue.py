@@ -30,7 +30,7 @@ def pingTaiWaJueDecideIsTask(request):
     response.data = {'flag':flag}
     return JsonResponse(response.__dict__)
 
-
+# 获取任务
 @csrf_exempt
 def pingTaiWaJueHuoQuRenWu(request):
     now_time = int(time.time())
@@ -56,6 +56,7 @@ def pingTaiWaJueHuoQuRenWu(request):
         response.data = {}
     return JsonResponse(response.__dict__)
 
+# 返回结果
 @csrf_exempt
 def pingTaiWaJueTiJiaoRenWu(request):
     if request.method == 'POST':

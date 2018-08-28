@@ -1667,15 +1667,28 @@ def baiduFuGaiPC(keyword):
 
 # url = 'http://127.0.0.1:8000/zhugedanao/zhongDianCiChaXunDecideIsTask'
 # url = 'http://api.zhugeyingxiao.com/zhugedanao/zhongDianCiChaXunDecideIsTask'
-url = 'http://api.zhugeyingxiao.com/zhugedanao/timeToRefreshZhgongDianCi'
+# url = 'http://api.zhugeyingxiao.com/zhugedanao/timeToRefreshZhgongDianCi'
+# ret = requests.get(url)
+# print(os.getcwd())
+# print(ret.text)
+
+
+
+import json, requests
+import threading
+def zhongDianCiTimerRefresh():
+    timer = threading.Timer(30, zhongDianCiTimerRefresh)
+    timer.start()
+    print('==========')
+    # url = 'http://127.0.0.1:8000/zhugedanao/timeToRefreshZhgongDianCi'
+    # requests.get(url)
+
+# zhongDianCiTimerRefresh()
+
+
+url = 'http://api.zhugeyingxiao.com/zhugedanao/pingTaiWaJue/finalResult/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11'
 ret = requests.get(url)
-print(os.getcwd())
 print(ret.text)
-
-
-
-
-
 
 
 
