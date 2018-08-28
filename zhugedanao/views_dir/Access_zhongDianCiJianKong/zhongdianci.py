@@ -60,8 +60,9 @@ def timeToRefreshZhgongDianCi(request):
         next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
         task_list_objs.update(next_datetime=next_datetime_addoneday)
         models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=objs[0].tid.id).update(is_perform=1)
+    response.data = {}
     response.code = 200
-    response.msg = '查询成功'
+    response.msg = '改值成功'
 
     return JsonResponse(response.__dict__)
 

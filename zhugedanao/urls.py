@@ -69,5 +69,5 @@ urlpatterns = [
 
 
 
-    url(r'^linshi', temporary.linshi),                              # 定时刷新更改状态
+    url(r'^linshi', temporary.linshi),                                                                  # 临时转换用户名base64
 ]
