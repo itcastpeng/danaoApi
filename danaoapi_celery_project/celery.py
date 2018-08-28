@@ -24,10 +24,15 @@ app.conf.beat_schedule = {
     #     # 'args': (2, 2),                                     # 传递的参数
     # },
 
+#     'timeToRefreshZhgongDianCi':{
+#         'task':'danaoapi_celery_project.tasks.timeToRefreshZhgongDianCi',
+#         'schedule': crontab("*/2", '*', '*', '*', '*'),
+#     }
     'timeToRefreshZhgongDianCi':{
         'task':'danaoapi_celery_project.tasks.timeToRefreshZhgongDianCi',
-        'schedule': crontab("*/2", '*', '*', '*', '*'),
+        'schedule':30
     }
+
 }
 
 # Optional configuration, see the application user guide.
