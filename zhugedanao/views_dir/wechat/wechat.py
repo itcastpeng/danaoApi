@@ -91,7 +91,9 @@ def index(request):
                 else:
                     ret_obj = we_chat_public_send_msg_obj.get_user_info(openid=openid)
                     print('ret_obj -->', ret_obj)
-                    nickname = base64.b64encode(json.loads(ret_obj['nickname']).encode(encoding='utf-8'))
+
+                    encodestr = base64.b64encode(ret_obj['nickname'].encode('utf-8'))
+                    encode_username = str(encodestr, encoding='utf-8')
                     models.zhugedanao_userprofile.objects.create(
                         openid=openid,
                         token=get_token(timestamp),
@@ -102,7 +104,8 @@ def index(request):
                         city=ret_obj['city'],
                         subscribe_time=ret_obj['subscribe_time'],
                         set_avator=ret_obj['headimgurl'],
-                        username=nickname,
+                        username=encode_username,
+                        # username=ret_obj['nickname'],
                     )
 
 
@@ -125,17 +128,15 @@ def wechat_login(request):
     user_objs = models.zhugedanao_userprofile.objects.select_related('level_name').filter(timestamp=timestamp)
     if user_objs:
         user_obj = user_objs[0]
-        # username = ''
-        # print('user_obj.username---------1> ',user_obj.username)
-        # if user_obj.username:
-        #     username = base64.b64decode(user_obj.username).decode()
-        # print('user_obj.username---------2> ',user_obj.username)
         response.code = 200
+        decode_username = base64.b64decode(user_obj.username)
+        username = str(decode_username, 'utf-8')
         response.data = {
             'token': user_obj.token,
             'user_id': user_obj.id,
             'set_avator': user_obj.set_avator,
-            'username': user_obj.username,
+            # 'username': user_obj.username,
+            'username':username,
             'level_name': user_obj.level_name.name
         }
         response.msg = "登录成功"
