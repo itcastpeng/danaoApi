@@ -45,8 +45,8 @@ class zhugedanao_userprofile(models.Model):
         (2, "未启用"),
     )
     status = models.SmallIntegerField(choices=status_choices, verbose_name="状态", default=1)
-    password = models.CharField(verbose_name="密码", max_length=32, null=True, blank=True)
-    username = models.CharField(verbose_name="姓名", max_length=128, null=True, blank=True)
+    password = models.CharField(verbose_name="密码", max_length=64, null=True, blank=True)
+    username = models.CharField(verbose_name="姓名", max_length=64, null=True, blank=True)
 
     level_name = models.ForeignKey('zhugedanao_level', verbose_name="用户级别", default=1)
     role = models.ForeignKey("zhugedanao_role", verbose_name="角色", null=True, blank=True)

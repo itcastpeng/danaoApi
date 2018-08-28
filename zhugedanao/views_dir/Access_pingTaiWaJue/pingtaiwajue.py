@@ -14,7 +14,7 @@ import json
 
 # 平台挖掘 判断是否有任务
 @csrf_exempt
-def baiDuXiaLaDecideIsTask(request):
+def pingTaiWaJueDecideIsTask(request):
     now_time = int(time.time())
     q = Q()
     q.add(Q(is_perform=0), Q.AND)
@@ -32,7 +32,7 @@ def baiDuXiaLaDecideIsTask(request):
 
 
 @csrf_exempt
-def baiDuXiaLaHuoQuRenWu(request):
+def pingTaiWaJueHuoQuRenWu(request):
     now_time = int(time.time())
     time_stamp20 = now_time + 20
     q = Q()
@@ -57,7 +57,7 @@ def baiDuXiaLaHuoQuRenWu(request):
     return JsonResponse(response.__dict__)
 
 @csrf_exempt
-def baiDuXiaLaTiJiaoRenWu(request):
+def pingTaiWaJueTiJiaoRenWu(request):
     if request.method == 'POST':
         print('request.POST--------> ',request.POST)
         task_id = request.POST.get('task_id')
