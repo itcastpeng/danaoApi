@@ -28,6 +28,11 @@ app.conf.beat_schedule = {
 #         'task':'danaoapi_celery_project.tasks.timeToRefreshZhgongDianCi',
 #         'schedule': crontab("*/2", '*', '*', '*', '*'),
 #     }
+    'timeToRefreshZhgongDianCi':{
+        'task':'danaoapi_celery_project.tasks.timeToRefreshZhgongDianCi',
+        'schedule':30
+    }
+
 }
 
 # Optional configuration, see the application user guide.
