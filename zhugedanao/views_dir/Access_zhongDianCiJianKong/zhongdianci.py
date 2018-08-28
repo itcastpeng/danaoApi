@@ -48,6 +48,7 @@ def timeToRefreshZhgongDianCi(request):
         else:
             response.code = 403
             response.msg = '无任务'
+            response.data = {}
             return JsonResponse(response.__dict__)
     task_list_objs.update(
         task_status=3,
@@ -144,6 +145,9 @@ def TiJiaoRenWuzhongDianCi(request):
                 create_time=now_data,
                 paiming=paiming,
             )
+        models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=tid).update(
+            is_perform=0
+        )
         # detail_objs_count = objs.zhugedanao_zhongdianci_jiankong_taskdetail_set.filter(
         #     tid_id=objs.id,
         # )
@@ -151,10 +155,10 @@ def TiJiaoRenWuzhongDianCi(request):
         # baifenbi = 0
         # if detail_count:
         #     baifenbi = int((detail_count / detail_objs_count.count()) * 100)
-        models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=tid).update(
-            task_status=1,
-            is_zhixing=0
-        )
+        # models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=tid).update(
+        #     task_status=1,
+        #     is_zhixing=0
+        # )
         response.code = 200
         response.msg = '已完成'
     else:
