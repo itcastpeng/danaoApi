@@ -35,7 +35,6 @@ def timeToRefreshZhgongDianCi(request):
     lijijiankong = request.GET.get('lijijiankong')
     start_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:59')
     if lijijiankong:
-        print('=----------------》 ', lijijiankong)
         task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=lijijiankong)
     else:
         objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(
@@ -46,23 +45,24 @@ def timeToRefreshZhgongDianCi(request):
         )[:1]
         if objs:
             task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=objs[0].tid.id)
-    if task_list_objs:
-        task_list_objs.update(
-            task_status=3,
-            is_zhixing=1
-        )
-        next_datetime = task_list_objs[0].next_datetime
-        now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
-        if next_datetime <= now_datetime:
-            next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
-            task_list_objs.update(next_datetime=next_datetime_addoneday)
-            models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=objs[0].tid.id).update(is_perform=1)
-        response.code = 200
-        response.msg = '查询成功'
-    else:
-        response.code = 403
-        response.msg = '无任务'
+        else:
+            response.code = 403
+            response.msg = '无任务'
+            return JsonResponse(response.__dict__)
+    task_list_objs.update(
+        task_status=3,
+        is_zhixing=1
+    )
+    next_datetime = task_list_objs[0].next_datetime
+    now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
+    if next_datetime <= now_datetime:
+        next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
+        task_list_objs.update(next_datetime=next_datetime_addoneday)
+        models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=objs[0].tid.id).update(is_perform=1)
+    response.code = 200
+    response.msg = '查询成功'
+
     return JsonResponse(response.__dict__)
 
 # 判断是否有任务
