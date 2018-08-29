@@ -30,7 +30,7 @@ class AddForm(forms.Form):
         url_num = 0
         for i in url.split('\n'):
             url_num += 1
-            if i:
+            if i.strip():
                 url_list.append(i.strip())
             else:
                 self.add_error('url_list', '第{}行不能为空!'.format(url_num))
