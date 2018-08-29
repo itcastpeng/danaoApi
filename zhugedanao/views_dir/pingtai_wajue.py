@@ -11,6 +11,7 @@ from zhugedanao.forms.pingtai_wajue import AddForm, SelectForm
 import json
 import random
 from django.db.models import Count,Q, Sum
+import threading
 chongfu = 0
 
 # cerf  token验证 用户展示模块
@@ -25,8 +26,8 @@ def pingTaiWaJueShow(request):
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
             task_objs = models.zhugedanao_pingtaiwajue_keyword.objects.filter(user_id_id=user_id)
-            objs = models.zhugedanao_pingtaiwajue_finalResult.objects.filter(user_id_id=user_id)
             task_count = task_objs.count()
+            objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id=user_id)
             objs_count = objs.count()
             yiwancheng = task_objs.filter(is_perform=1).count()
             query_progress = 0
@@ -43,13 +44,13 @@ def pingTaiWaJueShow(request):
             data_list = []
 
             for obj in objs:
-                if str(obj.search) == '1':
+                if str(obj.tid.search) == '1':
                     yinqing = '百度'
-                elif str(obj.search) == '4':
+                elif str(obj.tid.search) == '4':
                     yinqing = '手机百度'
-                elif str(obj.search) == '3':
+                elif str(obj.tid.search) == '3':
                     yinqing = '360'
-                elif str(obj.search) == '6':
+                elif str(obj.tid.search) == '6':
                     yinqing = '手机360'
                 else:
                     yinqing = ''
@@ -58,7 +59,6 @@ def pingTaiWaJueShow(request):
                     'number':obj.number,
                     'search':yinqing
                 })
-
             response.code = 200
             response.msg = '查询成功'
             response.data = {
@@ -72,7 +72,6 @@ def pingTaiWaJueShow(request):
             response.code = 402
             response.msg = "请求异常"
             response.data = json.loads(forms_obj.errors.as_json())
-
     return JsonResponse(response.__dict__)
 
 
@@ -87,7 +86,8 @@ def pingTaiWaJue(request, oper_type, o_id):
     if request.method == "POST":
         # 增加下拉任务
         if oper_type == "add":
-            # models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
+            models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id_id=user_id).delete()
+            models.zhugedanao_pingtaiwajue_keyword.objects.filter(user_id_id=user_id).delete()
             form_data = {
                 'search' : request.POST.get('search'),
                 'keywords': request.POST.get('keywords'),
@@ -190,11 +190,21 @@ def pingTaiWaJue(request, oper_type, o_id):
             ws['F4'].alignment = Alignment(horizontal='center', vertical='center')
             ws['F5'].alignment = Alignment(horizontal='center', vertical='center')
             row = 4
-            objs = models.zhugedanao_pingtaiwajue_finalResult.objects.filter(user_id_id=user_id)
-            number_count = objs.values('user_id').annotate(Sum('number'))
+            objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id_id=user_id)
+            number_count = objs.values('tid__user_id').annotate(Sum('number'))
+            print('number_count==========> ',number_count)
             number = 0
             bili = 0
+            yinqing = '百度'
             for obj in objs:
+                if str(obj.tid.search) == '1':
+                    yinqing = '百度'
+                elif str(obj.tid.search) == '4':
+                    yinqing = '手机百度'
+                elif str(obj.tid.search) == '3':
+                    yinqing = '360'
+                elif str(obj.tid.search) == '6':
+                    yinqing = '手机360'
                 number += 1
                 if obj.number:
                     bili = int((int(obj.number) / int(number_count[0]['number__sum'])) * 100)
@@ -202,7 +212,7 @@ def pingTaiWaJue(request, oper_type, o_id):
                 ws.cell(row=row, column=2, value="{title}".format(title=obj.yuming))
                 ws.cell(row=row, column=3, value="{title}".format(title=obj.number))
                 ws.cell(row=row, column=4, value="{bili}".format(bili=str(bili) + '%'))
-                ws.cell(row=row, column=5, value="{bili}".format(bili='百度'))
+                ws.cell(row=row, column=5, value="{search}".format(search=yinqing))
                 row += 1
             ws.cell(row=4, column=6, value="总排名数:{}".format(number_count[0]['number__sum']))
             ws.cell(row=5, column=6, value="平台数:1")
@@ -217,29 +227,53 @@ def pingTaiWaJue(request, oper_type, o_id):
 
         # 处理后最终结果
         if oper_type == 'finalResult':
-            objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id_id=user_id).values('yuming','tid__search').annotate(
+            # while True:
+            # keyword_objs = models.zhugedanao_pingtaiwajue_keyword.objects.filter(user_id_id=user_id)
+            # yiwancheng = keyword_objs.filter(is_perform=1).count()
+            # keyword_all = keyword_objs.count()
+            # print('---------> ', yiwancheng, keyword_all)
+            # if int(yiwancheng) == int(keyword_all):
+            #     break
+            # else:
+            # objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id_id=user_id).values('yuming','tid__search').annotate(
+            #     Sum('number')
+            # )
+                # final_objs = models.zhugedanao_pingtaiwajue_finalResult.objects
+                # for obj in objs:
+                #     is_yuming = final_objs.filter(yuming=obj['yuming'])
+                #     print('is_yuming============> ',is_yuming)
+                #     if is_yuming:
+                #         final_objs.update(
+                #             user_id_id=user_id,
+                #             yuming=obj['yuming'],
+                #             number=obj['number__sum'],
+                #             search=obj['tid__search']
+                #         )
+                #     else:
+                #         final_objs.create(
+                #             user_id_id=user_id,
+                #             yuming=obj['yuming'],
+                #             number=obj['number__sum'],
+                #             search=obj['tid__search']
+                #         )
+            objs = models.zhugedanao_pingtaiwajue_yuming.objects
+            tongji_objs = objs.filter(tid__user_id_id=user_id).values('yuming',
+                'tid__search').annotate(
                 Sum('number')
             )
-            final_objs = models.zhugedanao_pingtaiwajue_finalResult.objects
-            # final_objs.filter(user_id_id=user_id).delete()
-            # print(objs)
-            for obj in objs:
-                is_yuming = final_objs.filter(yuming=obj['yuming'])
-                if is_yuming:
-                    final_objs.update(
-                        user_id_id=user_id,
-                        yuming=obj['yuming'],
-                        number=obj['number__sum'],
-                        search=obj['tid__search']
+            for tongji_obj in tongji_objs:
+                yuming_obj = objs.filter(tid__user_id_id=user_id).filter(yuming=tongji_obj['yuming']).filter(tid__search=tongji_obj['tid__search'])
+                if yuming_obj[0].yuming and yuming_obj[0].number != tongji_obj['number__sum']:
+                    now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+                    create_obj = objs.create(
+                        yuming=tongji_obj['yuming'],
+                        number=tongji_obj['number__sum'],
+                        tid_id=yuming_obj[0].tid.id,
+                        create_time=now_date
                     )
-                else:
-                    final_objs.create(
-                        user_id_id=user_id,
-                        yuming=obj['yuming'],
-                        number=obj['number__sum'],
-                        search=obj['tid__search']
-                    )
-            response.code = 200
+                    objs.filter(yuming=tongji_obj['yuming']).exclude(id=create_obj.id).delete()
+            response.data = {}
+            response.code = 2000
             response.msg = '计算结果完成'
     else:
         response.code = 402
