@@ -58,16 +58,16 @@ def pingTaiWaJueShow(request):
                     'number':obj.number,
                     'search':yinqing
                 })
-            exet_data = {
+
+            response.code = 200
+            response.msg = '查询成功'
+            response.data = {
                 'data': data_list,                      # 详情
                 'objs_count':objs_count,                # 总数
                 'query_progress':query_progress,        # 进度
                 'whether_complete':whether_complete,    # 是否完成
                 'yiwancheng_obj':yiwancheng,            # 已完成
             }
-            response.code = 200
-            response.msg = '查询成功'
-            response.data = {'exet_data':exet_data}
         else:
             response.code = 402
             response.msg = "请求异常"
@@ -221,8 +221,8 @@ def pingTaiWaJue(request, oper_type, o_id):
                 Sum('number')
             )
             final_objs = models.zhugedanao_pingtaiwajue_finalResult.objects
-            final_objs.filter(user_id_id=user_id).delete()
-            print(objs)
+            # final_objs.filter(user_id_id=user_id).delete()
+            # print(objs)
             for obj in objs:
                 is_yuming = final_objs.filter(yuming=obj['yuming'])
                 if is_yuming:
