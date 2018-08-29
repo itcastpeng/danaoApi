@@ -30,15 +30,15 @@ class AddForm(forms.Form):
         url_num = 0
         for i in url.split('\n'):
             url_num += 1
-            if i:
+            if i.strip():
                 url_list.append(i.strip())
             else:
                 self.add_error('url_list', '第{}行不能为空!'.format(url_num))
         if len(url_list) == 0:
             self.add_error('url_list', '提交链接不能为空')
         # if len(url_list) > 20:                          # 测试
-        if len(url_list) > 200:  # 线上
-            self.add_error('url_list', '提交链接大于200条!')
+        if len(url_list) > 1000:  # 线上
+            self.add_error('url_list', '提交链接大于1000条!')
         else:
             url_list_data = []
             num = 0
