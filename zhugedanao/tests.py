@@ -634,8 +634,8 @@ class shouluChaXun():
 
     # 获取任务
     def shouLuHuoQuRenWu(self):
-        # url = 'http://api.zhugeyingxiao.com/zhugedanao/shouluHuoQuRenWu'
-        url = 'http://127.0.0.1:8000/zhugedanao/shouluHuoQuRenWu'
+        url = 'http://api.zhugeyingxiao.com/zhugedanao/shouluHuoQuRenWu'
+        # url = 'http://127.0.0.1:8000/zhugedanao/shouluHuoQuRenWu'
         ret = requests.get(url)
         result = json.loads(ret.text)
         print('获取收录任务-------------> ',result['data'])
@@ -649,7 +649,6 @@ class shouluChaXun():
         kuaizhao = data_dict['resultObj']['kuaizhao_time'],
         status_code = data_dict['resultObj']['status_code'],
         o_id = data_dict['tid'],
-        # url = 'http://api.zhugeyingxiao.com/zhugedanao/shouluTiJiaoRenWu'
         content_dict = {
             'o_id' : o_id,
             'title' : title,
@@ -673,8 +672,8 @@ class shouluChaXun():
             self.shouLuReturnsTheResult(data_dict)
         else:
             return
+
 # if __name__ == '__main__':
-#
 #     objs = shouluChaXun()
 #     objs.start()
 
@@ -1668,9 +1667,9 @@ def baiduFuGaiPC(keyword):
 # url = 'http://127.0.0.1:8000/zhugedanao/zhongDianCiChaXunDecideIsTask'
 url = 'http://api.zhugeyingxiao.com/zhugedanao/zhongDianCiChaXunDecideIsTask'
 # url = 'http://api.zhugeyingxiao.com/zhugedanao/timeToRefreshZhgongDianCi'
-ret = requests.get(url)
-print(os.getcwd())
-print(ret.text)
+# ret = requests.get(url)
+# print(os.getcwd())
+# print(ret.text)
 
 
 
@@ -1689,6 +1688,238 @@ import threading
 # url = 'http://api.zhugeyingxiao.com/zhugedanao/pingTaiWaJue/finalResult/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11'
 # ret = requests.get(url)
 # print(ret.text)
+
+
+
+
+
+
+
+
+
+
+
+
+
+def baiduShouLuPC(domain, liaojietijiao_shoulu=None):
+    resultObj = {
+        "shoulu": 0,
+        "kuaizhao_time": '',
+        "title": '',
+        "status_code": ''
+    }
+    # 编码成url格式
+    domain = parse.quote_plus(domain.strip())
+    zhidao_url = 'http://www.baidu.com/s?wd={domain}'.format(domain=domain)
+    headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)]}
+    ret_domain = requests.get(zhidao_url, headers=headers, timeout=10)
+    soup_domain = BeautifulSoup(ret_domain.text, 'lxml')
+    if soup_domain.find('div', class_='content_none'):
+        resultObj["status_code"] = ret_domain.status_code
+    else:
+        div_tags = soup_domain.find_all('div', class_='result c-container ')
+        if div_tags and div_tags[0].attrs.get('id'):
+            panduan_url = div_tags[0].find('a')['href']
+            f13_div = div_tags[0].find('div', class_='f13')
+            if liaojietijiao_shoulu:
+                ret = requests.get(panduan_url, headers=headers, timeout=10)
+                ret_two_url = ret.url
+                if domain in ret_two_url or domain == ret_two_url:
+                    if f13_div.find('a'):
+                        resultObj["shoulu"] = 1
+                else:
+                    resultObj["shoulu"] = 0
+            else:
+                print('div_tags====> ',div_tags[0].find('a').get_text())
+                ret = requests.get(panduan_url, headers=headers, timeout=10)
+                print(ret.url)
+import re
+# domain = 'https://wenda.so.com/q/1373013967063537'
+# baiduShouLuPC(domain)
+
+
+# re.search('window.location.replace', ret.text)
+# print(ret.text.split('window.location.replace'))
+
+# domain = 'http://news.100yiyao.com/detail/193538320.html'
+# baiduShouLuPC(domain)
+            #     status_code, title, ret_two_url = getPageInfo(panduan_url)
+            #     # 解码
+            #     domain = parse.unquote_plus(domain)
+            #     if domain in ret_two_url or domain == ret_two_url:
+            #         if f13_div.find('a'):
+            #             resultObj["shoulu"] = 1
+            #             resultObj["title"] = title
+            #             resultObj["status_code"] = status_code
+            #             if div_tags[0].find('span', class_='newTimeFactor_before_abs'):
+            #                 resultObj["kuaizhao_time"] = div_tags[0].find('span',
+            #                     class_='newTimeFactor_before_abs').get_text().strip().replace('-', '').replace('年',
+            #                     '-').replace('月', '-').replace('日', '').strip()
+            #     else:
+            #         status_code, title, ret_two_url = getPageInfo(domain)
+            #         resultObj["title"] = title
+            #         resultObj["status_code"] = status_code
+            #         resultObj["shoulu"] = 0
+
+    # return resultObj
+
+
+
+
+
+
+def baiduShouLuMobeil(domain, liaojietijiao_shoulu=None):
+    resultObj = {
+        "shoulu": 0,
+        "kuaizhao_time": '',
+        "title": '',
+        "status_code": ''
+    }
+    # 编码成url格式
+    domain = parse.quote_plus(domain.strip())
+    zhidao_url = 'https://m.baidu.com/from=844b/pu=sz@1320_2001/s?tn=iphone&usm=2&word={}'.format(domain)
+    headers = {
+        'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'}
+    ret_domain = requests.get(zhidao_url, headers=headers, timeout=10)
+    print('zhidao_url=======> ', zhidao_url)
+    soup_domain = BeautifulSoup(ret_domain.text, 'lxml')
+    if not soup_domain.find_all('div', class_='result c-result'):
+        resultObj["status_code"] = ret_domain.status_code
+    else:
+        div_tags = soup_domain.find_all('div', class_='result c-result')
+        if div_tags:
+            dict_data_clog = eval(div_tags[0].attrs.get('data-log'))
+            url = dict_data_clog['mu']
+            if url.strip():
+                domain_jiema = parse.unquote_plus(domain)
+                if liaojietijiao_shoulu:
+                    ret = requests.get(url, headers=headers, timeout=10)
+                    ret_two_url = ret.url
+                    if domain_jiema == ret_two_url or domain_jiema in ret_two_url:
+                        resultObj["shoulu"] = 1
+                    else:
+                        resultObj["shoulu"] = 0
+                else:
+                    ret = requests.get(url, headers=headers, timeout=10)
+                    if domain_jiema == ret.url or domain_jiema in ret.url:
+                        resultObj["status_code"] = ret.status_code
+                        if ret.status_code == 200 :
+                            resultObj["title"] = div_tags[0].find('a').get_text()
+                            resultObj["shoulu"] = 1
+                    else:
+                        ret = requests.get(url, headers=headers, timeout=10)
+                        resultObj["status_code"] = ret.status_code
+                        resultObj["shoulu"] = 0
+    print('resultObj======> ',resultObj)
+    # return resultObj
+
+
+
+
+def pcShoulu360(domain):
+    resultObj = {
+        "shoulu": 0,
+        "kuaizhao_time": '',
+        "title": '',
+        "status_code": '',
+        "rank_num": 0
+    }
+    # 编码成url格式
+    domain = parse.quote_plus(domain.strip())
+    headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)]}
+    pc_360url = 'https://so.com/s?src=3600w&q={domain}'.format(domain=domain)
+    ret_domain = requests.get(pc_360url, headers=headers, timeout=10)
+    print('pc_360url============> ', pc_360url)
+    soup = BeautifulSoup(ret_domain.text, 'lxml')
+    if soup.find('div', class_='so-toptip'):
+        resultObj['shoulu'] = '0'
+        resultObj["status_code"] = ret_domain.status_code
+    else:
+        li_tags = soup.find_all('li', class_='res-list')
+        if len(li_tags) > 0:
+            zongti_xinxi = li_tags[0].find('a', target='_blank')  # 获取order -- title -- title_url
+            yuming_canshu = li_tags[0].find('p', class_='res-linkinfo')  # 域名参数
+            if li_tags[0].find('a').attrs.get('data-url'):
+                data_url = li_tags[0].find('a').attrs.get('data-url')
+            else:
+                data_url = zongti_xinxi.attrs['href']
+            # status_code, title, ret_two_url = getPageInfo(data_url)
+            ret = requests.get(data_url, headers=headers, timeout=10)
+            # # 解码
+            domain_jiema = parse.unquote_plus(domain)
+            if domain_jiema in ret.url or domain_jiema == ret.url:
+                resultObj["status_code"] = ret.status_code
+                if ret.status_code == 200:
+                    resultObj["title"] = li_tags[0].find('a').get_text()
+                    resultObj['shoulu'] = 1
+            else:
+                ret = requests.get(data_url, headers=headers, timeout=10)
+                resultObj["status_code"] = ret.status_code
+                resultObj['shoulu'] = 0
+    print(resultObj)
+    return resultObj
+
+def mobielShoulu360(domain):
+    resultObj = {
+        "shoulu": 0,
+        "kuaizhao_time": '',
+        "title": '',
+        "status_code": '',
+        "rank_num": 0
+    }
+    # 编码成url格式
+    domain = parse.quote_plus(domain.strip())
+    PC_360_url = 'https://m.so.com/s?src=3600w&q={}'.format(domain)
+    print('PC_360_url------> ', PC_360_url)
+    headers = {
+        'user-agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1'}
+    ret = requests.get(PC_360_url, headers=headers, timeout=10)
+    soup = BeautifulSoup(ret.text, 'lxml')
+    if soup.find('div', class_='mso-url2link'):
+        resultObj["status_code"] = ret.status_code
+    else:
+        div_tags = soup.find_all('div', class_=' g-card res-list og ')
+        if len(div_tags) > 0:
+            url_data = div_tags[0].attrs.get('data-pcurl')
+            # # 解码
+            domain = parse.unquote_plus(domain)
+            ret = requests.get(url_data, headers=headers, timeout=10)
+            if domain in ret.url or ret.url == domain:
+                resultObj["status_code"] = ret.status_code
+                if ret.status_code == 200:
+                    resultObj["title"] = div_tags[0].find('a').get_text()
+                    resultObj['shoulu'] = 1
+            else:
+                ret = requests.get(url_data, headers=headers, timeout=10)
+                resultObj["status_code"] = ret.status_code
+                resultObj['shoulu'] = 0
+    print(resultObj)
+    return resultObj
+
+
+
+headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)]}
+import re
+
+ret = requests.get('http://www.baidu.com/link?url=49bGpZx-NhCEdpw8XvicGvqI0htNiQ4esXfsP1UlgRpQSxm7Zz5t6YTGkWesSSIOYJ3yML6VovtqKzkt5YjMkq', headers=headers, timeout=5, allow_redirects=False)
+if ret.status_code == 200:
+    pattern = re.compile(
+        r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+    zhixing_url = re.findall(pattern, ret.text)
+    if len(zhixing_url) > 1:
+        zhixing_url = zhixing_url[0]
+if ret.status_code == 302:
+    zhixing_url = ret.headers['location']
+
+pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
+url = re.findall(pattern, ret.text)
+if len(url) > 1:
+    url = url[0]
+
+print('url========> ',url)
+
+
+
 
 
 

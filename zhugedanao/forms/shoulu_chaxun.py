@@ -25,8 +25,33 @@ class AddForm(forms.Form):
         }
     )
     def clean_url_list(self):
-        url_list = self.data.get('url_list')
-        return url_list.split()
+        url_list = []
+        url = self.data.get('url_list')
+        url_num = 0
+        for i in url.split('\n'):
+            url_num += 1
+            if i:
+                url_list.append(i.strip())
+            else:
+                self.add_error('url_list', '第{}行不能为空!'.format(url_num))
+        if len(url_list) == 0:
+            self.add_error('url_list', '提交链接不能为空')
+        # if len(url_list) > 20:                          # 测试
+        if len(url_list) > 200:  # 线上
+            self.add_error('url_list', '提交链接大于200条!')
+        else:
+            url_list_data = []
+            num = 0
+            for url_re in url_list:
+                num += 1
+                pattern = re.compile(
+                    r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
+                url = re.findall(pattern, url_re)
+                if url:
+                    url_list_data.append(url[0])
+                else:
+                    self.add_error('url_list', '第{}行请输入正确链接'.format(num))
+            return url_list_data
 
 
 # 判断是否是数字
