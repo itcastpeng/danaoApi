@@ -10,8 +10,8 @@ from celery import Celery
 from celery.schedules import crontab
 
 app = Celery(
-    broker='redis://redis_host:6379/2',
-    backend='redis://redis_host:6379/2',
+    broker='redis://redis_host:6379/3',
+    backend='redis://redis_host:6379/3',
     include=['danaoapi_celery_project.tasks'],
 )
 
