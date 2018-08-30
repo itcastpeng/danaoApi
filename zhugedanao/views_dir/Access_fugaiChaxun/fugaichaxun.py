@@ -99,17 +99,3 @@ def fuGaiTiJiaoRenWu(request):
         response.msg = '请求异常'
     response.data = {}
     return JsonResponse(response.__dict__)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
