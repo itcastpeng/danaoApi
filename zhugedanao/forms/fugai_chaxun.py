@@ -28,7 +28,7 @@ class AddForm(forms.Form):
 
     def clean_keywords_list(self):
         keywords_data_list = []
-        for i in self.data.get('keywords_list').strip().split():
+        for i in self.data.get('keywords_list').split('\n'):
             if i.strip():
                 keywords_data_list.append(i.strip())
         if len(keywords_data_list) == 0:
