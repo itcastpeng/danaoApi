@@ -227,39 +227,30 @@ def linksShouLuReturnData(request):
     return JsonResponse(response.__dict__)
 
 
-# 提交链接前查询是否收录
+
+
+# 提交链接 删除任务
 @csrf_exempt
-def beforelinksSubmitStatusDecideIsTask(request):
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(beforeSubmitStatus=1)
-    flag = False
-    response.code = 403
-    response.msg = '无任务'
-    if objs:
-        flag = True
+def linksSubmitDelteTask(request):
+    if request.method == 'GET':
+        task_id = request.GET.get('task_id')
+        task_list_objs = models.zhugedanao_lianjie_task_list.objects.get(id=task_id)
+        task_detale_objs = task_list_objs.zhugedanao_lianjie_tijiao_set.filter(tid_id=task_list_objs.id)
+        for task_detale_obj in task_detale_objs:
+            print('task_detale_obj.id-------> ',task_detale_obj.id)
+            models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=task_detale_obj.id).delete()
+        task_detale_objs.delete()
+        task_list_objs.delete()
+
         response.code = 200
-        response.msg = '查询成功'
-    response.data = {'flag':flag}
-    return JsonResponse(response.__dict__)
-# 获取任务
-@csrf_exempt
-def linksSubmitBeforeStatus(request):
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(beforeSubmitStatus=1).order_by('?')[0:1]
-    if objs:
-        o_id = objs[0].id
-        url = objs[0].url
-        response.data = {
-            'o_id':o_id,
-            'url':url
-        }
-        response.code = 200
-        response.msg = '查询成功'
+        response.msg = '删除成功'
     else:
-        response.code = 403
-        response.msg = '无任务'
-        response.data = {}
+        response.code = 402
+        response.msg = '请求异常'
+    response.data = {}
     return JsonResponse(response.__dict__)
-# 返回任务
-@csrf_exempt
-def SubmitBeforeReturnData(request):
-    pass
+
+
+
+
 
