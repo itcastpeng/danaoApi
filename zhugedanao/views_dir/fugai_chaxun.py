@@ -71,9 +71,12 @@ def fuGaiChaxunShow(request):
                 rank_num = 0
                 paiming_detail = '-'
                 if obj.paiming_detail:
-                    if len(obj.paiming_detail) != 0:
+                    if len(obj.paiming_detail) == 1:
+                        paiming_detail = int(obj.paiming_detail)
+                        if int(paiming_detail) > 0:
+                            rank_num =1
+                    if len(obj.paiming_detail) > 1:
                         rank_num = len(obj.paiming_detail.split(','))
-
                         paiming_detail = str(set(eval(obj.paiming_detail)))
                 rank_num_count += rank_num
                 data_list.append({
