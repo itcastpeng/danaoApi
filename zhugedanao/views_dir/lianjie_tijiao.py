@@ -143,7 +143,7 @@ def lianjie_tijiao_detail(request):
                         'url': obj.url,
                         'count': obj.count,                         # 详情数据提交次数
                         'status_text':obj.get_status_display(),    # 查询状态
-                        'beforeSubmit':'未查询',
+                        'beforeSubmit':obj.get_beforeSubmitStatus_display(),
                     })
                 #  查询成功 返回200 状态码
                 response.code = 200
