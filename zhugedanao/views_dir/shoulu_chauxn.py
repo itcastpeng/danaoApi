@@ -25,7 +25,7 @@ def shouLuChaXunShow(request):
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
-            objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).order_by('-is_shoulu')
+            objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id)
             if difference_status:
                 if int(difference_status) == 0:         # 已收录
                     objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id, is_shoulu=1)
