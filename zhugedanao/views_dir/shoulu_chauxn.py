@@ -11,7 +11,7 @@ from zhugedanao.forms.shoulu_chaxun import AddForm, SelectForm
 import json
 import random
 
-chongfu = 0
+
 
 # cerf  token验证 用户展示模块
 @csrf_exempt
@@ -25,7 +25,7 @@ def shouLuChaXunShow(request):
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
-            objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id)
+            objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).order_by('-is_shoulu')
             if difference_status:
                 if int(difference_status) == 0:         # 已收录
                     objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id, is_shoulu=1)
@@ -99,7 +99,7 @@ def shouLuChaXunShow(request):
 
     return JsonResponse(response.__dict__)
 
-
+chongfu = 0
 #  增删改
 #  csrf  token验证
 @csrf_exempt

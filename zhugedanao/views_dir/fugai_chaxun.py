@@ -23,7 +23,7 @@ def fuGaiChaxunShow(request):
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
-            objs = models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id)
+            objs = models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id).order_by('-is_zhixing')
             dataCount = objs.count()        # 覆盖总数
             objs_eidt = objs.filter(is_zhixing=1)
             # 已完成 进度条
@@ -77,13 +77,15 @@ def fuGaiChaxunShow(request):
                             rank_num =1
                     if len(obj.paiming_detail) > 1:
                         rank_num = len(obj.paiming_detail.split(','))
-                        paiming_detail = str(set(eval(obj.paiming_detail)))
+                        paiming_detail =str(set(eval(obj.paiming_detail)))
+                        if type(paiming_detail) != int:
+                            paiming_detail = paiming_detail.replace('{', '').replace('}', '')
                 rank_num_count += rank_num
                 data_list.append({
                     'id':obj.id,
                     'keyword':obj.keyword,
                     'search_engine':yinqing,
-                    'rank_info':json.dumps(paiming_detail),
+                    'rank_info':paiming_detail,
                     'otherData':obj.json_detail_data,
                     'rank_num':rank_num
                     })

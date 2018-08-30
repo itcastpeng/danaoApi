@@ -88,9 +88,13 @@ def get_task_for(request):
             )
             log_count = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
             if log_count:
+                # 提交 查询该链接是否收录
                 objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
                 if int(objs[0].beforeSubmitStatus) == 1:
-                    objs.update(beforeSubmitStatus=is_shoulu)
+                    shoulu = 3
+                    if int(is_shoulu) == 1:
+                        shoulu = 2
+                    objs.update(beforeSubmitStatus=shoulu)
                 if objs:
                     tid=objs[0].tid.id
                     count_list = objs.filter(tid=tid).count()
