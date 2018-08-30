@@ -35,14 +35,14 @@ def shouluHuoQuRenWu(request):
     q = Q()
     q.add(Q(is_zhixing=0), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time), Q.AND)
-    objs = models.zhugedanao_shoulu_chaxun.objects.filter(q)[0:1]
+    objs = models.zhugedanao_shoulu_chaxun.objects.filter(q).order_by('?')[0:1]
     if objs:
         objs[0].time_stamp = time_stamp20
         objs[0].save()
         response.data = {
             'o_id':objs[0].id,
             'url':objs[0].url,
-            'search':objs[0].search,
+            'search':objs[0].search
         }
         response.msg = '查询成功'
     else:

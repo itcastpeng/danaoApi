@@ -38,7 +38,7 @@ class AddForm(forms.Form):
             self.add_error('url_list', '提交链接不能为空')
         # if len(url_list) > 20:                          # 测试
         if len(url_list) > 1000:  # 线上
-            self.add_error('url_list', '提交链接大于1000条!')
+            self.add_error('url_list', '输入框内提交链接不得大于1000条!')
         else:
             url_list_data = []
             num = 0
