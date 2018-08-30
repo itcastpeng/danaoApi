@@ -37,7 +37,7 @@ def fuGaiHuoQuRenWu(request):
     q = Q()
     q.add(Q(is_zhixing=0), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time), Q.AND)
-    objs = models.zhugedanao_fugai_chaxun.objects.filter(q)[0:1]
+    objs = models.zhugedanao_fugai_chaxun.objects.filter(q)[0:1].order_by('?')
     if objs:
         objs[0].time_stamp = time_stamp30
         objs[0].save()
