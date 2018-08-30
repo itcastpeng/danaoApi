@@ -83,7 +83,7 @@ def fuGaiChaxunShow(request):
                     'id':obj.id,
                     'keyword':obj.keyword,
                     'search_engine':yinqing,
-                    'rank_info':paiming_detail,
+                    'rank_info':json.dumps(paiming_detail),
                     'otherData':obj.json_detail_data,
                     'rank_num':rank_num
                     })
