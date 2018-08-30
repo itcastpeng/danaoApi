@@ -83,7 +83,7 @@ def fuGaiChaxunShow(request):
                     'id':obj.id,
                     'keyword':obj.keyword,
                     'search_engine':yinqing,
-                    'rank_info':paiming_detail,
+                    'rank_info':json.dumps(paiming_detail),
                     'otherData':obj.json_detail_data,
                     'rank_num':rank_num
                     })
@@ -138,7 +138,6 @@ def fuGaiChaXun(request, oper_type, o_id):
             if forms_obj.is_valid():
                 print("验证通过")
                 global chongfu
-
                 chongfu = int(len(forms_obj.cleaned_data.get('keywords_list'))) - int(len(set(forms_obj.cleaned_data.get('keywords_list'))))
                  # 添加数据库
                 search_list = forms_obj.cleaned_data.get('search_list')
@@ -146,9 +145,8 @@ def fuGaiChaXun(request, oper_type, o_id):
                 conditions_list = forms_obj.cleaned_data.get('conditions_list')
                 querysetlist = []
                 now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                print('search_list-----------> ',search_list)
                 for search in json.loads(search_list):
-                    for keyword in keywords_list:
+                    for keyword in list(keywords_list):
                         querysetlist.append(
                             models.zhugedanao_fugai_chaxun(
                                 user_id_id=user_id,
