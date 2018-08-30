@@ -73,15 +73,15 @@ def lianjie_tijiao(request):
                 if obj.shoulu_num:
                     shoulu_num = obj.shoulu_num
                 ret_data.append({
-                    'id': obj.id,                                            # 任务id
-                    'task_name': obj.task_name,                              # 任务名称
-                    'task_status':zhuangtai,                                 # 任务状态 完成 未完成
-                    'task_progress': obj.task_progress,                      # 进度条
-                    'create_date': obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),# 创建时间
-                    'count_taskList':obj.count_taskList,                     # 详情数量
-                    'yiwancheng_obj': yiwancheng_obj,                        # 已完成数量
-                    'is_update':int(obj.is_update),                          # 是否可以修改和删除 1不可以 0可以
-                    'shoulu_num':shoulu_num
+                    'id': obj.id,                                                   # 任务id
+                    'task_name': obj.task_name,                                     # 任务名称
+                    'task_status':zhuangtai,                                        # 任务状态 完成 未完成
+                    'task_progress': obj.task_progress,                             # 进度条
+                    'create_date': obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),   # 创建时间
+                    'count_taskList':obj.count_taskList,                            # 详情数量
+                    'yiwancheng_obj': yiwancheng_obj,                               # 已完成数量
+                    'is_update':int(obj.is_update),                                 # 是否可以修改和删除 1不可以 0可以
+                    'shoulu_num':shoulu_num,                                        # 已收录数量
                 })
             response.code = 200
             response.msg = '查询成功'
@@ -104,7 +104,6 @@ def lianjie_tijiao(request):
 def lianjie_tijiao_detail(request):
     response = Response.ResponseObj()
     if request.method == "GET":
-        print('任务详情------------',request.GET)
         forms_obj = SelectForm(request.GET)
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
@@ -116,7 +115,6 @@ def lianjie_tijiao_detail(request):
                 'url': '__contains',
                 'tid':tid
             }
-            print('tid---------> ',tid)
             if tid:
                 q = conditionCom(request, field_dict)
                 print('q -->', q)
@@ -145,6 +143,7 @@ def lianjie_tijiao_detail(request):
                         'url': obj.url,
                         'count': obj.count,                         # 详情数据提交次数
                         'status_text':obj.get_status_display(),    # 查询状态
+                        'beforeSubmit':'未查询',
                     })
                 #  查询成功 返回200 状态码
                 response.code = 200

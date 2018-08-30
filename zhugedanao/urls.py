@@ -32,6 +32,9 @@ urlpatterns = [
     url(r'^set_task_access', access_task.set_task_access),                                       # 获取提交链接数据
     url(r'^get_task_for', access_task.get_task_for),                                             # 接收返回的数据并改值
     # url(r'^panduan_shijian', access_task.panduan_shijian),                                     # celery定时判断时间改值30分钟
+    # url(r'^beforelinksSubmitStatusDecideIsTask', access_task.beforelinksSubmitStatusDecideIsTask),# 提交链接前查询是否收录
+    # url(r'^linksSubmitBeforeStatus', access_task.linksSubmitBeforeStatus),                        # 提交链接前查询收录获取任务
+    # url(r'^SubmitBeforeReturnData', access_task.SubmitBeforeReturnData),                          # 提交链接前查询收录返回任务
 
     # 收录功能
     url(r'^shouLuChaxun/(?P<oper_type>\w+)/(?P<o_id>\d+)', shoulu_chauxn.shouLuChaxun),          # 操作

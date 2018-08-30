@@ -76,6 +76,8 @@ def get_task_for(request):
         urlId = request.POST.get('urlId')
         ip_addr = request.POST.get('ip_addr')
         address = request.POST.get('address')
+        is_shoulu = request.POST.get('is_shoulu')
+
         print('urlId----> ',o_id, urlId, ip_addr, address)
         if urlId:
             models.zhugedanao_lianjie_tijiao_log.objects.create(
@@ -87,6 +89,8 @@ def get_task_for(request):
             log_count = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
             if log_count:
                 objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
+                if int(objs[0].beforeSubmitStatus) == 1:
+                    objs.update(beforeSubmitStatus=is_shoulu)
                 if objs:
                     tid=objs[0].tid.id
                     count_list = objs.filter(tid=tid).count()
@@ -219,8 +223,39 @@ def linksShouLuReturnData(request):
     return JsonResponse(response.__dict__)
 
 
-
-
-
-
+# 提交链接前查询是否收录
+@csrf_exempt
+def beforelinksSubmitStatusDecideIsTask(request):
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(beforeSubmitStatus=1)
+    flag = False
+    response.code = 403
+    response.msg = '无任务'
+    if objs:
+        flag = True
+        response.code = 200
+        response.msg = '查询成功'
+    response.data = {'flag':flag}
+    return JsonResponse(response.__dict__)
+# 获取任务
+@csrf_exempt
+def linksSubmitBeforeStatus(request):
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(beforeSubmitStatus=1).order_by('?')[0:1]
+    if objs:
+        o_id = objs[0].id
+        url = objs[0].url
+        response.data = {
+            'o_id':o_id,
+            'url':url
+        }
+        response.code = 200
+        response.msg = '查询成功'
+    else:
+        response.code = 403
+        response.msg = '无任务'
+        response.data = {}
+    return JsonResponse(response.__dict__)
+# 返回任务
+@csrf_exempt
+def SubmitBeforeReturnData(request):
+    pass
 
