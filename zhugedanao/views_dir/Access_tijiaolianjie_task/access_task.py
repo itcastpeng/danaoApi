@@ -72,13 +72,11 @@ def set_task_access(request):
 def get_task_for(request):
     if request.method == 'POST':
         now_date =  datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-        o_id = request.POST.get('o_id')
+        # o_id = request.POST.get('o_id')
         urlId = request.POST.get('urlId')
         ip_addr = request.POST.get('ip_addr')
         address = request.POST.get('address')
         is_shoulu = request.POST.get('is_shoulu')
-
-        print('urlId----> ',o_id, urlId, ip_addr, address)
         if urlId:
             models.zhugedanao_lianjie_tijiao_log.objects.create(
                 zhugedanao_lianjie_tijiao_id=urlId,
@@ -94,7 +92,7 @@ def get_task_for(request):
                     shoulu = 3
                     if int(is_shoulu) == 1:
                         shoulu = 2
-                    objs.update(beforeSubmitStatus=shoulu)
+                    objs.filter(id=urlId).update(beforeSubmitStatus=shoulu)
                 if objs:
                     tid=objs[0].tid.id
                     count_list = objs.filter(tid=tid).count()
@@ -102,7 +100,6 @@ def get_task_for(request):
                     jindutiao = 0
                     if zhixing_count:
                         jindutiao = int((zhixing_count / count_list) * 100)
-                    print(count_list)
                     task_status = 0
                     if zhixing_count == count_list:
                         task_status = 1
