@@ -16,13 +16,13 @@ class AddForm(forms.Form):
     keywords_list = forms.CharField(
         required=True,
         error_messages={
-            'required': "提交链接不能为空"
+            'required': "关键词不能为空"
         }
     )
     conditions_list = forms.CharField(
         required=True,
         error_messages={
-            'required': "提交链接不能为空"
+            'required': "覆盖条件不能为空"
         }
     )
 
@@ -32,9 +32,9 @@ class AddForm(forms.Form):
             if i.strip():
                 keywords_data_list.append(i.strip())
         if len(keywords_data_list) == 0:
-            self.add_error('keyword', '关键词不能为空')
-        # if len(keywords_data_list) > 500:
-        #     self.add_error('keyword', '关键词超过五百条!')
+            self.add_error('keywords_list', '关键词不能为空')
+        if len(keywords_data_list) > 1000:
+            self.add_error('keyword', '关键词超过1000个!')
         else:
             return keywords_data_list
 
@@ -44,7 +44,7 @@ class AddForm(forms.Form):
             if i:
                 conditions_list.append(i.strip())
         if len(conditions_list) == 0:
-            self.add_error('keyword', '搜索条件不能为空')
+            self.add_error('conditions_list', '搜索条件不能为空')
         else:
             return conditions_list
 

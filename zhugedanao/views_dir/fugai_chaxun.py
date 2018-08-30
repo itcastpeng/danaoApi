@@ -133,12 +133,20 @@ def fuGaiChaXun(request, oper_type, o_id):
                 'conditions_list':request.POST.get('fugai_tiaojian')
             }
             models.zhugedanao_fugai_chaxun.objects.filter(user_id_id=user_id).delete()
+            keywords_data_list = []
+            for i in form_data.get('keywords_list').split():
+                if i.strip():
+                    keywords_data_list.append(i.strip())
+            if len(keywords_data_list) == 0:
+                print('关键词不能为空')
+            if len(keywords_data_list) > 10:
+                print('关键词超过1000个!')
+
             #  创建 form验证 实例（参数默认转成字典）
             forms_obj = AddForm(form_data)
             if forms_obj.is_valid():
                 print("验证通过")
                 global chongfu
-
                 chongfu = int(len(forms_obj.cleaned_data.get('keywords_list'))) - int(len(set(forms_obj.cleaned_data.get('keywords_list'))))
                  # 添加数据库
                 search_list = forms_obj.cleaned_data.get('search_list')
@@ -146,7 +154,6 @@ def fuGaiChaXun(request, oper_type, o_id):
                 conditions_list = forms_obj.cleaned_data.get('conditions_list')
                 querysetlist = []
                 now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                print('search_list-----------> ',search_list)
                 for search in json.loads(search_list):
                     for keyword in keywords_list:
                         querysetlist.append(
