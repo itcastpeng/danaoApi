@@ -36,6 +36,7 @@ def timeToRefreshZhgongDianCi(request):
     start_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:59')
     if lijijiankong:
         task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=lijijiankong)
+        models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=task_list_objs[0].id).update(is_perform=1)
     else:
         q = Q()
         q.add(Q(tid__task_status=2) | Q(tid__task_status=1), Q.AND)
@@ -46,12 +47,12 @@ def timeToRefreshZhgongDianCi(request):
         )[:1]
         if objs:
             task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=objs[0].tid.id)
+            models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=objs[0].tid.id).update(is_perform=1)
         else:
             response.code = 403
             response.msg = '无任务'
             response.data = {}
             return JsonResponse(response.__dict__)
-        models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=objs[0].tid.id).update(is_perform=1)
     task_list_objs.filter(id=task_list_objs[0].id).update(
         task_status=3,
         is_zhixing=1
