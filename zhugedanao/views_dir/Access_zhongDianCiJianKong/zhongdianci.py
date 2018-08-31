@@ -51,17 +51,17 @@ def timeToRefreshZhgongDianCi(request):
             response.msg = '无任务'
             response.data = {}
             return JsonResponse(response.__dict__)
+        models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=objs[0].tid.id).update(is_perform=1)
     task_list_objs.filter(id=task_list_objs[0].id).update(
         task_status=3,
         is_zhixing=1
     )
-    next_datetime = task_list_objs[0].next_datetime
-    now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
-    if next_datetime <= now_datetime:
-        next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
-        task_list_objs.update(next_datetime=next_datetime_addoneday)
-        models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=objs[0].tid.id).update(is_perform=1)
+    # next_datetime = task_list_objs[0].next_datetime
+    # now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    # now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
+    # if next_datetime <= now_datetime:
+    #     next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
+    #     task_list_objs.update(next_datetime=next_datetime_addoneday)
     response.data = {}
     response.code = 200
     response.msg = '改值成功'
@@ -152,6 +152,14 @@ def TiJiaoRenWuzhongDianCi(request):
                 create_time=now_data,
                 paiming=paiming,
             )
+        task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=tid)
+        if task_list_objs:
+            next_datetime = task_list_objs[0].next_datetime
+            now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
+            if next_datetime <= now_datetime:
+                next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
+                task_list_objs.update(next_datetime=next_datetime_addoneday)
         models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=tid).update(
             is_perform=0
         )
