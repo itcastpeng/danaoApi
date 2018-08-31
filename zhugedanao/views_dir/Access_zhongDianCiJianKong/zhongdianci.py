@@ -37,8 +37,9 @@ def timeToRefreshZhgongDianCi(request):
     if lijijiankong:
         task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=lijijiankong)
     else:
-        objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(
-            tid__task_status=2,
+        q = Q()
+        q.add(Q(tid__task_status=2) | Q(tid__task_status=1), Q.AND)
+        objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(q).filter(
             tid__qiyong_status=1,
             tid__next_datetime__lte=start_time,
             is_perform=0
