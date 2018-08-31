@@ -124,7 +124,6 @@ def shouLuChaxun(request, oper_type, o_id):
                 # print('-------->', forms_obj.cleaned_data.get('url_list'), type(forms_obj.cleaned_data.get('url_list')))
                 chongfu = int(len(forms_obj.cleaned_data.get('url_list'))) - int(len(set(forms_obj.cleaned_data.get('url_list'))))
                 url_list = set(forms_obj.cleaned_data.get('url_list'))
-                print(url_list, type(url_list))
                 search_list = forms_obj.cleaned_data.get('search_list')
                 querysetlist = []
                 now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')

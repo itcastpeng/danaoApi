@@ -30,31 +30,31 @@ def fuGaiChaxunShow(request):
             yiZhiXingCount = objs_eidt.count()
             yiWanCheng = 0
             if yiZhiXingCount:
-                # yiWanCheng = int((yiZhiXingCount / dataCount) * 100)
-                yiWanCheng = objs_eidt.count()
+                yiWanCheng = yiZhiXingCount
             whether_complete = False
             if dataCount == yiWanCheng:
                 whether_complete = True
-            # fugai_objs = objs_eidt.filter(paiming_detail__isnull=False)
-            # paiming_num = fugai_objs.count()
-            # fugai_num = 0
-            # for fugai_obj in fugai_objs:
-            #     fugai_num += len(fugai_obj.paiming_detail.split(','))
-            # fugailv = 0
-            # if fugai_num:
-            #     fugailv = int((int(fugai_num) / int(dataCount * 10)) * 100)
-            # paiminglv = 0
-            # if paiming_num:
-            #     paiminglv = int((int(paiming_num) / int(dataCount)) * 100)
+            fugai_objs = objs_eidt.filter(paiming_detail__isnull=False).filter(paiming_detail__gt=0)
+            paiming_num = fugai_objs.count()
+            fugai_num = 0
+            for fugai_obj in fugai_objs:
+                fugai_num += len(fugai_obj.paiming_detail.split(','))
+            fugailv = 0
+            if fugai_num:
+                fugailv = int((int(fugai_num) / int(dataCount * 10)) * 100)
+            paiminglv = 0
+            if paiming_num:
+                paiminglv = int((int(paiming_num) / int(dataCount)) * 100)
+            query_progress = 0 # 进度条
+            if yiZhiXingCount:
+                query_progress = int((yiZhiXingCount / dataCount) * 100)
             # 分页
             if length != 0:
                 start_line = (current_page - 1) * length
                 stop_line = start_line + length
                 objs = objs[start_line: stop_line]
-
             # 返回的数据
             data_list = []
-            rank_num_count = 0
             for obj in objs:
                 if obj.json_detail_data:
                     pass
@@ -81,7 +81,6 @@ def fuGaiChaxunShow(request):
                         if type(paiming_detail_sort) != int:
                             ls2 = [str(i) for i in paiming_detail_sort]
                             paiming_detail = ','.join(ls2)
-                rank_num_count += rank_num
                 data_list.append({
                     'id':obj.id,
                     'keyword':obj.keyword,
@@ -90,21 +89,13 @@ def fuGaiChaxunShow(request):
                     'otherData':obj.json_detail_data,
                     'rank_num':rank_num
                     })
-            paiminglv = 0
-            if rank_num_count:
-                paiminglv = int((int(rank_num_count) / (int(dataCount) * 10)) * 100)
-            fugailv = 0
-            if rank_num_count:
-                fugailv = int((int(rank_num_count) / int(dataCount * 10)) * 100)
-            query_progress = 0
-            if yiZhiXingCount:
-                query_progress = int((yiZhiXingCount / dataCount) * 100)
+
             response.code = 200
             response.msg = '查询成功'
             response.data = {
                 'retData': data_list,                   # 详情
                 'dataCount': dataCount,                 # 任务总数
-                'paiming_num':rank_num_count,           # 有排名数
+                'paiming_num':fugai_num,           # 有排名数
                 'fugailv':fugailv,                      # 覆盖率
                 'paiminglv':paiminglv,                  # 排名率
                 'yiwancheng_obj':yiWanCheng,            # 已完成数量
