@@ -203,6 +203,7 @@ def zhongDianCiOper(request, oper_type, o_id):
                     for keywords in keyword_list:
                         num += 1
                         if keywords:
+                            print(keywords)
                             if 'http' in keywords:
                                 re_keyword = re.findall("(.*)http", keywords.replace('\t', ''))
                                 if re_keyword[0]:
@@ -212,6 +213,7 @@ def zhongDianCiOper(request, oper_type, o_id):
                                     response.code = 301
                                     response.msg = '第{}行请输入关键词!'.format(num)
                                     panduan_flag = True
+                                    flag = True
                                     break
                                 if url and re_keyword:
                                     pattern = re.compile(
@@ -222,6 +224,7 @@ def zhongDianCiOper(request, oper_type, o_id):
                                             if panduan_number != num:
                                                 panduan_flag = True
                                                 response.code = 301
+                                                flag = True
                                                 response.msg = '第{}行请输入正确链接'.format(num - 1)
                                                 break
                                         panduan_number += 1
@@ -237,6 +240,7 @@ def zhongDianCiOper(request, oper_type, o_id):
                                         response.code = 200
                                         response.msg = "添加成功"
                                     else:
+                                        flag = True
                                         response.code = 301
                                         response.msg = '第{}行请输入正确链接!'.format(num)
                                 else:
@@ -263,6 +267,10 @@ def zhongDianCiOper(request, oper_type, o_id):
                                     flag = True
                                     response.code = 301
                                     response.msg = '无链接, 请填写模糊匹配或填写链接!'
+                        else:
+                            flag = True
+                            response.code = 301
+                            response.msg = '第{}行不能为空!'.format(num)
                 models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.bulk_create(querysetlist)
                 if flag:
                     # 验证不通过 删除创建的任务列表

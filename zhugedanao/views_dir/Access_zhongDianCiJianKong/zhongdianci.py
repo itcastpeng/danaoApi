@@ -36,6 +36,7 @@ def timeToRefreshZhgongDianCi(request):
     start_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:59')
     if lijijiankong:
         task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=lijijiankong)
+        models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=task_list_objs[0].id).update(is_perform=1)
     else:
         q = Q()
         q.add(Q(tid__task_status=2) | Q(tid__task_status=1), Q.AND)
@@ -46,6 +47,7 @@ def timeToRefreshZhgongDianCi(request):
         )[:1]
         if objs:
             task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=objs[0].tid.id)
+            models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=objs[0].tid.id).update(is_perform=1)
         else:
             response.code = 403
             response.msg = '无任务'
@@ -55,13 +57,12 @@ def timeToRefreshZhgongDianCi(request):
         task_status=3,
         is_zhixing=1
     )
-    next_datetime = task_list_objs[0].next_datetime
-    now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
-    if next_datetime <= now_datetime:
-        next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
-        task_list_objs.update(next_datetime=next_datetime_addoneday)
-        models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=objs[0].tid.id).update(is_perform=1)
+    # next_datetime = task_list_objs[0].next_datetime
+    # now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    # now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
+    # if next_datetime <= now_datetime:
+    #     next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
+    #     task_list_objs.update(next_datetime=next_datetime_addoneday)
     response.data = {}
     response.code = 200
     response.msg = '改值成功'
@@ -130,12 +131,18 @@ def TiJiaoRenWuzhongDianCi(request):
         judge = request.POST.get('judge')
         json_data = json.loads(resultObj)
         now_data = datetime.date.today().strftime('%Y-%m-%d')
+        paiming = 0
+        if json_data['order']:
+            paiming = json_data['order']
+        shoulu = 0
+        if json_data['shoulu']:
+            shoulu = json_data['shoulu']
         if judge == 'shoulu':
             objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
                 tid_id=tid,
                 create_time=now_data,
-                paiming=json_data['order'],
-                is_shoulu=json_data['shoulu'],
+                paiming=paiming,
+                is_shoulu=shoulu,
             )
         else:
             print('=========================')
@@ -146,6 +153,14 @@ def TiJiaoRenWuzhongDianCi(request):
                 create_time=now_data,
                 paiming=paiming,
             )
+        task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=tid)
+        if task_list_objs:
+            next_datetime = task_list_objs[0].next_datetime
+            now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
+            if next_datetime <= now_datetime:
+                next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
+                task_list_objs.update(next_datetime=next_datetime_addoneday)
         models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=tid).update(
             is_perform=0
         )
