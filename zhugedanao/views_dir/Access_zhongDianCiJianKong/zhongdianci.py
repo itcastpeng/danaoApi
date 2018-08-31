@@ -50,7 +50,7 @@ def timeToRefreshZhgongDianCi(request):
             response.msg = '无任务'
             response.data = {}
             return JsonResponse(response.__dict__)
-    task_list_objs.update(
+    task_list_objs.filter(id=task_list_objs[0].id).update(
         task_status=3,
         is_zhixing=1
     )
