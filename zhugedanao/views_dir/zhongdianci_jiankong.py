@@ -213,6 +213,7 @@ def zhongDianCiOper(request, oper_type, o_id):
                                     response.code = 301
                                     response.msg = '第{}行请输入关键词!'.format(num)
                                     panduan_flag = True
+                                    flag = True
                                     break
                                 if url and re_keyword:
                                     pattern = re.compile(
