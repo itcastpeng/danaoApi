@@ -50,7 +50,7 @@ def timeToRefreshZhgongDianCi(request):
             response.msg = '无任务'
             response.data = {}
             return JsonResponse(response.__dict__)
-    task_list_objs.update(
+    task_list_objs.filter(id=task_list_objs[0].id).update(
         task_status=3,
         is_zhixing=1
     )
@@ -100,7 +100,7 @@ def HuoQuRenWuzhongDianCi(request):
     objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(q)[:1]
     if objs:
         now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-        time_stamp = int(time.time()) + 300
+        time_stamp = int(time.time()) + 30
         models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=objs[0].id).update(
             time_stamp=time_stamp,
             task_start_time=now_datetime
