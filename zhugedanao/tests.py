@@ -1916,9 +1916,17 @@ url = re.findall(pattern, ret.text)
 if len(url) > 1:
     url = url[0]
 
-print('url========> ',url)
+# print('url========> ',url)
 
 
+
+chrfiles = "9, 2, 10, 4, 3, 65, 7"
+paiming_detail =set(eval(chrfiles))
+paiming_detail_sort = sorted(paiming_detail)
+ls2 = [str(i) for i in paiming_detail_sort]
+
+print(','.join(ls2))
+# print(" ".join(paiming_detail_sort))
 
 
 

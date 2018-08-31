@@ -193,42 +193,83 @@ def zhongDianCiOper(request, oper_type, o_id):
                 )
                 querysetlist = []
                 create_time = datetime.datetime.today().strftime("%Y-%m-%d %H-%M-%S")
+                flag = False
+                panduan_flag = False
                 for search in forms_obj.cleaned_data.get('search_engine'):
+                    if panduan_flag:
+                        break
+                    num = 0
+                    panduan_number = 1
                     for keywords in keyword_list:
-                        if 'http' in keywords:
-                            re_keyword = re.findall("(.*)http", keywords.replace('\t', ''))
-                            url_list = keywords.split(re_keyword[0])
-                            url = url_list[1]
-                            if url and re_keyword:
-                                querysetlist.append(
-                                    models.zhugedanao_zhongdianci_jiankong_taskDetail(
-                                        tid_id=objs.id,
-                                        search_engine=search,
-                                        lianjie=url.strip(),
-                                        keyword=re_keyword[0],
-                                        create_time=create_time
-                                    )
-                                )
-                                response.code = 200
-                                response.msg = "添加成功"
-                        else:
-                            if form_data['mohupipei']:
-                                querysetlist.append(
-                                    models.zhugedanao_zhongdianci_jiankong_taskDetail(
-                                        tid_id=objs.id,
-                                        search_engine=search,
-                                        keyword=keywords,
-                                        mohupipei=form_data['mohupipei'],
-                                        create_time=create_time
-                                    )
-                                )
-                                response.code = 200
-                                response.msg = "添加成功"
+                        num += 1
+                        if keywords:
+                            if 'http' in keywords:
+                                re_keyword = re.findall("(.*)http", keywords.replace('\t', ''))
+                                if re_keyword[0]:
+                                    url_list = keywords.split(re_keyword[0])
+                                    url = url_list[1]
+                                else:
+                                    response.code = 301
+                                    response.msg = '第{}行请输入关键词!'.format(num)
+                                    panduan_flag = True
+                                    break
+                                if url and re_keyword:
+                                    pattern = re.compile(
+                                        r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 判断链接
+                                    url = re.findall(pattern, url)
+                                    if url:
+                                        if panduan_number >= 1:
+                                            if panduan_number != num:
+                                                panduan_flag = True
+                                                response.code = 301
+                                                response.msg = '第{}行请输入正确链接'.format(num - 1)
+                                                break
+                                        panduan_number += 1
+                                        querysetlist.append(
+                                            models.zhugedanao_zhongdianci_jiankong_taskDetail(
+                                                tid_id=objs.id,
+                                                search_engine=search,
+                                                lianjie=url[0],
+                                                keyword=re_keyword[0],
+                                                create_time=create_time
+                                            )
+                                        )
+                                        response.code = 200
+                                        response.msg = "添加成功"
+                                    else:
+                                        response.code = 301
+                                        response.msg = '第{}行请输入正确链接!'.format(num)
+                                else:
+                                    flag = True
+                                    response.code = 301
+                                    if not url:
+                                        response.msg = '第{}行请填写正确链接!'.format(num)
+                                    if not re_keyword:
+                                        response.msg = '第{}行请填写正确关键词!'.format(num)
                             else:
-                                response.code = 301
-                                response.msg = '请填写正确数据'
+                                if form_data['mohupipei']:
+                                    querysetlist.append(
+                                        models.zhugedanao_zhongdianci_jiankong_taskDetail(
+                                            tid_id=objs.id,
+                                            search_engine=search,
+                                            keyword=keywords.strip(),
+                                            mohupipei=form_data['mohupipei'],
+                                            create_time=create_time
+                                        )
+                                    )
+                                    response.code = 200
+                                    response.msg = "添加成功"
+                                else:
+                                    flag = True
+                                    response.code = 301
+                                    response.msg = '无链接, 请填写模糊匹配或填写链接!'
                 models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.bulk_create(querysetlist)
-
+                if flag:
+                    # 验证不通过 删除创建的任务列表
+                    task_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects
+                    task_objs.filter(id=objs.id)
+                    if task_objs:
+                        task_objs.filter(id=objs.id).delete()
             else:
                 print("验证不通过")
                 response.code = 301
