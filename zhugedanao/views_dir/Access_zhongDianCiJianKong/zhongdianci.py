@@ -155,12 +155,16 @@ def TiJiaoRenWuzhongDianCi(request):
             )
         task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=tid)
         if task_list_objs:
+            task_list_objs.update(task_status=1)
             next_datetime = task_list_objs[0].next_datetime
             now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
             if next_datetime <= now_datetime:
                 next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
-                task_list_objs.update(next_datetime=next_datetime_addoneday)
+                task_list_objs.update(
+                    next_datetime=next_datetime_addoneday,
+                    is_zhixing = False
+                )
         models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=tid).update(
             is_perform=0
         )

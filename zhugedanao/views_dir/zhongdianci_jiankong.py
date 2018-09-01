@@ -55,7 +55,7 @@ def zhongDianCiShowTaskList(request):
                         task_status = '已查询'
                     data_list.append({
                         "id": obj.id,
-                        'is_zhixing':obj.is_zhixing,
+                        'zhiixng':obj.is_zhixing,
                         "qiyong_status": qiyongstatus,
                         "task_name": obj.task_name,
                         "task_start_time": obj.task_start_time,
