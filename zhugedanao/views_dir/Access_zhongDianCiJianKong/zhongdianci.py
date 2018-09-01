@@ -129,15 +129,16 @@ def TiJiaoRenWuzhongDianCi(request):
         tid = request.POST.get('tid')
         resultObj = request.POST.get('resultObj')
         judge = request.POST.get('judge')
+        print(resultObj)
         json_data = json.loads(resultObj)
         now_data = datetime.date.today().strftime('%Y-%m-%d')
-        paiming = 0
-        if json_data['order']:
-            paiming = json_data['order']
-        shoulu = 0
-        if json_data['shoulu']:
-            shoulu = json_data['shoulu']
         if judge == 'shoulu':
+            paiming = 0
+            if json_data['order']:
+                paiming = json_data['order']
+            shoulu = 0
+            if json_data['shoulu']:
+                shoulu = json_data['shoulu']
             objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
                 tid_id=tid,
                 create_time=now_data,
@@ -145,9 +146,8 @@ def TiJiaoRenWuzhongDianCi(request):
                 is_shoulu=shoulu,
             )
         else:
-            print('=========================')
             paiming = str(','.join(map(str, json_data)))
-            print(paiming, type(paiming))
+            print('paiming==========> ',paiming)
             objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
                 tid_id=tid,
                 create_time=now_data,

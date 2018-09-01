@@ -128,7 +128,6 @@ def pingTaiWaJue(request, oper_type, o_id):
                 response.data = {}
 
     elif request.method == 'GET':
-
         # 点击返回 删除任务
         if oper_type == 'clickReturn':
             response.code = 200
@@ -140,8 +139,6 @@ def pingTaiWaJue(request, oper_type, o_id):
                 user_id_id=user_id
             ).delete()
             return JsonResponse(response.__dict__)
-
-            # 生成报表
 
         # 生成excel
         if oper_type == 'generateExcel':
