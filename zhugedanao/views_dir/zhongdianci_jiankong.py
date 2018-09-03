@@ -45,7 +45,6 @@ def zhongDianCiShowTaskList(request):
                     if obj.qiyong_status:
                         qiyongstatus = '已启用'
                     task_status = '正在查询'
-                    print('=====>', obj.id, obj.next_datetime)
                     if int(baifenbi) == 100:
                         task_list_objs.filter(id=obj.id).update(
                             task_status=1,
@@ -85,8 +84,6 @@ def zhongDianCiShowTaskList(request):
                 response.data = {'data_list':data_list}
             response.msg = '查询成功'
             response.code = 200
-            #     response.code = 403
-            #     response.msg = '无任务'
         else:
             response.code = 402
             response.msg = "数据类型验证失败"
