@@ -129,10 +129,9 @@ def TiJiaoRenWuzhongDianCi(request):
         tid = request.POST.get('tid')
         resultObj = request.POST.get('resultObj')
         judge = request.POST.get('judge')
-        print(resultObj)
-        json_data = json.loads(resultObj)
         now_data = datetime.date.today().strftime('%Y-%m-%d')
         if judge == 'shoulu':
+            json_data = eval(resultObj)
             paiming = 0
             if json_data['order']:
                 paiming = json_data['order']
@@ -146,8 +145,8 @@ def TiJiaoRenWuzhongDianCi(request):
                 is_shoulu=shoulu,
             )
         else:
+            json_data = json.loads(resultObj)
             paiming = str(','.join(map(str, json_data)))
-            print('paiming==========> ',paiming)
             objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
                 tid_id=tid,
                 create_time=now_data,
@@ -159,7 +158,6 @@ def TiJiaoRenWuzhongDianCi(request):
         task_tid_obj = task_list_objs.filter(id=task_id)
         task_detail_count = task_detaile_objs.filter(tid_id=task_tid_obj[0].id).count()
         task_detail_yiwancheng = task_detaile_objs.filter(tid_id=task_tid_obj[0].id).filter(is_perform=0).count()
-        print('task_detail_count, task_detail_yiwancheng==========> ',task_detail_count, task_detail_yiwancheng)
         if int(task_detail_yiwancheng) == int(task_detail_count):
             task_list_objs.filter(id=task_id).update(task_status=1)
             next_datetime = task_tid_obj[0].next_datetime

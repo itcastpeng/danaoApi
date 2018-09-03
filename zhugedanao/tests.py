@@ -1928,6 +1928,8 @@ ls2 = [str(i) for i in paiming_detail_sort]
 print(','.join(ls2))
 # print(" ".join(paiming_detail_sort))
 
+p = {'order': 0, 'shoulu': 0}
 
+print(p, type(p))
 
 

@@ -409,7 +409,6 @@ def zhongDianCiOper(request, oper_type, o_id):
             ws['A3'].alignment = Alignment(horizontal='center', vertical='center')
             ws['B3'].alignment = Alignment(horizontal='center', vertical='center')
             ws['A4'].alignment = Alignment(horizontal='center', vertical='center')
-            print(user_id, o_id)
             objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(
                 tid_id=o_id
             )
@@ -450,7 +449,6 @@ def zhongDianCiOper(request, oper_type, o_id):
             response.data = {'excel_name': 'http://api.zhugeyingxiao.com/' + os.path.join('statics', 'zhugedanao', 'zhongDianCiExcel','{}.xlsx'.format(excel_name))}
             response.msg = '生成成功'
             response.code = 200
-
     else:
         response.code = 402
         response.msg = "请求异常"
