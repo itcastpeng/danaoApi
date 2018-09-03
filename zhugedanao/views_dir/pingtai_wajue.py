@@ -27,7 +27,7 @@ def pingTaiWaJueShow(request):
             length = forms_obj.cleaned_data['length']
             task_objs = models.zhugedanao_pingtaiwajue_keyword.objects.filter(user_id_id=user_id)
             task_count = task_objs.count()
-            objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id=user_id)
+            objs = models.zhugedanao_pingtaiwajue_keyword.objects.filter(tid__user_id=user_id)
             objs_count = objs.count()
             yiwancheng = task_objs.filter(is_perform=1).count()
             query_progress = 0

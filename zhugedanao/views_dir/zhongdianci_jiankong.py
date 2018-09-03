@@ -17,24 +17,18 @@ def zhongDianCiShowTaskList(request):
     response = Response.ResponseObj()
     user_id = request.GET.get('user_id')
     if request.method == "GET":
-        print('=========================', user_id)
         forms_obj = SelectForm(request.GET)
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
-            objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(
+            task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(
                 user_id_id=user_id)
             # 分页
             if length != 0:
                 start_line = (current_page - 1) * length
                 stop_line = start_line + length
-                objs = objs[start_line: stop_line]
+                objs = task_list_objs[start_line: stop_line]
             if objs:
-                # is_zhixing_count = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(
-                #     tid=objs[0].id
-                # ).filter(
-                #     is_perform=1
-                # ).count()
                 data_list = []
                 for obj in objs:
                     # 查询跑出来的任务 数量 判断百分比
@@ -45,10 +39,31 @@ def zhongDianCiShowTaskList(request):
                     baifenbi = 0
                     if detail_count:
                         baifenbi = int((detail_count / detail_objs_count.count()) * 100)
+                    obj.task_jindu = baifenbi
+                    obj.save()
                     qiyongstatus = '未启用'
                     if obj.qiyong_status:
                         qiyongstatus = '已启用'
                     task_status = '正在查询'
+                    if int(baifenbi) == 100:
+                        task_list_objs.filter(id=obj.id).update(
+                            task_status=1,
+                            is_zhixing=0
+                        )
+                        next_datetime = obj.next_datetime
+                        now_date_start = obj.task_start_time
+                        now_date = datetime.date.today().strftime('%Y-%m-%d')  # 当前年月日
+                        canshu = now_date + ' ' + now_date_start
+                        next_datetime_start = datetime.datetime.today().strptime(canshu, "%Y-%m-%d %H:%M:%S")  # 传来的参数 时分秒
+                        now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                        now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
+                        if next_datetime >= now_datetime:
+                            next_datetime_addoneday = (next_datetime_start + datetime.timedelta(days=1)).strftime(
+                                '%Y-%m-%d %H:%M:%S')
+                            models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=obj.id).update(
+                                next_datetime=next_datetime_addoneday,
+                                is_zhixing=0
+                            )
                     if int(obj.task_status) == 2:
                         task_status = '未查询'
                     elif int(obj.task_status) == 1:
@@ -61,7 +76,7 @@ def zhongDianCiShowTaskList(request):
                         "task_start_time": obj.task_start_time,
                         "task_status": task_status,
                         "search_engine": obj.search_engine.split(','),
-                        'task_jindu': int(baifenbi),
+                        'task_jindu': obj.task_jindu,
                     })
                 response.data = {'data_list':data_list}
             else:
@@ -69,8 +84,6 @@ def zhongDianCiShowTaskList(request):
                 response.data = {'data_list':data_list}
             response.msg = '查询成功'
             response.code = 200
-            #     response.code = 403
-            #     response.msg = '无任务'
         else:
             response.code = 402
             response.msg = "数据类型验证失败"
@@ -175,11 +188,11 @@ def zhongDianCiOper(request, oper_type, o_id):
                 qiyongstatus = False
                 if qiyong_status:
                     qiyongstatus = True
-                now_date = datetime.date.today().strftime('%Y-%m-%d') # 当前年月日
+                now_date = datetime.date.today().strftime('%Y-%m-%d')  # 当前年月日
                 canshu = now_date + ' ' + form_data['task_start_time']
-                kaishishijian = datetime.datetime.today().strptime(canshu, "%Y-%m-%d %H:%M:%S") # 传来的参数 时分秒
+                kaishishijian = datetime.datetime.today().strptime(canshu, "%Y-%m-%d %H:%M:%S")  # 传来的参数 时分秒
                 now = now_date + ' ' + time.strftime("%H:%M:%S")
-                now_time = datetime.datetime.today().strptime(now, "%Y-%m-%d %H:%M:%S") #当前时分秒
+                now_time = datetime.datetime.today().strptime(now, "%Y-%m-%d %H:%M:%S")  # 当前时分秒
                 next_datetime = kaishishijian
                 if kaishishijian < now_time:
                     next_datetime = (kaishishijian + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
@@ -252,6 +265,9 @@ def zhongDianCiOper(request, oper_type, o_id):
                                         response.msg = '第{}行请填写正确关键词!'.format(num)
                             else:
                                 if form_data['mohupipei']:
+                                    models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=objs.id).update(
+                                        mohupipei=form_data['mohupipei']
+                                    )
                                     querysetlist.append(
                                         models.zhugedanao_zhongdianci_jiankong_taskDetail(
                                             tid_id=objs.id,

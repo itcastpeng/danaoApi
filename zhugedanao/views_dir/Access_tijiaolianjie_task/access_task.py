@@ -197,8 +197,6 @@ def linksShouLuReturnData(request):
                 tid = objs[0].tid_id  # 列表id
                 count_list = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=o_id).count()
                 # print('返回数据----------> ', o_id, count_list, '是否收录---> ',is_shoulu)
-                shoulu_num = objs_tijiaolianjie.filter(tid=tid).filter(status=2).count()
-                models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(shoulu_num=shoulu_num)
                 print('count_list=======> ',objs[0].id,  count_list)
                 if int(count_list) < 3 and int(is_shoulu) == 3:
                     objs.update(status=1, is_zhixing=0, time_stamp = None)
@@ -209,6 +207,8 @@ def linksShouLuReturnData(request):
                         status=is_shoulu,
                     )
 
+                shoulu_num = objs_tijiaolianjie.filter(tid=tid).filter(status=2).count()
+                models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(shoulu_num=shoulu_num)
                 response.code = 200
                 response.msg = '已完成'
             else:
