@@ -26,9 +26,10 @@ def pingTaiWaJueShow(request):
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
             task_objs = models.zhugedanao_pingtaiwajue_keyword.objects.filter(user_id_id=user_id)
+            yuming_objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id=user_id)
+            yuming_count = yuming_objs.count()
+
             task_count = task_objs.count()
-            objs = models.zhugedanao_pingtaiwajue_keyword.objects.filter(tid__user_id=user_id)
-            objs_count = objs.count()
             yiwancheng = task_objs.filter(is_perform=1).count()
             query_progress = 0
             if yiwancheng:
@@ -40,7 +41,7 @@ def pingTaiWaJueShow(request):
             if length != 0:
                 start_line = (current_page - 1) * length
                 stop_line = start_line + length
-                objs = objs[start_line: stop_line]
+                objs = task_objs[start_line: stop_line]
             data_list = []
 
             for obj in objs:
@@ -62,8 +63,9 @@ def pingTaiWaJueShow(request):
             response.code = 200
             response.msg = '查询成功'
             response.data = {
+                'yuming_count':yuming_count,            # 域名数量
                 'data': data_list,                      # 详情
-                'objs_count':objs_count,                # 总数
+                'objs_count':task_count,                # 总数
                 'query_progress':query_progress,        # 进度
                 'whether_complete':whether_complete,    # 是否完成
                 'yiwancheng_obj':yiwancheng,            # 已完成
