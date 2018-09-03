@@ -129,10 +129,9 @@ def TiJiaoRenWuzhongDianCi(request):
         tid = request.POST.get('tid')
         resultObj = request.POST.get('resultObj')
         judge = request.POST.get('judge')
-        print(resultObj)
-        json_data = json.loads(resultObj)
         now_data = datetime.date.today().strftime('%Y-%m-%d')
         if judge == 'shoulu':
+            json_data = eval(resultObj)
             paiming = 0
             if json_data['order']:
                 paiming = json_data['order']
@@ -146,28 +145,35 @@ def TiJiaoRenWuzhongDianCi(request):
                 is_shoulu=shoulu,
             )
         else:
+            json_data = json.loads(resultObj)
             paiming = str(','.join(map(str, json_data)))
-            print('paiming==========> ',paiming)
             objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
                 tid_id=tid,
                 create_time=now_data,
                 paiming=paiming,
             )
-        task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=tid)
-        if task_list_objs:
-            task_list_objs.update(task_status=1)
-            next_datetime = task_list_objs[0].next_datetime
+        task_detaile_objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects
+        task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects
+        task_id = task_detaile_objs.filter(id=tid)[0].tid.id
+        task_tid_obj = task_list_objs.filter(id=task_id)
+        task_detail_count = task_detaile_objs.filter(tid_id=task_tid_obj[0].id).count()
+        task_detail_yiwancheng = task_detaile_objs.filter(tid_id=task_tid_obj[0].id).filter(is_perform=0).count()
+        if int(task_detail_yiwancheng) == int(task_detail_count):
+            task_list_objs.filter(id=task_id).update(task_status=1)
+            next_datetime = task_tid_obj[0].next_datetime
             now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
             if next_datetime <= now_datetime:
                 next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
-                task_list_objs.update(
+                task_list_objs.filter(id=task_id).update(
                     next_datetime=next_datetime_addoneday,
                     is_zhixing = False
                 )
         models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=tid).update(
             is_perform=0
         )
+
+
         # detail_objs_count = objs.zhugedanao_zhongdianci_jiankong_taskdetail_set.filter(
         #     tid_id=objs.id,
         # )
