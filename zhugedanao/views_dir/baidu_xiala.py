@@ -7,7 +7,7 @@ from publicFunc import account
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
-from zhugedanao.forms.pingtai_wajue import AddForm, SelectForm
+from zhugedanao.forms.baidu_xiala import AddForm, SelectForm
 import json
 import random
 from django.db.models import Count,Q, Sum
@@ -17,7 +17,7 @@ chongfu = 0
 # cerf  token验证 用户展示模块
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
-def pingTaiWaJueShow(request):
+def baiDuXiaLaShow(request):
     response = Response.ResponseObj()
     user_id = request.GET.get('user_id')
     if request.method == "GET":
@@ -25,50 +25,38 @@ def pingTaiWaJueShow(request):
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
-            task_objs = models.zhugedanao_pingtaiwajue_keyword.objects.filter(user_id_id=user_id)
-            yuming_objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id=user_id)
-            yuming_count = yuming_objs.count()
-
-            task_count = task_objs.count()
-            yiwancheng = task_objs.filter(is_perform=1).count()
-            query_progress = 0
-            if yiwancheng:
-                query_progress = int((int(yiwancheng) / int(task_count)) * 100)
-            whether_complete = False
-            if yiwancheng == task_count:
-                whether_complete = True
+            objs = models.zhugedanao_baiduxiala_chaxun.objects.filter(user_id_id=user_id)
+            obj_count = objs.count()
+            num = 0
+            for obj in objs:
+                for xiala in eval(obj.xialaci):
+                    num += 1
             # 分页
             if length != 0:
                 start_line = (current_page - 1) * length
                 stop_line = start_line + length
-                objs = yuming_objs[start_line: stop_line]
+                objs = objs[start_line: stop_line]
             data_list = []
-
             for obj in objs:
-                if str(obj.tid.search) == '1':
-                    yinqing = '百度'
-                elif str(obj.tid.search) == '4':
-                    yinqing = '手机百度'
-                elif str(obj.tid.search) == '3':
-                    yinqing = '360'
-                elif str(obj.tid.search) == '6':
-                    yinqing = '手机360'
+                if obj.xialaci:
+                    for xialaci in eval(obj.xialaci):
+                        data_list.append({
+                            'keyword': obj.keyword,
+                            'search': obj.search,
+                            'xialaci': xialaci
+                        })
                 else:
-                    yinqing = ''
-                data_list.append({
-                    'yuming':obj.yuming,
-                    'number':obj.number,
-                    'search':yinqing
-                })
+                    data_list.append({
+                        'keyword': obj.keyword,
+                        'search': obj.search,
+                        'xialaci': ''
+                    })
             response.code = 200
             response.msg = '查询成功'
             response.data = {
-                'yuming_count':yuming_count,            # 域名数量
-                'data': data_list,                      # 详情
-                'objs_count':task_count,                # 总数
-                'query_progress':query_progress,        # 进度
-                'whether_complete':whether_complete,    # 是否完成
-                'yiwancheng_obj':yiwancheng,            # 已完成
+                'retData': data_list,
+                'keyword_count':obj_count,
+                'obj_count':num,
             }
         else:
             response.code = 402
@@ -82,44 +70,36 @@ def pingTaiWaJueShow(request):
 #  csrf  token验证
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
-def pingTaiWaJue(request, oper_type, o_id):
+def baiDuXiaLa(request, oper_type, o_id):
     response = Response.ResponseObj()
     user_id = request.GET.get('user_id')
     if request.method == "POST":
         # 增加下拉任务
         if oper_type == "add":
-            models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id_id=user_id).delete()
-            models.zhugedanao_pingtaiwajue_keyword.objects.filter(user_id_id=user_id).delete()
             form_data = {
-                'search' : request.POST.get('search'),
-                'keywords': request.POST.get('keywords'),
-                'page_number': request.POST.get('page_number'),
+                'search_list': request.POST.get('searchEngineModel'),
+                'keywords_list': request.POST.get('editor_content'),
             }
-            #  创建 form验证 实例（参数默认转成字典）
+            querysetlist = []
             forms_obj = AddForm(form_data)
             if forms_obj.is_valid():
-                global chongfu
-                print("验证通过")
-                #  添加数据库
-                chongfu = int(len(forms_obj.cleaned_data.get('keywords'))) - int(len(set(forms_obj.cleaned_data.get('keywords'))))
-                print('chongfu============>',chongfu)
-                keywords_list = set(forms_obj.cleaned_data.get('keywords'))
-                querysetlist = []
-                create_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                print("form_data['search']===========>",form_data['search'], type(json.loads(form_data['search'])))
-                for search in json.loads(form_data['search']):
-                    print('search=====> ',search)
-                    for keyword in keywords_list:
+                models.zhugedanao_baiduxiala_chaxun.objects.filter(user_id_id=user_id).delete()
+                chongfu = int(len(forms_obj.cleaned_data.get('keywords_list'))) - int(len(set(forms_obj.cleaned_data.get('keywords_list'))))
+
+                now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+                for search in eval(forms_obj.cleaned_data.get('search_list')):
+                    for keyword in set(forms_obj.cleaned_data.get('keywords_list')):
+                        print(search, keyword)
                         querysetlist.append(
-                            models.zhugedanao_pingtaiwajue_keyword(
-                                user_id_id=user_id,
-                                search=search,
-                                keyword=keyword,
-                                create_time=create_time,
-                                page_number=json.loads(form_data['page_number'])
+                            models.zhugedanao_baiduxiala_chaxun(
+                                user_id_id = user_id,
+                                keyword = keyword,
+                                search = search,
+                                is_zhixing = 0,
+                                createAndStart_time=now_date
                             )
                         )
-                models.zhugedanao_pingtaiwajue_keyword.objects.bulk_create(querysetlist)
+                models.zhugedanao_baiduxiala_chaxun.objects.bulk_create(querysetlist)
                 response.code = 200
                 response.msg = "添加成功"
                 response.data = {}
@@ -127,7 +107,6 @@ def pingTaiWaJue(request, oper_type, o_id):
                 print("验证不通过")
                 response.code = 301
                 response.msg = json.loads(forms_obj.errors.as_json())
-                response.data = {}
 
     elif request.method == 'GET':
         # 点击返回 删除任务
@@ -224,60 +203,8 @@ def pingTaiWaJue(request, oper_type, o_id):
             response.data = {'excel_name':'http://api.zhugeyingxiao.com/' + os.path.join('statics', 'zhugedanao', 'pingTaiWaJueExcel' , '{}.xlsx'.format(excel_name))}
             return JsonResponse(response.__dict__)
 
-        # 处理后最终结果
-        if oper_type == 'finalResult':
-            # while True:
-            # keyword_objs = models.zhugedanao_pingtaiwajue_keyword.objects.filter(user_id_id=user_id)
-            # yiwancheng = keyword_objs.filter(is_perform=1).count()
-            # keyword_all = keyword_objs.count()
-            # print('---------> ', yiwancheng, keyword_all)
-            # if int(yiwancheng) == int(keyword_all):
-            #     break
-            # else:
-            # objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id_id=user_id).values('yuming','tid__search').annotate(
-            #     Sum('number')
-            # )
-                # final_objs = models.zhugedanao_pingtaiwajue_finalResult.objects
-                # for obj in objs:
-                #     is_yuming = final_objs.filter(yuming=obj['yuming'])
-                #     print('is_yuming============> ',is_yuming)
-                #     if is_yuming:
-                #         final_objs.update(
-                #             user_id_id=user_id,
-                #             yuming=obj['yuming'],
-                #             number=obj['number__sum'],
-                #             search=obj['tid__search']
-                #         )
-                #     else:
-                #         final_objs.create(
-                #             user_id_id=user_id,
-                #             yuming=obj['yuming'],
-                #             number=obj['number__sum'],
-                #             search=obj['tid__search']
-                #         )
-            objs = models.zhugedanao_pingtaiwajue_yuming.objects
-            tongji_objs = objs.filter(tid__user_id_id=user_id).values('yuming',
-                'tid__search').annotate(
-                Sum('number')
-            )
-            for tongji_obj in tongji_objs:
-                yuming_obj = objs.filter(tid__user_id_id=user_id).filter(yuming=tongji_obj['yuming']).filter(tid__search=tongji_obj['tid__search'])
-                if yuming_obj[0].yuming and yuming_obj[0].number != tongji_obj['number__sum']:
-                    now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                    create_obj = objs.create(
-                        yuming=tongji_obj['yuming'],
-                        number=tongji_obj['number__sum'],
-                        tid_id=yuming_obj[0].tid.id,
-                        create_time=now_date
-                    )
-                    objs.filter(yuming=tongji_obj['yuming']).exclude(id=create_obj.id).delete()
-            response.data = {}
-            response.code = 2000
-            response.msg = '计算结果完成'
     else:
         response.code = 402
         response.msg = "请求异常"
-
-
 
     return JsonResponse(response.__dict__)
