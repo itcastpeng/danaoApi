@@ -99,10 +99,10 @@ def HuoQuRenWuzhongDianCi(request):
     q = Q()
     q.add(Q(is_perform=1) & Q(tid__task_status=3) & Q(tid__qiyong_status=1), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now), Q.AND)
-    objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(q)[:1]
+    objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(q).order_by('?')[:1]
     if objs:
         now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-        time_stamp = int(time.time()) + 30
+        time_stamp = int(time.time()) + 10
         models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=objs[0].id).update(
             time_stamp=time_stamp,
             task_start_time=now_datetime
