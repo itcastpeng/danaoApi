@@ -156,19 +156,22 @@ def TiJiaoRenWuzhongDianCi(request):
         task_list_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects
         task_id = task_detaile_objs.filter(id=tid)[0].tid.id
         task_tid_obj = task_list_objs.filter(id=task_id)
-        task_detail_count = task_detaile_objs.filter(tid_id=task_tid_obj[0].id).count()
-        task_detail_yiwancheng = task_detaile_objs.filter(tid_id=task_tid_obj[0].id).filter(is_perform=0).count()
-        if int(task_detail_yiwancheng) == int(task_detail_count):
-            task_list_objs.filter(id=task_id).update(task_status=1)
-            next_datetime = task_tid_obj[0].next_datetime
-            now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
-            if next_datetime <= now_datetime:
-                next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
-                task_list_objs.filter(id=task_id).update(
-                    next_datetime=next_datetime_addoneday,
-                    is_zhixing = False
-                )
+        # task_detail_count = task_detaile_objs.filter(tid_id=task_tid_obj[0].id).count()
+        # task_detail_yiwancheng = task_detaile_objs.filter(tid_id=task_tid_obj[0].id).filter(is_perform=0).count()
+        # if int(task_detail_yiwancheng) == int(task_detail_count):
+        #     task_list_objs.filter(id=task_id).update(
+        #         task_status=1,
+        #         is_zhixing=0
+        #     )
+        next_datetime = task_tid_obj[0].next_datetime
+        now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
+        if next_datetime <= now_datetime:
+            next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
+            task_list_objs.filter(id=task_id).update(
+                next_datetime=next_datetime_addoneday,
+                is_zhixing=0
+            )
         models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=tid).update(
             is_perform=0
         )

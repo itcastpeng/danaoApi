@@ -49,6 +49,11 @@ def zhongDianCiShowTaskList(request):
                     if obj.qiyong_status:
                         qiyongstatus = '已启用'
                     task_status = '正在查询'
+                    if int(baifenbi) == 100:
+                        objs.filter(id=obj.id).update(
+                            task_status=1,
+                            is_zhixing=0
+                        )
                     if int(obj.task_status) == 2:
                         task_status = '未查询'
                     elif int(obj.task_status) == 1:
@@ -252,6 +257,9 @@ def zhongDianCiOper(request, oper_type, o_id):
                                         response.msg = '第{}行请填写正确关键词!'.format(num)
                             else:
                                 if form_data['mohupipei']:
+                                    models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=objs.id).update(
+                                        mohupipei=form_data['mohupipei']
+                                    )
                                     querysetlist.append(
                                         models.zhugedanao_zhongdianci_jiankong_taskDetail(
                                             tid_id=objs.id,
