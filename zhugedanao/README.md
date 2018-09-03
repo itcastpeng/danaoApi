@@ -604,8 +604,46 @@ http请求url：  http://127.0.0.1:8000/zhugedanao/pingTaiWaJue/finalResult/0?ti
 ```
 
 
+#### 百度下拉 查询 说明
+``` 
+http请求方式 GET
+http请求url:  http://127.0.0.1:8000/zhugedanao/baiDuXiaLaShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		        说明
+公共参数
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "code": 200,
+    "data": {
+        "obj_count": 37,                            # 数据总数
+        "keyword_count": 4,                         # 关键词总数
+        "retData": [
+            {
+                "search": 1,                        # 搜索引擎
+                "keyword": "asd",                   # 关键词
+                "xialaci": "asdf"                   # 下拉词
+            }
+        ]
+    },
+    "msg": "查询成功"
+}
+```
 
+#### 百度下拉 添加 说明
+``` 
+http请求方式 POST
+http请求url:  http://127.0.0.1:8000/zhugedanao/baiDuXiaLa/add/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+editor_content          POST                是                   关键词
+searchEngineModel       POST                是                   搜索引擎
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "code": 200,
+    "data": {},
+    "msg": "添加成功"
+}
+```
 
 
 

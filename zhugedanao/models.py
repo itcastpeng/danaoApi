@@ -186,7 +186,6 @@ class zhugedanao_zhongdianci_jiankong_taskList(models.Model):
     task_start_time = models.CharField(verbose_name='任务开始时间', max_length=64, null=True, blank=True)
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
 
-
 # 重点词监控 列表详情
 class zhugedanao_zhongdianci_jiankong_taskDetail(models.Model):
     tid = models.ForeignKey(to='zhugedanao_zhongdianci_jiankong_taskList', verbose_name='任务列表', null=True, blank=True)
@@ -206,11 +205,12 @@ class zhugedanao_zhongdianci_jiankong_taskDetailData(models.Model):
     is_shoulu = models.BooleanField(verbose_name='收录', default=0)
     create_time = models.DateField(verbose_name='创建时间', null=True, blank=True)
 
+
 # 平台挖掘  关键词表
 class zhugedanao_pingtaiwajue_keyword(models.Model):
     create_time = models.DateTimeField(verbose_name='创建时间', null=True, blank=True)
     search = models.IntegerField(verbose_name='搜索引擎', default=0)
-    keyword = models.CharField(verbose_name='关键词', max_length=64, null=True, blank=True)
+    keyword = models.CharField(verbose_name='关键词', max_length=128, null=True, blank=True)
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
     is_perform = models.BooleanField(verbose_name='是否执行', default=False)
     time_stamp = models.IntegerField(verbose_name='时间戳', null=True, blank=True)
@@ -223,9 +223,14 @@ class zhugedanao_pingtaiwajue_yuming(models.Model):
     yuming = models.CharField(verbose_name='域名', max_length=128, null=True, blank=True)
     number = models.IntegerField(verbose_name='域名数量', default=0)
 
-# 最终计算结果
-# class zhugedanao_pingtaiwajue_finalResult(models.Model):
-#     yuming = models.CharField(verbose_name='域名', max_length=128, null=True, blank=True)
-#     number = models.IntegerField(verbose_name='域名数量', default=0)
-#     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
-#     search = models.IntegerField(verbose_name='搜索引擎', default=0)
+
+# 百度下拉
+class zhugedanao_baiduxiala_chaxun(models.Model):
+    keyword = models.CharField(verbose_name='关键词', max_length=128, null=True, blank=True)
+    search = models.IntegerField(verbose_name='搜索引擎', default=0)
+    xialaci = models.CharField(verbose_name='下拉词', max_length=256, null=True, blank=True)
+    is_zhixing = models.BooleanField(verbose_name='是否已经执行', default=0)
+    time_stamp = models.IntegerField(verbose_name='任务间隔时间', default=0)
+    user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
+    createAndStart_time = models.DateTimeField(verbose_name='创建和开始时间', auto_now_add=True)
+

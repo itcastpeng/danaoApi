@@ -33,13 +33,13 @@ def fuGaiChaXunDecideIsTask(request):
 @csrf_exempt
 def fuGaiHuoQuRenWu(request):
     now_time = int(time.time())
-    time_stamp30 = now_time + 30
+    time_stamp10 = now_time + 10
     q = Q()
     q.add(Q(is_zhixing=0), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time), Q.AND)
-    objs = models.zhugedanao_fugai_chaxun.objects.filter(q)[0:1]
+    objs = models.zhugedanao_fugai_chaxun.objects.filter(q).order_by('?')[0:1]
     if objs:
-        objs[0].time_stamp = time_stamp30
+        objs[0].time_stamp = time_stamp10
         objs[0].save()
         response.code = 200
         response.msg = '查询成功'
