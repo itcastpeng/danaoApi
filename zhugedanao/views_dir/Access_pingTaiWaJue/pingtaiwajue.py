@@ -34,13 +34,13 @@ def pingTaiWaJueDecideIsTask(request):
 @csrf_exempt
 def pingTaiWaJueHuoQuRenWu(request):
     now_time = int(time.time())
-    time_stamp20 = now_time + 20
+    time_stamp5 = now_time + 5
     q = Q()
     q.add(Q(is_perform=0), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time), Q.AND)
     objs = models.zhugedanao_pingtaiwajue_keyword.objects.filter(q)[0:1]
     if objs:
-        objs[0].time_stamp = time_stamp20
+        objs[0].time_stamp = time_stamp5
         objs[0].save()
         response.code = 200
         response.msg = '查询成功'
