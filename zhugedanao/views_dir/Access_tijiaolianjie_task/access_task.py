@@ -44,7 +44,7 @@ def decideIsTask(request):
 def set_task_access(request):
     now_time_stamp = int(time.time())
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-    time_stampadd600 = now_time_stamp + 600
+    time_stamp10 = now_time_stamp + 10
     now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
     q = Q()
     q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
@@ -54,7 +54,7 @@ def set_task_access(request):
     if objs:
         obj = objs[0]
         obj.submit_date = now_date
-        obj.time_stamp = time_stampadd600
+        obj.time_stamp = time_stamp10
         obj.save()
         response.data = {
             'tid': obj.id,

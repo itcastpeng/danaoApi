@@ -1941,9 +1941,11 @@ if len(url) > 1:
 import requests
 
 # url = 'http://news.100yiyao.com/detail/193538318.html'
-url = 'https://www.wang1314.com/doc/topic-9224909-1.html'
+url = 'https://m.so.com/jump?u=https%3A%2F%2Fsh.qihoo.com%2Fctranscode%3Ftitle%3D%25E7%2596%25AF%25E7%258B%2582%25E9%25BE%2599%25E5%258D%259A%25E5%25A3%25AB%25E5%25A5%25BD%25E4%25B8%258D%25E5%25A5%25BD%253F%25E5%2580%25BC%25E5%25BE%2597%25E6%2582%25A8%25E9%2580%2589%25E6%258B%25A9%25E7%259A%2584%25E5%25A5%25BD%25E7%259A%2584%25E6%2595%2599%25E8%2582%25B2%25E5%2593%2581%25E7%2589%258C%26u%3Dhttp%253A%252F%252Fnews.chinabyte.com%252Fcsgg%252F332%252F14375332.shtml%26m%3D476772c07b815a5ff071862baa87086fd1eb5233%26q%3Dhttp%253A%252F%252Fnews.chinabyte.com%252Fcsgg%252F332%252F14375332.shtml&m=1d66a5&from=m.so.com'
 ret = requests.get(url, timeout=10, allow_redirects=False)
-
+print('ret===========> ', ret.text)
+print('ret===========> ', ret.headers)
+print('ret===========> ', ret.text)
 print(ret.status_code)
 
 

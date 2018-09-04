@@ -31,13 +31,13 @@ def shouLuChaXunDecideIsTask(request):
 @csrf_exempt
 def shouluHuoQuRenWu(request):
     now_time = int(time.time())
-    time_stamp10 = now_time + 10
+    time_stamp5 = now_time + 5
     q = Q()
     q.add(Q(is_zhixing=0), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time), Q.AND)
     objs = models.zhugedanao_shoulu_chaxun.objects.filter(q)[0:1]
     if objs:
-        objs[0].time_stamp = time_stamp10
+        objs[0].time_stamp = time_stamp5
         objs[0].save()
         response.data = {
             'o_id':objs[0].id,
