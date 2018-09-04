@@ -207,8 +207,8 @@ def linksShouLuReturnData(request):
                         status=is_shoulu,
                     )
 
-                shoulu_num = objs_tijiaolianjie.filter(tid=tid).filter(status=2).count()
-                models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(shoulu_num=shoulu_num)
+                # shoulu_num = objs_tijiaolianjie.filter(tid=tid).filter(status=2).count()
+                # models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(shoulu_num=shoulu_num)
                 response.code = 200
                 response.msg = '已完成'
             else:
