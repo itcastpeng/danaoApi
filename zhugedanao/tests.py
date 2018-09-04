@@ -1940,8 +1940,9 @@ if len(url) > 1:
 
 import requests
 
-url = 'http://news.100yiyao.com/detail/193538318.html'
-ret = requests.get(url)
+# url = 'http://news.100yiyao.com/detail/193538318.html'
+url = 'https://www.wang1314.com/doc/topic-9224909-1.html'
+ret = requests.get(url, timeout=10, allow_redirects=False)
 
 print(ret.status_code)
 
