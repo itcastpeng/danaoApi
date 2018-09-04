@@ -102,9 +102,9 @@ def HuoQuRenWuzhongDianCi(request):
     objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(q).order_by('?')[:1]
     if objs:
         now_datetime = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-        time_stamp = int(time.time()) + 10
+        time_stamp5 = int(time.time()) + 5
         models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=objs[0].id).update(
-            time_stamp=time_stamp,
+            time_stamp=time_stamp5,
             task_start_time=now_datetime
         )
         response.code = 200
