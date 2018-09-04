@@ -94,6 +94,8 @@ def get_task_for(request):
                         if int(is_shoulu) == 1:
                             shoulu = 2
                         objs.filter(id=urlId).update(beforeSubmitStatus=shoulu)
+                        if shoulu == 2:
+                            objs.filter(id=urlId).update(status=shoulu)
                     tid=objs[0].tid.id
                     count_list = objs.filter(tid=tid).count()
                     zhixing_count = objs.filter(is_zhixing=1).count()
@@ -101,7 +103,7 @@ def get_task_for(request):
                     if zhixing_count:
                         jindutiao = int((zhixing_count / count_list) * 100)
                     task_status = 0
-                    if zhixing_count == count_list:
+                    if zhixing_count == count_list or int(objs[0].status) == 2:
                         task_status = 1
                     objs.update(
                         is_zhixing=1,
