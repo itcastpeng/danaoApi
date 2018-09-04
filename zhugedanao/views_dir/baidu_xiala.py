@@ -29,8 +29,9 @@ def baiDuXiaLaShow(request):
             obj_count = objs.count()
             num = 0
             for obj in objs:
-                for xiala in eval(obj.xialaci):
-                    num += 1
+                if obj.xialaci:
+                    for xiala in eval(obj.xialaci):
+                        num += 1
             # 分页
             if length != 0:
                 start_line = (current_page - 1) * length

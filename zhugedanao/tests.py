@@ -1918,19 +1918,42 @@ if len(url) > 1:
 
 # print('url========> ',url)
 
-import ast
+# import ast
+#
+# chrfiles = "9, 2, 10, 4, 3, 65, 7"
+# paiming_detail =set(eval(chrfiles))
+# paiming_detail_sort = sorted(paiming_detail)
+# ls2 = [str(i) for i in paiming_detail_sort]
+#
+# # print(','.join(ls2))
+# # print(" ".join(paiming_detail_sort))
+#
+#
+#
+# p = '{"q":"北京","p":"false","s":["北京时间","北京天气","北京爱情故事","北京地铁","北京地图","北京爱情故事电影版","北京天气预报","北京车展","北京空气质量指数","北京移动"]}'
+# print(json.loads(json.dumps(p)), type(json.loads(json.dumps(p))))
+#
+# print(ast.literal_eval(p), type(ast.literal_eval(p)))
 
-chrfiles = "9, 2, 10, 4, 3, 65, 7"
-paiming_detail =set(eval(chrfiles))
-paiming_detail_sort = sorted(paiming_detail)
-ls2 = [str(i) for i in paiming_detail_sort]
-
-# print(','.join(ls2))
-# print(" ".join(paiming_detail_sort))
 
 
 
-p = '{"q":"北京","p":"false","s":["北京时间","北京天气","北京爱情故事","北京地铁","北京地图","北京爱情故事电影版","北京天气预报","北京车展","北京空气质量指数","北京移动"]}'
-print(json.loads(json.dumps(p)), type(json.loads(json.dumps(p))))
+import requests
 
-print(ast.literal_eval(p), type(ast.literal_eval(p)))
+url = 'http://news.100yiyao.com/detail/193538318.html'
+ret = requests.get(url)
+
+print(ret.status_code)
+
+
+
+
+
+
+
+
+
+
+
+
+
