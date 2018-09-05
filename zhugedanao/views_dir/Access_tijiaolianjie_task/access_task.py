@@ -29,7 +29,7 @@ def panduan_shijian(request):
 def decideIsTask(request):
     q = Q()
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
+    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(status=1), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).filter(is_zhixing=0)[0:1]
     flag = False
     if objs:
@@ -47,7 +47,7 @@ def set_task_access(request):
     time_stamp10 = now_time_stamp + 10
     now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
     q = Q()
-    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
+    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(status=1), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time_stamp), Q.AND)
     print('q------> ', q)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0).filter(q)[0:1]
@@ -72,7 +72,6 @@ def set_task_access(request):
 def get_task_for(request):
     if request.method == 'POST':
         now_date =  datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-        # o_id = request.POST.get('o_id')
         urlId = request.POST.get('urlId')
         ip_addr = request.POST.get('ip_addr')
         address = request.POST.get('address')
@@ -90,17 +89,19 @@ def get_task_for(request):
             if log_count:
                 # 提交 查询该链接是否收录
                 objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
-                if objs:
+                print(objs[0].status)
+                if objs and int(objs[0].status) != 2:
                     if int(objs[0].beforeSubmitStatus) == 1:
                         shoulu = 3
                         if int(is_shoulu) == 1:
                             shoulu = 2
                         objs.filter(id=urlId).update(beforeSubmitStatus=shoulu)
-                        if shoulu == 2:
-                            objs.filter(id=urlId).update(status=shoulu)
+                        if int(shoulu) == 2:
+                            objs.filter(id=urlId).update(status=2)
                     tid=objs[0].tid.id
-                    count_list = objs.filter(tid=tid).count()
-                    zhixing_count = objs.filter(is_zhixing=1).count()
+                    detail_objs = models.zhugedanao_lianjie_tijiao.objects.filter(tid_id=tid)
+                    count_list = detail_objs.filter(tid_id=tid).count()
+                    zhixing_count = detail_objs.filter(is_zhixing=1).count()
                     jindutiao = 0
                     if zhixing_count:
                         jindutiao = int((zhixing_count / count_list) * 100)
