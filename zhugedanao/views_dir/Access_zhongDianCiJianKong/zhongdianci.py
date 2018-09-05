@@ -53,10 +53,11 @@ def timeToRefreshZhgongDianCi(request):
             response.msg = '无任务'
             response.data = {}
             return JsonResponse(response.__dict__)
-    task_list_objs.filter(id=task_list_objs[0].id).update(
-        task_status=3,
-        is_zhixing=1
-    )
+    if task_list_objs:
+        task_list_objs.filter(id=task_list_objs[0].id).update(
+            task_status=3,
+            is_zhixing=1
+        )
     response.data = {}
     response.code = 200
     response.msg = '改值成功'

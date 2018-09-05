@@ -613,19 +613,38 @@ http请求url:  http://127.0.0.1:8000/zhugedanao/baiDuXiaLaShow?timestamp=153415
 
 返回说明 （正常时返回的json数据 示例）
 {
-    "code": 200,
     "data": {
-        "obj_count": 37,                            # 数据总数
-        "keyword_count": 4,                         # 关键词总数
+        "keyword_count": 2,
+        "query_progress": 100,
+        "whether_complete": true,
         "retData": [
             {
-                "search": 1,                        # 搜索引擎
-                "keyword": "asd",                   # 关键词
-                "xialaci": "asdf"                   # 下拉词
+                "keyword": "北京",
+                "otherData": [
+                    "北京时间",
+                    "北京天气",
+                    "北京爱情故事",
+                    "北京地铁",
+                    "北京地图",
+                    "北京爱情故事电影版",
+                    "北京天气预报",
+                    "北京车展",
+                    "北京空气质量指数",
+                    "北京移动"
+                ],
+                "search": 1
+            },
+            {
+                "keyword": "百度",
+                "otherData": "",
+                "search": 1
             }
-        ]
+        ],
+        "obj_count": 10,
+        "yiwancheng_obj": 2
     },
-    "msg": "查询成功"
+    "msg": "查询成功",
+    "code": 200
 }
 ```
 

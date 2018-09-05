@@ -27,7 +27,14 @@ def baiDuXiaLaShow(request):
             length = forms_obj.cleaned_data['length']
             objs = models.zhugedanao_baiduxiala_chaxun.objects.filter(user_id_id=user_id)
             obj_count = objs.count()
+            zhixing_count = objs.filter(is_zhixing=1).count()
             num = 0
+            whether_complete = False
+            if int(zhixing_count) == int(obj_count):
+                whether_complete = True
+            query_progress = 0
+            if zhixing_count:
+                query_progress = int((int(zhixing_count) / int(obj_count)) * 100)
             for obj in objs:
                 if obj.xialaci:
                     for xiala in eval(obj.xialaci):
@@ -53,6 +60,9 @@ def baiDuXiaLaShow(request):
                 'retData': data_list,
                 'keyword_count':obj_count,
                 'obj_count':num,
+                'yiwancheng_obj':zhixing_count,
+                'whether_complete': whether_complete,  # 是否全部完成
+                'query_progress': query_progress  # 进度条
             }
         else:
             response.code = 402
