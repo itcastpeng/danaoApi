@@ -38,8 +38,8 @@ def baiDuXiaLaShow(request):
                 stop_line = start_line + length
                 objs = objs[start_line: stop_line]
             data_list = []
-            xialaci = ''
             for obj in objs:
+                xialaci = ''
                 if obj.xialaci:
                     xialaci = eval(obj.xialaci)
                 data_list.append({
