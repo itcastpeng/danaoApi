@@ -76,14 +76,16 @@ def get_task_for(request):
         urlId = request.POST.get('urlId')
         ip_addr = request.POST.get('ip_addr')
         address = request.POST.get('address')
-        is_shoulu = request.POST.get('is_shoulu')
+        is_shoulu = request.POST.get('is_shoulu')  # 首次查询 判断是否收录
         if urlId:
+            # 创建log 日志
             models.zhugedanao_lianjie_tijiao_log.objects.create(
                 zhugedanao_lianjie_tijiao_id=urlId,
                 ip=ip_addr,
                 address=address,
                 create_date=now_date,
             )
+            # 如果有日志
             log_count = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
             if log_count:
                 # 提交 查询该链接是否收录
@@ -94,6 +96,8 @@ def get_task_for(request):
                         if int(is_shoulu) == 1:
                             shoulu = 2
                         objs.filter(id=urlId).update(beforeSubmitStatus=shoulu)
+                        if shoulu == 2:
+                            objs.filter(id=urlId).update(status=shoulu)
                     tid=objs[0].tid.id
                     count_list = objs.filter(tid=tid).count()
                     zhixing_count = objs.filter(is_zhixing=1).count()
@@ -101,7 +105,7 @@ def get_task_for(request):
                     if zhixing_count:
                         jindutiao = int((zhixing_count / count_list) * 100)
                     task_status = 0
-                    if zhixing_count == count_list:
+                    if zhixing_count == count_list or int(objs[0].status) == 2:
                         task_status = 1
                     objs.update(
                         is_zhixing=1,

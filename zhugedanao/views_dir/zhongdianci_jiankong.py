@@ -32,15 +32,15 @@ def zhongDianCiShowTaskList(request):
                 data_list = []
                 for obj in objs:
                     # 查询跑出来的任务 数量 判断百分比
-                    detail_objs_count = obj.zhugedanao_zhongdianci_jiankong_taskdetail_set.filter(
-                        tid_id=obj.id,
-                    )
-                    detail_count = detail_objs_count.filter(is_perform=0).filter(task_start_time__isnull=False).count()
-                    baifenbi = 0
-                    if detail_count:
-                        baifenbi = int((detail_count / detail_objs_count.count()) * 100)
-                    obj.task_jindu = baifenbi
-                    obj.save()
+                    # detail_objs_count = obj.zhugedanao_zhongdianci_jiankong_taskdetail_set.filter(
+                    #     tid_id=obj.id,
+                    # )
+                    # detail_count = detail_objs_count.filter(is_perform=0).filter(task_start_time__isnull=False).count()
+                    # baifenbi = 0
+                    # if detail_count:
+                    #     baifenbi = int((detail_count / detail_objs_count.count()) * 100)
+                    # obj.task_jindu = baifenbi
+                    # obj.save()
                     qiyongstatus = '未启用'
                     if obj.qiyong_status:
                         qiyongstatus = '已启用'
@@ -65,7 +65,6 @@ def zhongDianCiShowTaskList(request):
                             task_status=1,
                             is_zhixing=0
                         )
-                        print('=================')
                         next_datetime = obj.next_datetime
                         now_date_start = obj.task_start_time
                         now_date = datetime.date.today().strftime('%Y-%m-%d')  # 当前年月日
