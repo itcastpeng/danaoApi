@@ -29,7 +29,7 @@ def zhongDianCiChaXunLiJiJianKong(request):
         response.msg = 'ID不能为空'
     return JsonResponse(response.__dict__)
 
-# 定时刷新 更改下一次执行时间
+# 定时刷新 改值
 @csrf_exempt
 def timeToRefreshZhgongDianCi(request):
     lijijiankong = request.GET.get('lijijiankong')
@@ -121,17 +121,17 @@ def HuoQuRenWuzhongDianCi(request):
 def TiJiaoRenWuzhongDianCi(request):
     if request.method == 'POST':
         tid = request.POST.get('tid')
-        resultObj = request.POST.get('resultObj')
         judge = request.POST.get('judge')
+        resultObj = request.POST.get('resultObj')
         now_data = datetime.date.today().strftime('%Y-%m-%d')
         if judge == 'shoulu':
-            json_data = eval(resultObj)
+            dict_data = eval(resultObj)
             paiming = 0
-            if json_data['order']:
-                paiming = json_data['order']
+            if dict_data['order']:
+                paiming = dict_data['order']
             shoulu = 0
-            if json_data['shoulu']:
-                shoulu = json_data['shoulu']
+            if dict_data['shoulu']:
+                shoulu = dict_data['shoulu']
             objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.create(
                 tid_id=tid,
                 create_time=now_data,
@@ -146,22 +146,45 @@ def TiJiaoRenWuzhongDianCi(request):
                 create_time=now_data,
                 paiming=paiming,
             )
-
         detail_objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=tid)
-        detail_objs.update(
-            is_perform=0
-        )
-        detail_objs_count = detail_objs.filter(tid_id=detail_objs[0].tid.id)
-
-        detail_count = detail_objs_count.filter(is_perform=0).filter(task_start_time__isnull=False).count()
+        detail_objs_count = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(tid_id=detail_objs[0].tid.id)
+        detail_objs.update(is_perform=0)  # 更改详情 2表 已执行
+        detail_count = detail_objs_count.filter(is_perform=0).filter(task_start_time__isnull=False).count() # 已执行总数
         baifenbi = 0
         if detail_count:
-            baifenbi = int((detail_count / detail_objs_count.count()) * 100)
-        models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=tid).update(
-            task_status=1,
-            is_zhixing=0,
-            task_jindu=baifenbi
+            baifenbi = int((detail_count / detail_objs_count.count()) * 100)        # 已执行总数除以详情总数 等于进度
+        models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=detail_objs[0].tid.id).update(
+            task_jindu = baifenbi
         )
+
+
+        if int(baifenbi) == 100:
+            task_objs = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=detail_objs[0].tid.id)
+            task_objs.update(
+                task_status=1,
+                is_zhixing=0,
+            )
+            next_datetime = task_objs[0].next_datetime
+            now_date_start = task_objs[0].task_start_time
+            now_date = datetime.date.today().strftime('%Y-%m-%d')  # 当前年月日
+            canshu = now_date + ' ' + now_date_start
+            next_datetime_start = datetime.datetime.today().strptime(canshu, "%Y-%m-%d %H:%M:%S")  # 传来的参数 时分秒
+            now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
+            if next_datetime <= now_datetime:
+                next_datetime_addoneday = (next_datetime_start + datetime.timedelta(days=1)).strftime(
+                    '%Y-%m-%d %H:%M:%S')
+                task_objs.update(
+                    next_datetime=next_datetime_addoneday,
+                    is_zhixing=0
+                )
+        response.code = 200
+        response.msg = '已完成'
+    else:
+        response.code = 402
+        response.msg = '请求异常'
+    response.data = {}
+    return JsonResponse(response.__dict__)
 
         # task_id  = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=tid)[0].tid.id
         # task_tid_obj = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=task_id)
@@ -177,15 +200,6 @@ def TiJiaoRenWuzhongDianCi(request):
 
 
 
-
-        response.code = 200
-        response.msg = '已完成'
-    else:
-        response.code = ''
-        response.msg = ''
-        response.data = {}
-
-    return JsonResponse(response.__dict__)
 
 
 
