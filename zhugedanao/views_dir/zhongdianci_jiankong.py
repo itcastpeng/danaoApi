@@ -60,26 +60,26 @@ def zhongDianCiShowTaskList(request):
                         "search_engine": obj.search_engine.split(','),
                         'task_jindu': obj.task_jindu,
                     })
-                    if int(obj.task_jindu) == 100:
-                        task_list_objs.filter(id=obj.id).update(
-                            task_status=1,
-                            is_zhixing=0
-                        )
-                        next_datetime = obj.next_datetime
-                        now_date_start = obj.task_start_time
-                        now_date = datetime.date.today().strftime('%Y-%m-%d')  # 当前年月日
-                        canshu = now_date + ' ' + now_date_start
-                        next_datetime_start = datetime.datetime.today().strptime(canshu, "%Y-%m-%d %H:%M:%S")  # 传来的参数 时分秒
-                        now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                        now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
-                        print(next_datetime, now_datetime)
-                        if next_datetime <= now_datetime:
-                            next_datetime_addoneday = (next_datetime_start + datetime.timedelta(days=1)).strftime(
-                                '%Y-%m-%d %H:%M:%S')
-                            models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=obj.id).update(
-                                next_datetime=next_datetime_addoneday,
-                                is_zhixing=0
-                            )
+                    # if int(obj.task_jindu) == 100:
+                    #     task_list_objs.filter(id=obj.id).update(
+                    #         task_status=1,
+                    #         is_zhixing=0
+                    #     )
+                    #     next_datetime = obj.next_datetime
+                    #     now_date_start = obj.task_start_time
+                    #     now_date = datetime.date.today().strftime('%Y-%m-%d')  # 当前年月日
+                    #     canshu = now_date + ' ' + now_date_start
+                    #     next_datetime_start = datetime.datetime.today().strptime(canshu, "%Y-%m-%d %H:%M:%S")  # 传来的参数 时分秒
+                    #     now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                    #     now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
+                    #     print(next_datetime, now_datetime)
+                    #     if next_datetime <= now_datetime:
+                    #         next_datetime_addoneday = (next_datetime_start + datetime.timedelta(days=1)).strftime(
+                    #             '%Y-%m-%d %H:%M:%S')
+                    #         models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=obj.id).update(
+                    #             next_datetime=next_datetime_addoneday,
+                    #             is_zhixing=0
+                    #         )
                 response.data = {'data_list':data_list}
             else:
                 data_list = []
