@@ -82,7 +82,7 @@ def zhongDianCiChaXunDecideIsTask(request):
     if flag:
         canshu = '有任务'
         response.code = 200
-        response.data = {'flag':flag}
+    response.data = {'flag':flag}
     response.msg = '{}'.format(canshu)
     return JsonResponse(response.__dict__)
 
