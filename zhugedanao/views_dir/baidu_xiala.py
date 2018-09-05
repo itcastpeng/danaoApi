@@ -38,20 +38,15 @@ def baiDuXiaLaShow(request):
                 stop_line = start_line + length
                 objs = objs[start_line: stop_line]
             data_list = []
+            xialaci = ''
             for obj in objs:
                 if obj.xialaci:
-                    for xialaci in eval(obj.xialaci):
-                        data_list.append({
-                            'keyword': obj.keyword,
-                            'search': obj.search,
-                            'xialaci': xialaci
-                        })
-                else:
-                    data_list.append({
-                        'keyword': obj.keyword,
-                        'search': obj.search,
-                        'xialaci': ''
-                    })
+                    xialaci = eval(obj.xialaci)
+                data_list.append({
+                    'keyword':obj.keyword,
+                    'search': obj.search,
+                    'otherData': xialaci
+                })
             response.code = 200
             response.msg = '查询成功'
             response.data = {
