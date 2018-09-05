@@ -29,8 +29,8 @@ def panduan_shijian(request):
 def decideIsTask(request):
     q = Q()
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(status__exclude=2), Q.AND)
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).filter(is_zhixing=0)[0:1]
+    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).filter(is_zhixing=0).exclude(status=2)[0:1]
     flag = False
     if objs:
         flag = True
@@ -47,10 +47,10 @@ def set_task_access(request):
     time_stamp10 = now_time_stamp + 10
     now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
     q = Q()
-    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(status__exclude=2), Q.AND)
+    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time_stamp), Q.AND)
     print('q------> ', q)
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0).filter(q)[0:1]
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(is_zhixing=0).filter(q).exclude(status=2)[0:1]
     if objs:
         obj = objs[0]
         obj.submit_date = now_date
