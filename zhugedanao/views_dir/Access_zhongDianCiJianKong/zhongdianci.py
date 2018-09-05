@@ -57,12 +57,6 @@ def timeToRefreshZhgongDianCi(request):
         task_status=3,
         is_zhixing=1
     )
-    # next_datetime = task_list_objs[0].next_datetime
-    # now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    # now_datetime = datetime.datetime.strptime(now_date, '%Y-%m-%d %H:%M:%S')
-    # if next_datetime <= now_datetime:
-    #     next_datetime_addoneday = (now_datetime + datetime.timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')
-    #     task_list_objs.update(next_datetime=next_datetime_addoneday)
     response.data = {}
     response.code = 200
     response.msg = '改值成功'
@@ -152,6 +146,23 @@ def TiJiaoRenWuzhongDianCi(request):
                 create_time=now_data,
                 paiming=paiming,
             )
+
+        detail_objs = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=tid)
+        detail_objs.update(
+            is_perform=0
+        )
+        detail_objs_count = detail_objs.filter(tid_id=detail_objs[0].tid.id)
+
+        detail_count = detail_objs_count.filter(is_perform=0).filter(task_start_time__isnull=False).count()
+        baifenbi = 0
+        if detail_count:
+            baifenbi = int((detail_count / detail_objs_count.count()) * 100)
+        models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=tid).update(
+            task_status=1,
+            is_zhixing=0,
+            task_jindu=baifenbi
+        )
+
         # task_id  = models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=tid)[0].tid.id
         # task_tid_obj = models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=task_id)
         # next_datetime = task_tid_obj[0].next_datetime
@@ -163,22 +174,10 @@ def TiJiaoRenWuzhongDianCi(request):
         #         next_datetime=next_datetime_addoneday,
         #         is_zhixing=0
         #     )
-        models.zhugedanao_zhongdianci_jiankong_taskDetail.objects.filter(id=tid).update(
-            is_perform=0
-        )
 
 
-        # detail_objs_count = objs.zhugedanao_zhongdianci_jiankong_taskdetail_set.filter(
-        #     tid_id=objs.id,
-        # )
-        # detail_count = detail_objs_count.filter(is_perform=1).count()
-        # baifenbi = 0
-        # if detail_count:
-        #     baifenbi = int((detail_count / detail_objs_count.count()) * 100)
-        # models.zhugedanao_zhongdianci_jiankong_taskList.objects.filter(id=tid).update(
-        #     task_status=1,
-        #     is_zhixing=0
-        # )
+
+
         response.code = 200
         response.msg = '已完成'
     else:

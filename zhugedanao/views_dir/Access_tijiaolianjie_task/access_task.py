@@ -76,14 +76,16 @@ def get_task_for(request):
         urlId = request.POST.get('urlId')
         ip_addr = request.POST.get('ip_addr')
         address = request.POST.get('address')
-        is_shoulu = request.POST.get('is_shoulu')
+        is_shoulu = request.POST.get('is_shoulu')  # 首次查询 判断是否收录
         if urlId:
+            # 创建log 日志
             models.zhugedanao_lianjie_tijiao_log.objects.create(
                 zhugedanao_lianjie_tijiao_id=urlId,
                 ip=ip_addr,
                 address=address,
                 create_date=now_date,
             )
+            # 如果有日志
             log_count = models.zhugedanao_lianjie_tijiao_log.objects.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
             if log_count:
                 # 提交 查询该链接是否收录
