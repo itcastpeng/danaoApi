@@ -14,10 +14,12 @@ response = Response.ResponseObj()
 def panduan_shijian(request):
     q = Q()
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-    q.add(Q(create_date__lte=next_datetime_addoneday), Q.AND)
+    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
     objs = models.zhugedanao_lianjie_task_list.objects.filter(q)
+    models.zhugedanao_lianjie_tijiao.objects.filter(tid_id=objs[0].id).update(is_zhixing=0)
     for obj in objs:
         obj.is_update = 1
+        obj.save()
     response.code = 200
     response.data = {}
     return JsonResponse(response.__dict__)
@@ -97,7 +99,7 @@ def get_task_for(request):
                             shoulu = 2
                         objs.filter(id=urlId).update(beforeSubmitStatus=shoulu)
                         if int(shoulu) == 2:
-                            objs.filter(id=urlId).update(status=2)
+                            objs.filter(id=urlId).update(status=2, is_zhixing=1)
                     tid=objs[0].tid.id
                     detail_objs = models.zhugedanao_lianjie_tijiao.objects.filter(tid_id=tid)
                     count_list = detail_objs.filter(tid_id=tid).count()
@@ -108,10 +110,10 @@ def get_task_for(request):
                     task_status = 0
                     if zhixing_count == count_list or int(objs[0].status) == 2:
                         task_status = 1
-                    objs.update(
-                        is_zhixing=1,
-                        count=log_count
-                    )
+                        objs.update(
+                            is_zhixing=1
+                        )
+                    objs.update(count=log_count)
                     models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(
                         task_progress=jindutiao,
                         task_status=task_status
