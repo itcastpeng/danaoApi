@@ -43,6 +43,15 @@ def guanJianCiPaiMingShow(request):
                 objs = task_list_objs[start_line: stop_line]
             data_list = []
             for obj in objs:
+                yinqing = '百度'
+                if int(obj.search_engine) == 1:
+                    yinqing = '百度'
+                elif int(obj.search_engine) == 4:
+                    yinqing = '手机百度'
+                elif int(obj.search_engine) == 3:
+                    yinqing = '360'
+                elif int(obj.search_engine) == 6:
+                    yinqing = '手机360'
                 paiming = '-'
                 if obj.paiming:
                     paiming = int(obj.paiming)
@@ -50,8 +59,7 @@ def guanJianCiPaiMingShow(request):
                     'paiming':paiming,
                     'lianjie':obj.lianjie,
                     'keyword':obj.keyword,
-                    'search':obj.search_engine,
-
+                    'search':yinqing,
                 })
             other_data = {
                 'query_progress': query_progress,
