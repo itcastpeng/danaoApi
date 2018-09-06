@@ -13,7 +13,7 @@ import random
 # cerf  token验证 用户展示模块
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
-def guanJianCiMaiMingShow(request):
+def guanJianCiPaiMingShow(request):
     response = Response.ResponseObj()
     user_id = request.GET.get('user_id')
     if request.method == "GET":
@@ -75,7 +75,7 @@ def guanJianCiMaiMingShow(request):
 #  csrf  token验证
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
-def guanJianCiMaiMingOper(request, oper_type, o_id):
+def guanJianCiPaiMingOper(request, oper_type, o_id):
     response = Response.ResponseObj()
     user_id = request.GET.get('user_id')
     if request.method == "POST":
