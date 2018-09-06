@@ -13,7 +13,7 @@ import random
 import redis
 
 
-redis_rc = redis.Redis(host='redis://redis_host', port=6379, db=4, decode_responses=True)
+redis_rc = redis.Redis(host='redis_host', port=6379, db=3, decode_responses=True)
 # redis_rc = redis.Redis(host='192.168.100.20', port=6379, db=4, decode_responses=True)
 # cerf  token验证 用户展示模块
 @csrf_exempt

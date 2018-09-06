@@ -7,7 +7,7 @@ response = Response.ResponseObj()
 from publicFunc import account
 import redis
 
-redis_rc = redis.Redis(host='redis://redis_host', port=6379, db=4, decode_responses=True)
+redis_rc = redis.Redis(host='redis_host', port=6379, db=3, decode_responses=True)
 # redis_rc = redis.Redis(host='192.168.100.20', port=6379, db=4, decode_responses=True)
 
 @csrf_exempt
@@ -43,7 +43,16 @@ def gonggong_exit_delete(request):
     ret = requests.get(delete_pingtaiwajue)
     pingtaiwajue_delete = ret.status_code
 
-    if shoulu_delete and fugai_delete and pingtaiwajue_delete == 200:
+    # 关闭页面 删除百度下拉
+    delete_baiduxiala = 'http://api.zhugeyingxiao.com/zhugedanao/baiDuXiaLa/clickReturn/0?timestamp={timestamp}&rand_str={rand_str}&user_id={user_id}'.format(
+        # delete_fugai_url = 'http://127.0.0.1:8000/zhugedanao/pingTaiWaJue/clickReturn/0?timestamp={timestamp}&rand_str={rand_str}&user_id={user_id}'.format(
+        rand_str=rand_str,
+        timestamp=timestamp,
+        user_id=user_id)
+    ret = requests.get(delete_baiduxiala)
+    baiduxiala_delete = ret.status_code
+
+    if shoulu_delete and fugai_delete and pingtaiwajue_delete and baiduxiala_delete== 200:
         redis_rc.delete('danao_shoulu_chongfu')
         redis_rc.delete('danao_fugai_chongfu')
         redis_rc.delete('danao_pingtaiwajue_chongfu')
