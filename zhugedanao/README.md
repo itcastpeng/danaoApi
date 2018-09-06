@@ -655,7 +655,100 @@ searchEngineModel       POST                是                   搜索引擎
 }
 ```
 
+#### 关键词排名 添加 说明
+``` 
+http请求 POST
+http请求url：  http://127.0.0.1:8000/zhugedanao/guanJianCiMaiMingOper/add/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+search_engine           POST                是                   搜索引擎
+keywords                POST                是                   关键词
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "添加成功",
+    "code": 200,
+    "data": {}
+}
+```
 
+#### 关键词排名 查询 说明
+``` 
+http请求 GET
+http请求url：   http://127.0.0.1:8000/zhugedanao/guanJianCiMaiMingShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+无
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {
+        "other_data": {
+            "whether_complete": true,                                               是否完成
+            "chongfu_num": 0,                                                       重复数
+            "yiwancheng_obj": 4,                                                    已完成数量
+            "data_list": [                                                          
+                {
+                    "paiming": 1,                                                   排名  
+                    "lianjie": "http://focus.smxe.cn/20171204/148l",                链接
+                    "keyword": "天津美莱双眼皮埋线好不好 美莱暖冬计划启动中",              关键词
+                    "search": "1"                                                   搜索引擎
+                },
+                {
+                    "paiming": "-",
+                    "lianjie": "http://news.360xh.com/201712/04/37408.html",
+                    "keyword": "昆明宝岛妇产医院有去过的吗？奋勇争先，情系健康",
+                    "search": "1"
+                },
+                {
+                    "paiming": "-",
+                    "lianjie": "http://focus.smxe.cn/20171204/148l",
+                    "keyword": "天津美莱双眼皮埋线好不好 美莱暖冬计划启动中",
+                    "search": "4"
+                },
+                {
+                    "paiming": "-",
+                    "lianjie": "http://news.360xh.com/201712/04/37408.html",
+                    "keyword": "昆明宝岛妇产医院有去过的吗？奋勇争先，情系健康",
+                    "search": "4"
+                }
+            ],
+            "query_progress": 100,                                                  进度
+            "obj_count": 4                                                          数据总数
+        }
+    },
+    "msg": "查询成功",
+    "code": 200
+}
+```
+
+#### 关键词排名 退出 说明
+``` 
+http请求 GET
+http请求url： http://127.0.0.1:8000/zhugedanao/guanJianCiMaiMingOper/clickReturn/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+无
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "退出成功",
+    "code": 200,
+    "data": {}
+}
+```
+
+#### 关键词排名 生成excel 说明
+``` 
+http请求 GET
+http请求 url：       http://127.0.0.1:8000/zhugedanao/guanJianCiMaiMingOper/generateExcel/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+无
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "生成成功",                          
+    "data": {                                       生成的路径名↓
+        "excel_name": "http://api.zhugeyingxiao.com/statics\\zhugedanao\\zhongDianCiExcel\\161536205504.xlsx"
+    },
+    "code": 200
+}
+```
 
