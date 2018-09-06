@@ -12,7 +12,10 @@ import json
 import random
 from django.db.models import Count,Q, Sum
 import threading
-chongfu = 0
+import redis
+
+redis_rc = redis.Redis(host='redis://redis_host', port=6379, db=4, decode_responses=True)
+# redis_rc = redis.Redis(host='192.168.100.20', port=6379, db=4, decode_responses=True)
 
 # cerf  token验证 用户展示模块
 @csrf_exempt
@@ -37,6 +40,10 @@ def pingTaiWaJueShow(request):
             whether_complete = False
             if yiwancheng == task_count:
                 whether_complete = True
+            pingtaiwajue_chongfu = redis_rc.get('danao_pingtaiwajue_chongfu')
+            chongfu = 0
+            if pingtaiwajue_chongfu:
+                chongfu = pingtaiwajue_chongfu
             # 分页
             if length != 0:
                 start_line = (current_page - 1) * length
@@ -69,7 +76,7 @@ def pingTaiWaJueShow(request):
                 'query_progress':query_progress,        # 进度
                 'whether_complete':whether_complete,    # 是否完成
                 'yiwancheng_obj':yiwancheng,            # 已完成
-                'chongfu_num':0
+                'chongfu_num':int(chongfu)
             }
         else:
             response.code = 402
@@ -99,17 +106,14 @@ def pingTaiWaJue(request, oper_type, o_id):
             #  创建 form验证 实例（参数默认转成字典）
             forms_obj = AddForm(form_data)
             if forms_obj.is_valid():
-                global chongfu
-                print("验证通过")
                 #  添加数据库
                 chongfu = int(len(forms_obj.cleaned_data.get('keywords'))) - int(len(set(forms_obj.cleaned_data.get('keywords'))))
                 print('chongfu============>',chongfu)
+                redis_rc.set('danao_pingtaiwajue_chongfu', '{}'.format(int(chongfu)), ex=None, px=None, nx=False, xx=False)
                 keywords_list = set(forms_obj.cleaned_data.get('keywords'))
                 querysetlist = []
                 create_time = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-                print("form_data['search']===========>",form_data['search'], type(json.loads(form_data['search'])))
                 for search in json.loads(form_data['search']):
-                    print('search=====> ',search)
                     for keyword in keywords_list:
                         querysetlist.append(
                             models.zhugedanao_pingtaiwajue_keyword(

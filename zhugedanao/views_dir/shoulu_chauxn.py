@@ -10,9 +10,11 @@ import datetime
 from zhugedanao.forms.shoulu_chaxun import AddForm, SelectForm
 import json
 import random
+import redis
 
 
-
+redis_rc = redis.Redis(host='redis://redis_host', port=6379, db=4, decode_responses=True)
+# redis_rc = redis.Redis(host='192.168.100.20', port=6379, db=4, decode_responses=True)
 # cerf  token验证 用户展示模块
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
@@ -54,6 +56,10 @@ def shouLuChaXunShow(request):
             whether_complete = False
             if dataCount == yiZhiXingCount:
                 whether_complete = True
+            redis_chongfu = redis_rc.get('danao_shoulu_chongfu')
+            chongfu = 0
+            if redis_chongfu:
+                chongfu = redis_chongfu
             # 返回的数据
             retData = []
             for obj in objs:
@@ -90,7 +96,7 @@ def shouLuChaXunShow(request):
                 'yiwancheng_obj':yiZhiXingCount,        # 已完成数量
                 'query_progress':query_progress,        # 进度条
                 'whether_complete':whether_complete,    # 是否全部完成
-                'chongfu_num':chongfu,                        # 重复数
+                'chongfu_num':int(chongfu),             # 重复数
             }
         else:
             response.code = 402
@@ -99,7 +105,6 @@ def shouLuChaXunShow(request):
 
     return JsonResponse(response.__dict__)
 
-chongfu = 0
 #  增删改
 #  csrf  token验证
 @csrf_exempt
@@ -118,11 +123,10 @@ def shouLuChaxun(request, oper_type, o_id):
             #  创建 form验证 实例（参数默认转成字典）
             forms_obj = AddForm(form_data)
             if forms_obj.is_valid():
-                global chongfu
-                print("验证通过")
                 #  添加数据库
-                # print('-------->', forms_obj.cleaned_data.get('url_list'), type(forms_obj.cleaned_data.get('url_list')))
                 chongfu = int(len(forms_obj.cleaned_data.get('url_list'))) - int(len(set(forms_obj.cleaned_data.get('url_list'))))
+                print('chongfu-----------> ',chongfu)
+                redis_rc.set('danao_shoulu_chongfu', '{}'.format(int(chongfu)), ex=None, px=None, nx=False, xx=False)
                 url_list = set(forms_obj.cleaned_data.get('url_list'))
                 search_list = forms_obj.cleaned_data.get('search_list')
                 querysetlist = []
@@ -153,7 +157,6 @@ def shouLuChaxun(request, oper_type, o_id):
         if oper_type == 'clickReturn':
             response.code = 200
             response.msg = '退出成功'
-            print('user_id=====> ',user_id)
             models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id).delete()
             return JsonResponse(response.__dict__)
 

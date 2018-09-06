@@ -11,7 +11,11 @@ from zhugedanao.forms.fugai_chaxun import AddForm, SelectForm
 import json
 import random
 
-chongfu = 0
+import redis
+
+redis_rc = redis.Redis(host='redis://redis_host', port=6379, db=4, decode_responses=True)
+# redis_rc = redis.Redis(host='192.168.100.20', port=6379, db=4, decode_responses=True)
+
 # cerf  token验证 用户展示模块
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
@@ -48,6 +52,10 @@ def fuGaiChaxunShow(request):
             query_progress = 0 # 进度条
             if yiZhiXingCount:
                 query_progress = int((yiZhiXingCount / dataCount) * 100)
+            fugai_chongfu = redis_rc.get('danao_fugai_chongfu')
+            chongfu = 0
+            if fugai_chongfu:
+                chongfu = fugai_chongfu
             # 分页
             if length != 0:
                 start_line = (current_page - 1) * length
@@ -99,7 +107,7 @@ def fuGaiChaxunShow(request):
                 'fugailv':fugailv,                      # 覆盖率
                 'paiminglv':paiminglv,                  # 排名率
                 'yiwancheng_obj':yiWanCheng,            # 已完成数量
-                'chongfu_num':chongfu,                  # 重复数
+                'chongfu_num':int(chongfu),             # 重复数
                 'whether_complete':whether_complete,    # 是否全部完成
                 'query_progress':query_progress         # 进度条
             }
@@ -130,9 +138,10 @@ def fuGaiChaXun(request, oper_type, o_id):
             #  创建 form验证 实例（参数默认转成字典）
             forms_obj = AddForm(form_data)
             if forms_obj.is_valid():
-                print("验证通过")
-                global chongfu
                 chongfu = int(len(forms_obj.cleaned_data.get('keywords_list'))) - int(len(set(forms_obj.cleaned_data.get('keywords_list'))))
+                redis_rc.set('danao_fugai_chongfu', '{}'.format(int(chongfu)), ex=None, px=None, nx=False, xx=False)
+
+                print(redis_rc.get('danao_fugai_chongfu'))
                  # 添加数据库
                 search_list = forms_obj.cleaned_data.get('search_list')
                 keywords_list = set(forms_obj.cleaned_data.get('keywords_list'))

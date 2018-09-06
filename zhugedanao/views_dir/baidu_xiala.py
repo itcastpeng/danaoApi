@@ -12,8 +12,10 @@ import json
 import random
 from django.db.models import Count,Q, Sum
 import threading
-chongfu = 0
+import redis
 
+redis_rc = redis.Redis(host='redis://redis_host', port=6379, db=4, decode_responses=True)
+# redis_rc = redis.Redis(host='192.168.100.20', port=6379, db=4, decode_responses=True)
 # cerf  token验证 用户展示模块
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
@@ -39,6 +41,11 @@ def baiDuXiaLaShow(request):
                 if obj.xialaci:
                     for xiala in eval(obj.xialaci):
                         num += 1
+            baiduxiala_chongfu = redis_rc.get('danao_baiduxiala_chongfu')
+            chongfu = 0
+            if baiduxiala_chongfu:
+                chongfu = baiduxiala_chongfu
+
             # 分页
             if length != 0:
                 start_line = (current_page - 1) * length
@@ -63,7 +70,7 @@ def baiDuXiaLaShow(request):
                 'yiwancheng_obj':zhixing_count,
                 'whether_complete': whether_complete,  # 是否全部完成
                 'query_progress': query_progress,  # 进度条
-                'chongfu_num':0
+                'chongfu_num':int(chongfu)
             }
         else:
             response.code = 402
@@ -91,11 +98,11 @@ def baiDuXiaLa(request, oper_type, o_id):
             if forms_obj.is_valid():
                 models.zhugedanao_baiduxiala_chaxun.objects.filter(user_id_id=user_id).delete()
                 chongfu = int(len(forms_obj.cleaned_data.get('keywords_list'))) - int(len(set(forms_obj.cleaned_data.get('keywords_list'))))
-
+                print('chongfu=======> ',chongfu)
+                redis_rc.set('danao_baiduxiala_chongfu', '{}'.format(chongfu), ex=None, px=None, nx=False, xx=False)
                 now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
                 for search in eval(forms_obj.cleaned_data.get('search_list')):
                     for keyword in set(forms_obj.cleaned_data.get('keywords_list')):
-                        print(search, keyword)
                         querysetlist.append(
                             models.zhugedanao_baiduxiala_chaxun(
                                 user_id_id = user_id,
