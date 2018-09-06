@@ -212,9 +212,7 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
                     response.msg = "添加成功"
                 else:
                     print("验证不通过")
-                    # print(forms_obj.errors)
                     response.code = 301
-                    # print(forms_obj.errors.as_json())
                     response.msg = json.loads(forms_obj.errors.as_json())
             else:
                 response.code = 301
@@ -222,18 +220,16 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
 
         # 删除任务
         elif oper_type == "delete":
-            # 删除 ID
-            objs = models.zhugedanao_lianjie_task_list.objects.filter(id=o_id)
-            if objs:
-                task_id = objs[0].id
-                task_detail_objs = models.zhugedanao_lianjie_tijiao.objects.filter(tid=task_id)
-                task_detail_objs.delete()
-                objs.delete()
-                response.code = 200
-                response.msg = "删除成功"
-            else:
-                response.code = 302
-                response.msg = '删除ID不存在'
+            task_list_objs = models.zhugedanao_lianjie_task_list.objects.get(id=o_id)
+            task_detale_objs = task_list_objs.zhugedanao_lianjie_tijiao_set.filter(tid_id=task_list_objs.id)
+            for task_detale_obj in task_detale_objs:
+                print('task_detale_obj.id-------> ', task_detale_obj.id)
+                models.zhugedanao_lianjie_tijiao_log.objects.filter(
+                    zhugedanao_lianjie_tijiao_id=task_detale_obj.id).delete()
+            task_detale_objs.delete()
+            task_list_objs.delete()
+            response.code = 200
+            response.msg = "删除成功"
 
         # 确认修改
         elif oper_type == "update_task":
