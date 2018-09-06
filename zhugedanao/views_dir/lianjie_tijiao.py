@@ -7,7 +7,7 @@ import datetime
 from publicFunc.condition_com import conditionCom
 from zhugedanao.forms.lianjie_tijiao import AddForm, UpdateForm, SelectForm, UpdateTaskForm
 import json
-from django.db.models import Q
+
 # cerf  token验证 用户展示模块
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
@@ -49,9 +49,7 @@ def lianjie_tijiao(request):
                 detail_task_count = models.zhugedanao_lianjie_tijiao.objects.filter(tid=obj.id)
 
                 # 该任务执行总数
-                q = Q()
-                q.add(Q(status=2) | Q(count=3), Q.AND)
-                detail_count = detail_task_count.filter(q).count()
+                detail_count = detail_task_count.filter(is_zhixing=0).count()
                 detail_count_jindu = detail_task_count.filter(is_zhixing=1).count()
 
                 # jindu = 0
