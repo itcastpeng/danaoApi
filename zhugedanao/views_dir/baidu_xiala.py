@@ -62,14 +62,14 @@ def baiDuXiaLaShow(request):
                 'obj_count':num,
                 'yiwancheng_obj':zhixing_count,
                 'whether_complete': whether_complete,  # 是否全部完成
-                'query_progress': query_progress  # 进度条
+                'query_progress': query_progress,  # 进度条
+                'chongfu_num':0
             }
         else:
             response.code = 402
             response.msg = "请求异常"
             response.data = json.loads(forms_obj.errors.as_json())
     return JsonResponse(response.__dict__)
-
 
 
 #  增删改
@@ -119,96 +119,85 @@ def baiDuXiaLa(request, oper_type, o_id):
         if oper_type == 'clickReturn':
             response.code = 200
             response.msg = '退出成功'
-            models.zhugedanao_pingtaiwajue_yuming.objects.filter(
-                tid__user_id_id=user_id
-            ).delete()
-            models.zhugedanao_pingtaiwajue_keyword.objects.filter(
+            models.zhugedanao_baiduxiala_chaxun.objects.filter(
                 user_id_id=user_id
             ).delete()
             return JsonResponse(response.__dict__)
 
         # 生成excel
         if oper_type == 'generateExcel':
-            now_date = datetime.datetime.today().strftime('%Y-%m-%d %H-%M-%S')
+            now_date = datetime.date.today().strftime('%Y-%m-%d')
             wb = Workbook()
             ws = wb.active
-            ws.cell(row=1, column=1, value="任务名称")
-            ws.cell(row=3, column=1, value="序号")
-            ws.cell(row=3, column=2, value="平台名称")
-            ws.cell(row=3, column=3, value="排名数")
-            ws.cell(row=3, column=4, value="比例")
-            ws.cell(row=3, column=5, value="搜索引擎")
-            ws.cell(row=3, column=6, value="查询时间:{}".format(now_date))
-            # ft1 = Font(name='宋体', size=22)
+            ws.cell(row=1, column=1, value="序号")
+            ws.cell(row=1, column=2, value="关键词")
+            ws.cell(row=1, column=3, value="下拉词")
+            ws.cell(row=1, column=4, value="搜索引擎")
+            ws.cell(row=1, column=5, value="制表日期:{}".format(now_date))
+            ft1 = Font(name='宋体', size=22)
             # a1 = ws['A1']
             # a1.font = ft1
 
             # 合并单元格        开始行      结束行       用哪列          占用哪列
-            ws.merge_cells(start_row=1, end_row=2, start_column=1, end_column=8)
-            ws.merge_cells(start_row=3, end_row=3, start_column=1, end_column=1)
-            ws.merge_cells(start_row=3, end_row=3, start_column=2, end_column=2)
-            ws.merge_cells(start_row=3, end_row=3, start_column=3, end_column=3)
-            ws.merge_cells(start_row=3, end_row=3, start_column=4, end_column=4)
-            ws.merge_cells(start_row=3, end_row=3, start_column=5, end_column=5)
-            ws.merge_cells(start_row=3, end_row=3, start_column=6, end_column=8)
-            ws.merge_cells(start_row=4, end_row=4, start_column=6, end_column=8)
-            ws.merge_cells(start_row=5, end_row=5, start_column=6, end_column=8)
+            # ws.merge_cells(start_row=1, end_row=2, start_column=1, end_column=8)
 
             # print('设置列宽')
             ws.column_dimensions['A'].width = 9
-            ws.column_dimensions['B'].width = 30
-            ws.column_dimensions['C'].width = 9
-            ws.column_dimensions['D'].width = 20
-            ws.column_dimensions['E'].width = 9
-            ws.column_dimensions['F'].width = 10
-            ws.column_dimensions['H'].width = 70
+            ws.column_dimensions['B'].width = 10
+            ws.column_dimensions['C'].width = 20
+            ws.column_dimensions['D'].width = 10
+            ws.column_dimensions['E'].width = 20
 
             # print('设置行高')
-            # ws.row_dimensions[1].height = 28
+            ws.row_dimensions[1].height = 20
 
             # print('文本居中')
             ws['A1'].alignment = Alignment(horizontal='center', vertical='center')
-            ws['D2'].alignment = Alignment(horizontal='center', vertical='center')
-            ws['E2'].alignment = Alignment(horizontal='center', vertical='center')
-            ws['F3'].alignment = Alignment(horizontal='center', vertical='center')
-            ws['F4'].alignment = Alignment(horizontal='center', vertical='center')
-            ws['F5'].alignment = Alignment(horizontal='center', vertical='center')
-            row = 4
-            objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id_id=user_id)
-            number_count = objs.values('tid__user_id').annotate(Sum('number'))
-            print('number_count==========> ',number_count)
-            number = 0
-            bili = 0
+            ws['B1'].alignment = Alignment(horizontal='center', vertical='center')
+            ws['C1'].alignment = Alignment(horizontal='center', vertical='center')
+            ws['D1'].alignment = Alignment(horizontal='center', vertical='center')
+            ws['E1'].alignment = Alignment(horizontal='center', vertical='center')
+            row = 2
+            objs = models.zhugedanao_baiduxiala_chaxun.objects.filter(user_id_id=user_id)
             yinqing = '百度'
+            number = 0
+            num = 0
             for obj in objs:
-                if str(obj.tid.search) == '1':
+                if int(obj.search) == 1:
                     yinqing = '百度'
-                elif str(obj.tid.search) == '4':
+                elif int(obj.search) == 4:
                     yinqing = '手机百度'
-                elif str(obj.tid.search) == '3':
-                    yinqing = '360'
-                elif str(obj.tid.search) == '6':
-                    yinqing = '手机360'
                 number += 1
-                if obj.number:
-                    bili = int((int(obj.number) / int(number_count[0]['number__sum'])) * 100)
-                ws.cell(row=row, column=1, value="{number}".format(number=number))
-                ws.cell(row=row, column=2, value="{title}".format(title=obj.yuming))
-                ws.cell(row=row, column=3, value="{title}".format(title=obj.number))
-                ws.cell(row=row, column=4, value="{bili}".format(bili=str(bili) + '%'))
-                ws.cell(row=row, column=5, value="{search}".format(search=yinqing))
+                number_ws = ws.cell(row=row, column=1, value="{number}".format(number=number))
+                number_ws.alignment = Alignment(horizontal='center', vertical='center')
+                number_ws.font = Font(size=10)
+                if obj.xialaci:
+                    for xialaci in eval(obj.xialaci):
+                        num += 1
+                        ws.cell(row=row, column=2, value="{title}".format(title=obj.keyword)).font = Font(size=10)
+                        xialaci_ws = ws.cell(row=row, column=3, value="{title}".format(title=xialaci))
+                        xialaci_ws.alignment = Alignment(horizontal='center', vertical='center')
+                        xialaci_ws.font = Font(size=10)
+                else:
+                    ws.cell(row=row, column=2, value="{title}".format(title=obj.keyword)).font = Font(size=10)
+                search_ws = ws.cell(row=row, column=4, value="{search}".format(search=yinqing))
+                search_ws.alignment = Alignment(horizontal='center', vertical='center')
+                search_ws.font = Font(size=10)
                 row += 1
-            ws.cell(row=4, column=6, value="总排名数:{}".format(number_count[0]['number__sum']))
-            ws.cell(row=5, column=6, value="平台数:1")
+            ws.cell(row=2, column=5, value="数据总数：{}".format(objs.count())).font = Font('宋体', color='0066CD', size=10)
+            ws.cell(row=3, column=5, value="重复：{}".format(0)).font = Font('宋体', color='0066CD', size=10)
+            ws.cell(row=4, column=5, value="下拉数：{}".format(num)).font = Font('宋体', color='0066CD', size=10)
+            ws.cell(row=5, column=5, value="异常：{}".format(0)).font = Font('宋体', color='0066CD', size=10)
+            ws.cell(row=6, column=5, value="百度下拉数：{}".format(0)).font = Font('宋体', color='0066CD', size=10)
+
             randInt = random.randint(1, 100)
             nowDateTime = int(time.time())
             excel_name = str(randInt) + str(nowDateTime)
-            wb.save(os.path.join(os.getcwd(), 'statics', 'zhugedanao', 'pingTaiWaJueExcel' , '{}.xlsx'.format(excel_name)))
+            wb.save(os.path.join(os.getcwd(), 'statics', 'zhugedanao', 'baiDuXiaLa' , '{}.xlsx'.format(excel_name)))
             response.code = 200
             response.msg = '生成成功'
-            response.data = {'excel_name':'http://api.zhugeyingxiao.com/' + os.path.join('statics', 'zhugedanao', 'pingTaiWaJueExcel' , '{}.xlsx'.format(excel_name))}
+            response.data = {'excel_name':'http://api.zhugeyingxiao.com/' + os.path.join('statics', 'zhugedanao', 'baiDuXiaLa' , '{}.xlsx'.format(excel_name))}
             return JsonResponse(response.__dict__)
-
     else:
         response.code = 402
         response.msg = "请求异常"

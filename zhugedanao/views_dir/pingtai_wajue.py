@@ -69,6 +69,7 @@ def pingTaiWaJueShow(request):
                 'query_progress':query_progress,        # 进度
                 'whether_complete':whether_complete,    # 是否完成
                 'yiwancheng_obj':yiwancheng,            # 已完成
+                'chongfu_num':0
             }
         else:
             response.code = 402

@@ -613,38 +613,29 @@ http请求url:  http://127.0.0.1:8000/zhugedanao/baiDuXiaLaShow?timestamp=153415
 
 返回说明 （正常时返回的json数据 示例）
 {
+    "msg": "查询成功",
     "data": {
-        "keyword_count": 2,
-        "query_progress": 100,
-        "whether_complete": true,
+        "yiwancheng_obj": 1,                        已完成数量
+        "obj_count": 1,                             下拉词总数
         "retData": [
             {
-                "keyword": "北京",
-                "otherData": [
-                    "北京时间",
-                    "北京天气",
-                    "北京爱情故事",
-                    "北京地铁",
-                    "北京地图",
-                    "北京爱情故事电影版",
-                    "北京天气预报",
-                    "北京车展",
-                    "北京空气质量指数",
-                    "北京移动"
+                "otherData": [                      下拉词
+                    "北京合众康桥"
                 ],
-                "search": 1
+                "search": 1,                        搜索引擎
+                "keyword": "合众康桥"                 关键词
             },
             {
-                "keyword": "百度",
                 "otherData": "",
-                "search": 1
+                "search": 4,
+                "keyword": "合众康桥"
             }
         ],
-        "obj_count": 10,
-        "yiwancheng_obj": 2
+        "whether_complete": false,                  是否完成
+        "query_progress": 50,                       进度条
+        "keyword_count": 2                          关键词总数
     },
-    "msg": "查询成功",
-    "code": 200
+    "code": 200                                     状态码
 }
 ```
 
