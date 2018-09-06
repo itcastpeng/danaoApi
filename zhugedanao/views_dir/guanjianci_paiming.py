@@ -13,7 +13,7 @@ import random
 # cerf  token验证 用户展示模块
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
-def guanJianCiMaiMingShow(request):
+def guanJianCiPaiMingShow(request):
     response = Response.ResponseObj()
     user_id = request.GET.get('user_id')
     if request.method == "GET":
@@ -43,6 +43,15 @@ def guanJianCiMaiMingShow(request):
                 objs = task_list_objs[start_line: stop_line]
             data_list = []
             for obj in objs:
+                yinqing = '百度'
+                if int(obj.search_engine) == 1:
+                    yinqing = '百度'
+                elif int(obj.search_engine) == 4:
+                    yinqing = '手机百度'
+                elif int(obj.search_engine) == 3:
+                    yinqing = '360'
+                elif int(obj.search_engine) == 6:
+                    yinqing = '手机360'
                 paiming = '-'
                 if obj.paiming:
                     paiming = int(obj.paiming)
@@ -50,8 +59,7 @@ def guanJianCiMaiMingShow(request):
                     'paiming':paiming,
                     'lianjie':obj.lianjie,
                     'keyword':obj.keyword,
-                    'search':obj.search_engine,
-
+                    'search':yinqing,
                 })
             other_data = {
                 'query_progress': query_progress,
@@ -75,7 +83,7 @@ def guanJianCiMaiMingShow(request):
 #  csrf  token验证
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
-def guanJianCiMaiMingOper(request, oper_type, o_id):
+def guanJianCiPaiMingOper(request, oper_type, o_id):
     response = Response.ResponseObj()
     user_id = request.GET.get('user_id')
     if request.method == "POST":
