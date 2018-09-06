@@ -80,8 +80,8 @@ urlpatterns = [
     url(r'^baiDuXiaLaTiJiaoRenWu', baiduxiala.baiDuXiaLaTiJiaoRenWu),                                    # 返回任务
 
     # 关键词排名
-    url(r'^guanJianCiMaiMingOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', guanjianci_paiming.guanJianCiPaiMingOper),  # 操作
-    url(r'^guanJianCiMaiMingShow', guanjianci_paiming.guanJianCiPaiMingShow),                                   # 查询
+    url(r'^guanJianCiPaiMingOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', guanjianci_paiming.guanJianCiPaiMingOper),  # 操作
+    url(r'^guanJianCiPaiMingShow', guanjianci_paiming.guanJianCiPaiMingShow),                                   # 查询
     url(r'^guanJianCiPaiMingDecideIsTask', guanjiancipaiming.guanJianCiPaiMingDecideIsTask),                    # 判断是否有任务
     url(r'^guanJianCiPaiMingHuoQuRenWu', guanjiancipaiming.guanJianCiPaiMingHuoQuRenWu),                        # 获取任务
     url(r'^guanJianCiPaiMingTiJiaoRenWu', guanjiancipaiming.guanJianCiPaiMingTiJiaoRenWu),                      # 返回任务
