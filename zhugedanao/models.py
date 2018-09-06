@@ -223,7 +223,6 @@ class zhugedanao_pingtaiwajue_yuming(models.Model):
     yuming = models.CharField(verbose_name='域名', max_length=128, null=True, blank=True)
     number = models.IntegerField(verbose_name='域名数量', default=0)
 
-
 # 百度下拉
 class zhugedanao_baiduxiala_chaxun(models.Model):
     keyword = models.CharField(verbose_name='关键词', max_length=128, null=True, blank=True)
@@ -234,3 +233,12 @@ class zhugedanao_baiduxiala_chaxun(models.Model):
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
     createAndStart_time = models.DateTimeField(verbose_name='创建和开始时间', auto_now_add=True)
 
+# 关键词排名查询
+class zhugedanao_guanjianci_paiming_chaxun(models.Model):
+    search_engine = models.CharField(verbose_name='搜索引擎', max_length=64, default=0)
+    is_perform = models.BooleanField(verbose_name='是否执行', default=False)
+    time_stamp = models.IntegerField(verbose_name='时间戳', null=True, blank=True)
+    keyword = models.CharField(verbose_name='关键词', max_length=64, null=True, blank=True)
+    lianjie = models.CharField(verbose_name='链接', max_length=128, null=True, blank=True)
+    user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
+    paiming = models.IntegerField(verbose_name='链接排名', default=0)

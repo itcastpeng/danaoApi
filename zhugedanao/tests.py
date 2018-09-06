@@ -1949,16 +1949,19 @@ if len(url) > 1:
 # print(ret.status_code)
 
 
-print('\033[1;35;0m字体变色，但无背景色 \033[0m')  # 有高亮 或者
-print('\033[1;35m字体有色，但无背景色 \033[0m')
+# print('\033[1;35;0m字体变色，但无背景色 \033[0m')  # 有高亮 或者
+# print('\033[1;35m字体有色，但无背景色 \033[0m')
 
 
 
+import redis
+# r = redis.Redis(host='redis://redis_host', port=6379, db=4, decode_responses=True)
+rc = redis.Redis(host='192.168.100.20', port=6379, db=4, decode_responses=True)
 
+rc.set('name', 'zhangsan', ex=None, px=None, nx=False, xx=False)
 
-
-
-
+p = rc.get('name')
+print(p )
 
 
 
