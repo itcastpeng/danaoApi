@@ -4,7 +4,7 @@ from django.conf.urls import url
 from zhugedanao.views_dir.wechat import wechat
 from zhugedanao.views_dir import oper_log
 from zhugedanao.views_dir import tongji_data
-from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun, zhongdianci_jiankong, pingtai_wajue, baidu_xiala
+from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun, zhongdianci_jiankong, pingtai_wajue, baidu_xiala, guanjianci_paiming
 from zhugedanao.views_dir.Access_tijiaolianjie_task import access_task
 from zhugedanao.views_dir.Access_shouluChaxun import shouluchauxn
 from zhugedanao.views_dir.Access_fugaiChaxun import fugaichaxun
@@ -78,6 +78,8 @@ urlpatterns = [
     url(r'^baiDuXiaLaHuoQuRenWu', baiduxiala.baiDuXiaLaHuoQuRenWu),                                      # 获取任务
     url(r'^baiDuXiaLaTiJiaoRenWu', baiduxiala.baiDuXiaLaTiJiaoRenWu),                                    # 返回任务
 
-
+    # 关键词排名
+    url(r'^guanJianCiMaiMingOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', guanjianci_paiming.guanJianCiMaiMingOper),  # 操作
+    url(r'^guanJianCiMaiMingShow', guanjianci_paiming.guanJianCiMaiMingShow),                                   # 查询
 
 ]
