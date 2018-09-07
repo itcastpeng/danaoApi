@@ -204,9 +204,6 @@ def shouLuChaxun(request, oper_type, o_id):
             row = 7
             objs = models.zhugedanao_shoulu_chaxun.objects.filter(user_id_id=user_id)
             for obj in objs:
-                is_shoulu = '未收录'
-                if str(obj.is_shoulu) == '1':
-                    is_shoulu = '已收录'
                 if str(obj.search) == '1':
                     yinqing = '百度'
                 elif str(obj.search) == '4':
@@ -217,19 +214,32 @@ def shouLuChaxun(request, oper_type, o_id):
                     yinqing = '手机360'
                 else:
                     yinqing = ''
+                is_shoulu = '未收录'
+                if str(obj.is_shoulu) == '1':
+                    is_shoulu = '已收录'
+                kuaizhao = ''
+                if obj.kuaizhao_time:
+                    kuaizhao = obj.kuaizhao_time
+                title = ''
+                if obj.title:
+                    title = obj.title
                 ws.cell(row=2, column=5, value="{chaxun_time}".format(chaxun_time=obj.createAndStart_time))
-                ws.cell(row=row, column=1, value="{title}".format(title=obj.title))
-                ws.cell(row=row, column=2, value="{url}".format(url=obj.url))
-                ws.cell(row=row, column=3, value="{search}".format(search=yinqing))
-                ws.cell(row=row, column=4, value="{is_shoulu}".format(is_shoulu=is_shoulu))
-                ws.cell(row=row, column=5, value="{kuaizhao_time}".format(kuaizhao_time=obj.kuaizhao_time))
+                title_ws = ws.cell(row=row, column=1, value="{title}".format(title=title))
+                url_ws = ws.cell(row=row, column=2, value="{url}".format(url=obj.url))
+                search_ws = ws.cell(row=row, column=3, value="{search}".format(search=yinqing))
+                is_shoulu_ws = ws.cell(row=row, column=4, value="{is_shoulu}".format(is_shoulu=is_shoulu))
+                kuaizhao_time_ws = ws.cell(row=row, column=5, value="{kuaizhao_time}".format(kuaizhao_time=kuaizhao))
+                if str(obj.is_shoulu) == '1':
+                    title_ws.font = Font(color='DC143C')
+                    url_ws.font = Font(color='DC143C')
+                    search_ws.font = Font(color='DC143C')
+                    is_shoulu_ws.font = Font(color='DC143C')
+                    kuaizhao_time_ws.font = Font(color='DC143C')
                 row += 1
             randInt = random.randint(1, 100)
             nowDateTime = int(time.time())
             excel_name = str(randInt) + str(nowDateTime)
             wb.save(os.path.join(os.getcwd(), 'statics', 'zhugedanao', 'shouLuExcel' , '{}.xlsx'.format(excel_name)))
-            # print('==========>','http://api.zhugeyingxiao.com/' + os.path.join('statics', 'zhugedanao', 'shouLuExcel' , '{}.xlsx'.format(excel_name)))
-            # print('==========>','http://127.0.0.1:8000/' + os.path.join('statics', 'zhugedanao', 'shouLuExcel' , '{}.xlsx'.format(excel_name)))
             response.code = 200
             response.msg = '生成成功'
             response.data = {'excel_name':'http://api.zhugeyingxiao.com/' + os.path.join('statics', 'zhugedanao', 'shouLuExcel' , '{}.xlsx'.format(excel_name))}

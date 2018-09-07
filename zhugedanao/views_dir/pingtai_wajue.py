@@ -195,6 +195,7 @@ def pingTaiWaJue(request, oper_type, o_id):
             ws['F5'].alignment = Alignment(horizontal='center', vertical='center')
             row = 4
             objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id_id=user_id)
+            print('objs.count()=========> ', objs.count())
             number_count = objs.values('tid__user_id').annotate(Sum('number'))
             print('number_count==========> ',number_count)
             number = 0
@@ -219,7 +220,7 @@ def pingTaiWaJue(request, oper_type, o_id):
                 ws.cell(row=row, column=5, value="{search}".format(search=yinqing))
                 row += 1
             ws.cell(row=4, column=6, value="总排名数:{}".format(number_count[0]['number__sum']))
-            ws.cell(row=5, column=6, value="平台数:1")
+            ws.cell(row=5, column=6, value="平台数:{}".format(objs.count()))
             randInt = random.randint(1, 100)
             nowDateTime = int(time.time())
             excel_name = str(randInt) + str(nowDateTime)

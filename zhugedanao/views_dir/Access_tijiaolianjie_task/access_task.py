@@ -30,6 +30,7 @@ response = Response.ResponseObj()
 
 """每个接口 都要判断是否还有任务 方便celery调度 节约资源"""
 
+
 # 链接提交 判断是否还有任务
 @csrf_exempt
 def decideIsTask(request):
@@ -37,6 +38,11 @@ def decideIsTask(request):
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
     q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).exclude(status=2)[0:1]
+    q = Q()
+    if objs[0].submit_date:
+        next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
+        q.add(Q(status=1) & Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
+        objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     flag = False
     if objs:
         flag = True
@@ -56,6 +62,11 @@ def set_task_access(request):
     q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(is_zhixing=0), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time_stamp), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).exclude(status=2)[0:1]
+    q = Q()
+    if objs[0].submit_date:
+        next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
+        q.add(Q(status=1) & Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
+        objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     if objs:
         obj = objs[0]
         obj.submit_date = now_date          # 提交时间
