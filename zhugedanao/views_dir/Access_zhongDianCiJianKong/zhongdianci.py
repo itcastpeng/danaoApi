@@ -56,7 +56,8 @@ def timeToRefreshZhgongDianCi(request):
     if task_list_objs:
         task_list_objs.filter(id=task_list_objs[0].id).update(
             task_status=3,
-            is_zhixing=1
+            is_zhixing=1,
+            task_jindu=0
         )
     response.data = {}
     response.code = 200
@@ -121,6 +122,7 @@ def HuoQuRenWuzhongDianCi(request):
 @csrf_exempt
 def TiJiaoRenWuzhongDianCi(request):
     if request.method == 'POST':
+        now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         tid = request.POST.get('tid')
         judge = request.POST.get('judge')
         resultObj = request.POST.get('resultObj')
