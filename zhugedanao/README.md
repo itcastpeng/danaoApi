@@ -788,7 +788,10 @@ http请求 url： http://127.0.0.1:8000/zhugedanao/loginNmberDeatil
 http请求 GET
 http请求 url:  http://127.0.0.1:8000/zhugedanao/todayAddUserNumberDetail
 参数   			        请求方式		        是否必须 		         说明
-无
+watchDay                GET                 否                   watchYesterday  昨天
+                                                                 watchSevenDays  最近七天
+                                                                 watchThirtyDays 最近三十天
+                                                                 不传值 默认当天
 
 返回说明 （正常时返回的json数据 示例）
 {
@@ -816,7 +819,10 @@ http请求 url:  http://127.0.0.1:8000/zhugedanao/todayAddUserNumberDetail
 http请求 GET
 http请求url：   http://127.0.0.1:8000/zhugedanao/todayActiveUsersNumberDetail
 参数   			        请求方式		        是否必须 		         说明
-无
+watchDay                GET                 否                   watchYesterday  昨天
+                                                                 watchSevenDays  最近七天
+                                                                 watchThirtyDays 最近三十天
+                                                                 不传值 默认当天
 
 返回说明 （正常时返回的json数据 示例）
 {
@@ -843,7 +849,10 @@ http请求 GET
 http请求url：      http://127.0.0.1:8000/zhugedanao/loginNmberDeatil
 http请求url：   http://127.0.0.1:8000/zhugedanao/todayActiveUsersNumberDetail
 参数   			        请求方式		        是否必须 		         说明
-无
+watchDay                GET                 否                   watchYesterday  昨天
+                                                                 watchSevenDays  最近七天
+                                                                 watchThirtyDays 最近三十天
+                                                                 不传值 默认当天
 
 返回说明 （正常时返回的json数据 示例）
 {

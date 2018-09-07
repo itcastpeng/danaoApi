@@ -69,6 +69,20 @@ def tongji_data(request):
 
     return JsonResponse(response.__dict__)
 
+
+# 判断时间
+def determineTheTime(watch_Yesterday=None):
+    now_date = datetime.datetime.now()
+    stop_date = datetime.datetime.now().strftime('%Y-%m-%d 23:59:59')
+    start_date = now_date.strftime('%Y-%m-%d 00:00:00')
+    if watch_Yesterday == 'watchYesterday':
+        start_date = (now_date - datetime.timedelta(days=1)).strftime('%Y-%m-%d 00:00:00')
+    elif watch_Yesterday == 'watchSevenDays':
+        start_date = (now_date - datetime.timedelta(days=6)).strftime('%Y-%m-%d 00:00:00')
+    elif watch_Yesterday == 'watchThirtyDays':
+        start_date = (now_date - datetime.timedelta(days=30)).strftime('%Y-%m-%d 00:00:00')
+    return start_date, stop_date
+
 # 用户统计详情
 def userStatisticalDetail(request):
     objs = models.zhugedanao_userprofile.objects.filter(status=1)
@@ -100,8 +114,11 @@ def userStatisticalDetail(request):
 
 # 今日增加用户详情
 def todayAddUserNumberDetail(request):
-    today_datetime = datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')
-    objs = models.zhugedanao_userprofile.objects.filter(create_date__gte=today_datetime)
+    watch_Yesterday = request.GET.get('watchDay')
+    start_date, stop_date = determineTheTime(watch_Yesterday)
+    q = Q()
+    q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date), Q.AND)
+    objs = models.zhugedanao_userprofile.objects.filter(q)
     obj_count = objs.count()
     otherData = []
     for obj in objs:
@@ -129,8 +146,11 @@ def todayAddUserNumberDetail(request):
 
 # 今日活跃用户详情
 def todayActiveUsersNumberDetail(request):
-    today_datetime = datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')
-    log_objs = models.zhugedanao_oper_log.objects.filter(create_date__gte=today_datetime)
+    watch_Yesterday = request.GET.get('watchDay')
+    start_date, stop_date = determineTheTime(watch_Yesterday)
+    q = Q()
+    q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date), Q.AND)
+    log_objs = models.zhugedanao_oper_log.objects.filter(q)
     objs = log_objs.select_related(
         'user_id'
     ).values(
@@ -166,7 +186,14 @@ def todayActiveUsersNumberDetail(request):
 
 # 登录详情
 def loginNmberDeatil(request):
+    watch_Yesterday = request.GET.get('watchDay')
     objs = models.zhugedanao_oper_log.objects.filter(gongneng=1).values('user__username', 'create_date').distinct().order_by('-create_date')
+    if watch_Yesterday:
+        start_date, stop_date = determineTheTime(watch_Yesterday)
+        q = Q()
+        q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date) &(Q(gongneng=1)), Q.AND)
+        objs = models.zhugedanao_oper_log.objects.filter(q).values('user__username', 'create_date').distinct().order_by('-create_date')
+
     obj_count = objs.count()
     otherData = []
     for obj in objs:
