@@ -70,7 +70,6 @@ def lianjie_tijiao(request):
                 if obj.task_status:
                     zhuangtai = '已完成'
                 shoulu_num = detail_task_count.filter(tid=obj.id).filter(status=2).count()
-                print('=========================>',shoulu_num)
                 obj.shoulu_num = shoulu_num
                 obj.save()
                 shoulu_num = 0
