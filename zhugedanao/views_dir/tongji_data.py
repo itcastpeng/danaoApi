@@ -80,7 +80,7 @@ def determineTheTime(watch_Yesterday=None):
         start_date = (now_date - datetime.timedelta(days=6)).strftime('%Y-%m-%d 00:00:00')
     elif watch_Yesterday == 'watchThirtyDays':
         start_date = (now_date - datetime.timedelta(days=30)).strftime('%Y-%m-%d 00:00:00')
-    else:
+    elif watch_Yesterday == 'watchAllDays':
         start_date = '1995-01-01 00:00:00'
     return start_date, stop_date
 
@@ -90,6 +90,7 @@ def pagingPage(objs, current_page, length):
     current_page = int(current_page)
     start_line = (current_page - 1) * length
     stop_line = start_line + length
+    print('start_line,stop_line----------> ',start_line,stop_line)
     objs = objs[start_line: stop_line]
     return objs
 
@@ -129,8 +130,10 @@ def userStatisticalDetail(request):
 # 今日增加用户详情
 def todayAddUserNumberDetail(request):
     watch_Yesterday = request.GET.get('watchDay')
+    print('watch_Yesterday=====> ',watch_Yesterday)
     start_date, stop_date = determineTheTime(watch_Yesterday)
     q = Q()
+    print('start_date====> ', start_date, 'stop_date----> ', stop_date)
     q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date), Q.AND)
     objs = models.zhugedanao_userprofile.objects.filter(q)
     obj_count = objs.count()
@@ -167,6 +170,7 @@ def todayActiveUsersNumberDetail(request):
     watch_Yesterday = request.GET.get('watchDay')
     start_date, stop_date = determineTheTime(watch_Yesterday)
     q = Q()
+    print('start_date====> ',start_date, 'stop_date----> ', stop_date)
     q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date), Q.AND)
     log_objs = models.zhugedanao_oper_log.objects.filter(q)
     objs = log_objs.select_related(
