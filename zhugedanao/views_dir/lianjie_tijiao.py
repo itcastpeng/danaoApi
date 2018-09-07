@@ -57,7 +57,8 @@ def lianjie_tijiao(request):
                 #     jindu = int((int(obj.task_progress) / int(obj.count_taskList)) * 100)
                 yiwancheng_obj = 0
                 if count != 0:
-                    yiwancheng_obj = int(obj.count_taskList - detail_count)
+                    # yiwancheng_obj = int(obj.count_taskList - detail_count)
+                    yiwancheng_obj = detail_task_count.exclude(status=1).count()
                 jindu = 0
                 if yiwancheng_obj:
                     jindu = int((yiwancheng_obj / obj.count_taskList) * 100)
