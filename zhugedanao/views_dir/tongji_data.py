@@ -84,10 +84,23 @@ def determineTheTime(watch_Yesterday=None):
         start_date = '1995-01-01 00:00:00'
     return start_date, stop_date
 
+# 分页
+def pagingPage(objs, current_page, length):
+    length = int(length)
+    current_page = int(current_page)
+    start_line = (current_page - 1) * length
+    stop_line = start_line + length
+    objs = objs[start_line: stop_line]
+    return objs
+
 # 用户统计详情
 def userStatisticalDetail(request):
     objs = models.zhugedanao_userprofile.objects.filter(status=1)
     obj_count = objs.count()
+    current_page = request.GET.get('current_page')
+    length = request.GET.get('length')
+    if length:
+        objs = pagingPage(objs, current_page, length)
     otherData = []
     for obj in objs:
         sex = '男'
@@ -102,7 +115,7 @@ def userStatisticalDetail(request):
             'country':obj.country,          # 国家
             'province':obj.province,        # 省份
             'city':obj.city,                # 城市
-            'sex':sex,                  # 性别
+            'sex':sex,                      # 性别
         })
     overData = {
         'otherData':otherData,
@@ -121,6 +134,10 @@ def todayAddUserNumberDetail(request):
     q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date), Q.AND)
     objs = models.zhugedanao_userprofile.objects.filter(q)
     obj_count = objs.count()
+    current_page = request.GET.get('current_page')
+    length = request.GET.get('length')
+    if length:
+        objs = pagingPage(objs, current_page, length)
     otherData = []
     for obj in objs:
         decode_username = base64.b64decode(obj.username)
@@ -158,6 +175,11 @@ def todayActiveUsersNumberDetail(request):
         'user__username',
         'user_id',
     ).distinct()
+    current_page = request.GET.get('current_page')
+    length = request.GET.get('length')
+    print('current_page==========> ',current_page, length)
+    if length:
+        objs = pagingPage(objs, current_page, length)
     otherData = []
     for obj in objs:
         user_id = obj.get('user_id')
@@ -194,9 +216,12 @@ def loginNmberDeatil(request):
         q = Q()
         q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date) &(Q(gongneng=1)), Q.AND)
         objs = models.zhugedanao_oper_log.objects.filter(q).values('user__username', 'create_date').distinct().order_by('-create_date')
-
     obj_count = objs.count()
     otherData = []
+    current_page = request.GET.get('current_page')
+    length = request.GET.get('length')
+    if length:
+        objs = pagingPage(objs, current_page, length)
     for obj in objs:
         decode_username = base64.b64decode(obj.get('user__username'))
         username = str(decode_username, 'utf-8')
