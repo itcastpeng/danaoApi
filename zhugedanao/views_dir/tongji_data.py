@@ -1,18 +1,18 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from django.db.models import Count
+from django.db.models import Count, Sum
 from publicFunc.Response import ResponseObj
 from publicFunc.account import is_token
 from zhugedanao import models
 from publicFunc.condition_com import conditionCom
 from django.db.models import Q
 
-import datetime
+import datetime, base64, sys, io
 
-
+response = ResponseObj()
+# sys.stdout = io.TextIOWrapper(sys.stdout.buffer,encoding='utf8')
 # 统计数据
 def tongji_data(request):
-    response = ResponseObj()
     nowDate = datetime.datetime.now().strftime("%Y-%m-%d")
 
     start_date = request.GET.get('create_date__gte', nowDate)
@@ -68,4 +68,127 @@ def tongji_data(request):
     }
 
     return JsonResponse(response.__dict__)
+
+# 用户统计详情
+def userStatisticalDetail(request):
+    objs = models.zhugedanao_userprofile.objects.filter(status=1)
+    obj_count = objs.count()
+    otherData = []
+    for obj in objs:
+        sex = '男'
+        if int(obj.sex) == 2:
+            sex = '女'
+        decode_username = base64.b64decode(obj.username)
+        username = str(decode_username, 'utf-8')
+        otherData.append({
+            'o_id':obj.id,                  # 用户id
+            'username':username,            # 用户名
+            'create_time':obj.create_date.strftime('%Y-%m-%d %H-%M-%S'),  # 创建时间
+            'country':obj.country,          # 国家
+            'province':obj.province,        # 省份
+            'city':obj.city,                # 城市
+            'sex':sex,                  # 性别
+        })
+    overData = {
+        'otherData':otherData,
+        'obj_count':obj_count
+    }
+    response.code = 200
+    response.msg = '查询成功'
+    response.data = {'overData':overData}
+    return JsonResponse(response.__dict__)
+
+# 今日增加用户详情
+def todayAddUserNumberDetail(request):
+    today_datetime = datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')
+    objs = models.zhugedanao_userprofile.objects.filter(create_date__gte=today_datetime)
+    obj_count = objs.count()
+    otherData = []
+    for obj in objs:
+        decode_username = base64.b64decode(obj.username)
+        username = str(decode_username, 'utf-8')
+        sex = '男'
+        if int(obj.sex) == 2:
+            sex = '女'
+        otherData.append({
+            'username':username,
+            'country':obj.country,          # 国家
+            'province':obj.province,        # 省份
+            'city':obj.city,                # 城市
+            'sex':sex,                  # 性别
+        })
+
+    overData = {
+        'otherData':otherData,
+        'obj_count':obj_count
+    }
+    response.code = 200
+    response.msg = '查询成功'
+    response.data = {'overData':overData}
+    return JsonResponse(response.__dict__)
+
+# 今日活跃用户详情
+def todayActiveUsersNumberDetail(request):
+    today_datetime = datetime.datetime.now().strftime('%Y-%m-%d 00:00:00')
+    log_objs = models.zhugedanao_oper_log.objects.filter(create_date__gte=today_datetime)
+    objs = log_objs.select_related(
+        'user_id'
+    ).values(
+        'user__username',
+        'user_id',
+    ).distinct()
+    otherData = []
+    for obj in objs:
+        user_id = obj.get('user_id')
+        dataList = []
+        objs_gongneng = log_objs.filter(
+            user_id=user_id
+        ).values(
+            'gongneng__name'
+        ).distinct()
+        for gongneng in objs_gongneng:
+            dataList.append(
+                gongneng.get('gongneng__name')
+            )
+        objs_count = objs_gongneng.count()
+        decode_username = base64.b64decode(obj.get('user__username'))
+        username = str(decode_username, 'utf-8')
+        otherData.append({
+            'objs_count':objs_count,
+            'user_id':user_id,
+            'username':username,
+            'dataList':dataList
+        })
+    response.code = 200
+    response.msg = '查询成功'
+    response.data = {'otherData':otherData}
+    return JsonResponse(response.__dict__)
+
+# 登录详情
+def loginNmberDeatil(request):
+    objs = models.zhugedanao_oper_log.objects.filter(gongneng=1).values('user__username', 'create_date').distinct().order_by('-create_date')
+    obj_count = objs.count()
+    otherData = []
+    for obj in objs:
+        decode_username = base64.b64decode(obj.get('user__username'))
+        username = str(decode_username, 'utf-8')
+        otherData.append({
+            'username':username,
+            'create_time':obj.get('create_date').strftime('%Y-%m-%d %H-%M-%S')
+        })
+    dataList = {
+        'otherData':otherData,
+        'obj_count':obj_count
+    }
+    response.code = 200
+    response.msg = '查询成功'
+    response.data = {'dataList':dataList}
+    return JsonResponse(response.__dict__)
+
+
+
+
+
+
+
 
