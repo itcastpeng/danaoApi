@@ -37,6 +37,7 @@ def decideIsTask(request):
     q = Q()
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
     q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
+    print(next_datetime_addoneday)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).exclude(status=2)[0:1]
     q = Q()
     if objs:
@@ -96,16 +97,16 @@ def get_task_for(request):
         is_shoulu = request.POST.get('is_shoulu')  # 首次查询 判断是否收录
         if urlId:
             # 如果有日志
+            # 创建log 日志
             log_objs = models.zhugedanao_lianjie_tijiao_log.objects
+            log_objs.create(
+                zhugedanao_lianjie_tijiao_id=urlId,
+                ip=ip_addr,
+                address=address,
+                create_date=now_date,
+            )
             log_count = log_objs.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
-            if log_count < 3:
-                # 创建log 日志
-                log_objs.create(
-                    zhugedanao_lianjie_tijiao_id=urlId,
-                    ip=ip_addr,
-                    address=address,
-                    create_date=now_date,
-                )
+            if log_count:
                 # 提交 查询该链接是否收录
                 objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
                 if int(objs[0].status) == 1:
