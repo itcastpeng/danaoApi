@@ -14,10 +14,9 @@ response = ResponseObj()
 # 统计数据
 def tongji_data(request):
     nowDate = datetime.datetime.now().strftime("%Y-%m-%d")
-
+    print(request.GET)
     start_date = request.GET.get('create_date__gte', nowDate)
     stop_date = request.GET.get('create_date__lt', '')
-
     # 获取参数
     field_dict = {
         'id': '',
@@ -81,6 +80,8 @@ def determineTheTime(watch_Yesterday=None):
         start_date = (now_date - datetime.timedelta(days=6)).strftime('%Y-%m-%d 00:00:00')
     elif watch_Yesterday == 'watchThirtyDays':
         start_date = (now_date - datetime.timedelta(days=30)).strftime('%Y-%m-%d 00:00:00')
+    else:
+        start_date = '1995-01-01 00:00:00'
     return start_date, stop_date
 
 # 用户统计详情
