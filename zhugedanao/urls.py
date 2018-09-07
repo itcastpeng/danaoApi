@@ -86,4 +86,10 @@ urlpatterns = [
     url(r'^guanJianCiPaiMingHuoQuRenWu', guanjiancipaiming.guanJianCiPaiMingHuoQuRenWu),                        # 获取任务
     url(r'^guanJianCiPaiMingTiJiaoRenWu', guanjiancipaiming.guanJianCiPaiMingTiJiaoRenWu),                      # 返回任务
 
+    # 用户统计
+    url(r'^userStatisticalDetail', tongji_data.userStatisticalDetail),                      # 全部用户详情
+    url(r'^todayAddUserNumberDetail', tongji_data.todayAddUserNumberDetail),                # 今日添加用户详情
+    url(r'^todayActiveUsersNumberDetail', tongji_data.todayActiveUsersNumberDetail),        # 今日活跃详情
+    url(r'^loginNmberDeatil', tongji_data.loginNmberDeatil),                                # 登录详情
+
 ]

@@ -752,3 +752,127 @@ http请求 url：       http://127.0.0.1:8000/zhugedanao/guanJianCiMaiMingOper/g
 }
 ```
 
+#### 统计 用户统计详情 说明
+``` 
+http请求 GET
+http请求 url： http://127.0.0.1:8000/zhugedanao/loginNmberDeatil
+参数   			        请求方式		        是否必须 		         说明
+无
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "code": 200,
+    "msg": "查询成功",
+    "data": {
+        "overData": {
+            "otherData": [
+                {
+                    "username": "做自己",
+                    "country": "中国",
+                    "city": "通州",
+                    "create_time": "2018-09-07 20-11-16",
+                    "province": "北京",
+                    "o_id": 10,
+                    "sex": "男"
+                }
+            ],
+            "obj_count": 98                                 # 总数
+        }
+    }
+}
+
+```
+
+#### 统计 今日增加用户详情 说明
+``` 
+http请求 GET
+http请求 url:  http://127.0.0.1:8000/zhugedanao/todayAddUserNumberDetail
+参数   			        请求方式		        是否必须 		         说明
+无
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {
+        "overData": {
+            "obj_count": 1,
+            "otherData": [
+                {
+                    "username": "做自己",
+                    "country": "中国",
+                    "city": "通州",
+                    "sex": "男",
+                    "province": "北京"
+                }
+            ]
+        }
+    },
+    "code": 200,
+    "msg": "查询成功"
+}
+```
+
+#### 统计 今日活跃用户详情 说明
+``` 
+http请求 GET
+http请求url：   http://127.0.0.1:8000/zhugedanao/todayActiveUsersNumberDetail
+参数   			        请求方式		        是否必须 		         说明
+无
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "data":{
+        "otherData":[
+            {
+                "username":"张聪",
+                "objs_count":1,
+                "dataList":[
+                    "登录"
+                ],
+                "user_id":11
+            }
+        ]
+    },
+    "code":200,
+    "msg":"查询成功"
+}
+```
+
+#### 统计 登录详情 说明
+``` 
+http请求 GET
+http请求url：      http://127.0.0.1:8000/zhugedanao/loginNmberDeatil
+http请求url：   http://127.0.0.1:8000/zhugedanao/todayActiveUsersNumberDetail
+参数   			        请求方式		        是否必须 		         说明
+无
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "查询成功",
+    "code": 200,
+    "data": {
+        "dataList": {
+            "otherData": [
+                {
+                    "create_time": "2018-09-07 19-41-55",
+                    "username": "心有损失"
+                },
+                {
+                    "create_time": "2018-09-07 19-41-55",
+                    "username": "张聪"
+                }                
+            ],
+            "obj_count": 158
+        }
+    }
+}
+```
+
+
+
+
+
+
+
+
+
+
