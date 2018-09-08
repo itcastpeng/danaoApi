@@ -73,6 +73,10 @@ def set_task_access(request):
         obj = objs[0]
         obj.time_stamp = time_stamp200
         obj.save()
+        response.data = {
+            'tid': obj.id,
+            'url': obj.url
+        }
         if objs[0].submit_date:
             next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
             q = Q()
@@ -80,10 +84,10 @@ def set_task_access(request):
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
             if objs:
                 obj = objs[0]
-        response.data = {
-            'tid': obj.id,
-            'url': obj.url
-        }
+                response.data = {
+                    'tid': obj.id,
+                    'url': obj.url
+                }
         response.msg = '查询成功'
     else:
         response.data = {}
