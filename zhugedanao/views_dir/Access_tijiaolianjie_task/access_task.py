@@ -37,16 +37,17 @@ def decideIsTask(request):
     q = Q()
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
     now_time_stamp = int(time.time())
-    time_stamp5 = now_time_stamp + 5
-    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(is_zhixing=0), Q.AND)
+    time_stamp5 = now_time_stamp + 10
     q.add(Q(access_task_stamp__isnull=True) | Q(access_task_stamp__lte=now_time_stamp), Q.AND)
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).exclude(status=2)[0:1]
-    q = Q()
+    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(is_zhixing=0), Q.AND)
+    q.add(Q(status=1) | Q(status=3), Q.AND)
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     if objs:
         objs[0].access_task_stamp = time_stamp5
         objs[0].save()
         if objs[0].submit_date:
             next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
+            q = Q()
             q.add(Q(status=1) & Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     flag = False
@@ -66,17 +67,19 @@ def set_task_access(request):
     q = Q()
     q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(is_zhixing=0), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time_stamp), Q.AND)
-    objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).exclude(status=2)[0:1]
-    q = Q()
-    if objs:
-        if objs[0].submit_date:
-            next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
-            q.add(Q(status=1) & Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
-            objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
+    q.add(Q(status=1) | Q(status=3), Q.AND)
+    objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     if objs:
         obj = objs[0]
         obj.time_stamp = time_stamp200
         obj.save()
+        if objs[0].submit_date:
+            next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
+            q = Q()
+            q.add(Q(status=1) & Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
+            objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
+            if objs:
+                obj = objs[0]
         response.data = {
             'tid': obj.id,
             'url': obj.url
