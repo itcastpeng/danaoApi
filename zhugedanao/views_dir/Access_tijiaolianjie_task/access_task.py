@@ -49,7 +49,8 @@ def decideIsTask(request):
         if objs[0].submit_date:
             next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
             q = Q()
-            q.add(Q(status=1) & Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
+            q.add(Q(status=1), Q.AND)
+            q.add(Q(submit_date__isnull=True) | Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     if objs:
         flag = True
@@ -83,10 +84,13 @@ def set_task_access(request):
             response.msg = '无任务'
             next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
             q = Q()
-            q.add(Q(status=1) & Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
+            q.add(Q(status=1), Q.AND)
+            q.add(Q(submit_date__isnull=True) | Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
             if objs:
                 obj = objs[0]
+                obj.submit_date = next_24datetime_addoneday
+                obj.save()
                 response.data = {
                     'tid': obj.id,
                     'url': obj.url
