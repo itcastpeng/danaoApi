@@ -38,8 +38,8 @@ def decideIsTask(request):
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
     now_time_stamp = int(time.time())
     time_stamp5 = now_time_stamp + 600
-    q.add(Q(access_task_stamp__isnull=True) | Q(access_task_stamp__lte=now_time_stamp), Q.AND)
     q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(is_zhixing=0), Q.AND)
+    q.add(Q(access_task_stamp__isnull=True) | Q(access_task_stamp__lte=now_time_stamp), Q.AND)
     q.add(Q(status=1) | Q(status=3), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     flag = False
@@ -49,7 +49,6 @@ def decideIsTask(request):
         if objs[0].submit_date:
             next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
             q = Q()
-            q.add(Q(status=1), Q.AND)
             q.add(Q(submit_date__isnull=True) | Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     if objs:
@@ -84,7 +83,6 @@ def set_task_access(request):
             response.msg = '无任务'
             next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
             q = Q()
-            q.add(Q(status=1), Q.AND)
             q.add(Q(submit_date__isnull=True) | Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
             if objs:
@@ -122,14 +120,14 @@ def get_task_for(request):
             # 如果有日志
             # 创建log 日志
             log_objs = models.zhugedanao_lianjie_tijiao_log.objects
-            log_objs.create(
-                zhugedanao_lianjie_tijiao_id=urlId,
-                ip=ip_addr,
-                address=address,
-                create_date=now_date,
-            )
             log_count = log_objs.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
             if log_count < 3:
+                log_objs.create(
+                    zhugedanao_lianjie_tijiao_id=urlId,
+                    ip=ip_addr,
+                    address=address,
+                    create_date=now_date,
+                )
                 # 提交 查询该链接是否收录
                 if int(objs[0].status) == 1:
                     jindutiao = 0
