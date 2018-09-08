@@ -128,6 +128,7 @@ class zhugedanao_lianjie_tijiao(models.Model):
     create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, null=True, blank=True)
     submit_date = models.DateTimeField(verbose_name='提交时间', null=True, blank=True)
     shoulutime_stamp = models.IntegerField(verbose_name='收录取任务间隔时间', null=True, blank=True)
+
     class Meta:
         app_label = "zhugedanao"
 
@@ -186,6 +187,7 @@ class zhugedanao_zhongdianci_jiankong_taskList(models.Model):
     task_start_time = models.CharField(verbose_name='任务开始时间', max_length=64, null=True, blank=True)
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
 
+
 # 重点词监控 列表详情
 class zhugedanao_zhongdianci_jiankong_taskDetail(models.Model):
     tid = models.ForeignKey(to='zhugedanao_zhongdianci_jiankong_taskList', verbose_name='任务列表', null=True, blank=True)
@@ -197,6 +199,7 @@ class zhugedanao_zhongdianci_jiankong_taskDetail(models.Model):
     task_start_time = models.DateTimeField(verbose_name='任务开始时间', null=True, blank=True)
     is_perform = models.BooleanField(verbose_name='是否执行', default=False)
     time_stamp = models.IntegerField(verbose_name='时间戳', null=True, blank=True)
+
 
 # 重点词监控 详情数据
 class zhugedanao_zhongdianci_jiankong_taskDetailData(models.Model):
@@ -216,12 +219,14 @@ class zhugedanao_pingtaiwajue_keyword(models.Model):
     time_stamp = models.IntegerField(verbose_name='时间戳', null=True, blank=True)
     page_number = models.IntegerField(verbose_name='页码', default=1)
 
+
 # 平台挖掘  域名表
 class zhugedanao_pingtaiwajue_yuming(models.Model):
     create_time = models.DateTimeField(verbose_name='创建时间', null=True, blank=True)
     tid = models.ForeignKey(to='zhugedanao_pingtaiwajue_keyword', verbose_name='关键词列表', null=True, blank=True)
     yuming = models.CharField(verbose_name='域名', max_length=128, null=True, blank=True)
     number = models.IntegerField(verbose_name='域名数量', default=0)
+
 
 # 百度下拉
 class zhugedanao_baiduxiala_chaxun(models.Model):
@@ -232,6 +237,7 @@ class zhugedanao_baiduxiala_chaxun(models.Model):
     time_stamp = models.IntegerField(verbose_name='任务间隔时间', default=0)
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
     createAndStart_time = models.DateTimeField(verbose_name='创建和开始时间', auto_now_add=True)
+
 
 # 关键词排名查询
 class zhugedanao_guanjianci_paiming_chaxun(models.Model):

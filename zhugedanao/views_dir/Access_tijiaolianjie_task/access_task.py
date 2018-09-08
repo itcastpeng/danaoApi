@@ -36,12 +36,15 @@ response = Response.ResponseObj()
 def decideIsTask(request):
     q = Q()
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
+    print('next_datetime_addoneday=======>',next_datetime_addoneday)
     q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
     print(next_datetime_addoneday)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).exclude(status=2)[0:1]
     q = Q()
     if objs:
+        print('==============')
         if objs[0].submit_date:
+            print('========----------')
             next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
             q.add(Q(status=1) & Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
@@ -56,7 +59,6 @@ def decideIsTask(request):
 # 链接提交 api
 @csrf_exempt
 def set_task_access(request):
-    now_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
     now_time_stamp = int(time.time())
     time_stamp200 = now_time_stamp + 200
@@ -72,7 +74,6 @@ def set_task_access(request):
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     if objs:
         obj = objs[0]
-        obj.submit_date = now_date          # 提交时间
         obj.time_stamp = time_stamp200
         obj.save()
         response.data = {
@@ -96,6 +97,10 @@ def get_task_for(request):
         address = request.POST.get('address')
         is_shoulu = request.POST.get('is_shoulu')  # 首次查询 判断是否收录
         if urlId:
+            objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
+            obj = objs[0]
+            obj.submit_date = now_date  # 提交时间
+            obj.save()
             # 如果有日志
             # 创建log 日志
             log_objs = models.zhugedanao_lianjie_tijiao_log.objects
@@ -108,7 +113,6 @@ def get_task_for(request):
             log_count = log_objs.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
             if log_count:
                 # 提交 查询该链接是否收录
-                objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
                 if int(objs[0].status) == 1:
                     jindutiao = 0
                     if int(objs[0].beforeSubmitStatus) == 1:

@@ -755,7 +755,7 @@ http请求 url：       http://127.0.0.1:8000/zhugedanao/guanJianCiMaiMingOper/g
 #### 统计 用户统计详情 说明
 ``` 
 http请求 GET
-http请求 url： http://127.0.0.1:8000/zhugedanao/loginNmberDeatil
+http请求 url： http://127.0.0.1:8000/zhugedanao/userStatisticalDetail
 参数   			        请求方式		        是否必须 		         说明
 无
 
