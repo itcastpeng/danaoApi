@@ -128,6 +128,7 @@ class zhugedanao_lianjie_tijiao(models.Model):
     create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, null=True, blank=True)
     submit_date = models.DateTimeField(verbose_name='提交时间', null=True, blank=True)
     shoulutime_stamp = models.IntegerField(verbose_name='收录取任务间隔时间', null=True, blank=True)
+    access_task_stamp = models.IntegerField(verbose_name='提交链接获取任务间隔时间', null=True, blank=True)
 
     class Meta:
         app_label = "zhugedanao"

@@ -36,15 +36,16 @@ response = Response.ResponseObj()
 def decideIsTask(request):
     q = Q()
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
-    print('next_datetime_addoneday=======>',next_datetime_addoneday)
-    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3), Q.AND)
-    print(next_datetime_addoneday)
+    now_time_stamp = int(time.time())
+    time_stamp5 = now_time_stamp + 5
+    q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(is_zhixing=0), Q.AND)
+    q.add(Q(access_task_stamp__isnull=True) | Q(access_task_stamp__lte=now_time_stamp), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q).exclude(status=2)[0:1]
     q = Q()
     if objs:
-        print('==============')
+        objs[0].access_task_stamp = time_stamp5
+        objs[0].save()
         if objs[0].submit_date:
-            print('========----------')
             next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
             q.add(Q(status=1) & Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
@@ -154,7 +155,6 @@ def get_task_for(request):
 def tiJiaoLianJieDecideIsTask(request):
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
     now_time_stamp = int(time.time())
-    time_stamp20 = now_time_stamp + 20
     q = Q()
     print(next_datetime_addoneday)
     # status 收录状态
