@@ -42,6 +42,7 @@ def decideIsTask(request):
     q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(is_zhixing=0), Q.AND)
     q.add(Q(status=1) | Q(status=3), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
+    flag = False
     if objs:
         objs[0].access_task_stamp = time_stamp5
         objs[0].save()
@@ -50,7 +51,6 @@ def decideIsTask(request):
             q = Q()
             q.add(Q(status=1) & Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
-    flag = False
     if objs:
         flag = True
     response.code = 200
@@ -77,7 +77,10 @@ def set_task_access(request):
             'tid': obj.id,
             'url': obj.url
         }
+        response.msg = '查询成功'
         if objs[0].submit_date:
+            response.data = {}
+            response.msg = '无任务'
             next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
             q = Q()
             q.add(Q(status=1) & Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
@@ -88,7 +91,10 @@ def set_task_access(request):
                     'tid': obj.id,
                     'url': obj.url
                 }
-        response.msg = '查询成功'
+                response.msg = '查询成功'
+            else:
+                response.data = {}
+                response.msg = '无任务'
     else:
         response.data = {}
         response.msg = '无任务'
@@ -119,7 +125,7 @@ def get_task_for(request):
                 create_date=now_date,
             )
             log_count = log_objs.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
-            if log_count:
+            if log_count < 3:
                 # 提交 查询该链接是否收录
                 if int(objs[0].status) == 1:
                     jindutiao = 0
