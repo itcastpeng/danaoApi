@@ -125,7 +125,7 @@ def get_task_for(request):
                 create_date=now_date,
             )
             log_count = log_objs.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
-            if log_count:
+            if log_count < 3:
                 # 提交 查询该链接是否收录
                 if int(objs[0].status) == 1:
                     jindutiao = 0
