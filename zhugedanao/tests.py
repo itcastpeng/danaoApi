@@ -1954,14 +1954,25 @@ if len(url) > 1:
 
 
 
-import redis
-# r = redis.Redis(host='redis://redis_host', port=6379, db=4, decode_responses=True)
-rc = redis.Redis(host='192.168.100.20', port=6379, db=4, decode_responses=True)
+# import redis
+# # r = redis.Redis(host='redis://redis_host', port=6379, db=4, decode_responses=True)
+# rc = redis.Redis(host='192.168.100.20', port=6379, db=4, decode_responses=True)
+#
+# rc.set('name', 'zhangsan', ex=None, px=None, nx=False, xx=False)
+#
+# p = rc.get('name')
+# print(p )
 
-rc.set('name', 'zhangsan', ex=None, px=None, nx=False, xx=False)
 
-p = rc.get('name')
-print(p )
+from requests.exceptions import ConnectionError
 
+p = 'http://www.jiacom/hy==='
 
-
+pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
+url = re.findall(pattern, p)
+if url:
+    print('=-==', url)
+    try:
+        ret = requests.get(url[0])
+    except ConnectionError:
+        print('==-----')
