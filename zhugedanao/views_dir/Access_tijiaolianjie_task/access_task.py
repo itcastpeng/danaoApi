@@ -84,7 +84,7 @@ def set_task_access(request):
             next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
             q = Q()
             q.add(Q(submit_date__isnull=True) | Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
-            objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
+            objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=objs[0].id).filter(q)[0:1]
             if objs:
                 obj = objs[0]
                 obj.submit_date = next_24datetime_addoneday
