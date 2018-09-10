@@ -1978,7 +1978,7 @@ if len(url) > 1:
 #         print('==-----')
 
 
-
+# 爬虫2018-09-10
 from openpyxl.styles import Font, Alignment
 from openpyxl import Workbook
 date = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -2013,4 +2013,13 @@ ws['C3'].alignment = Alignment(horizontal='center', vertical='center')
 ws['D3'].alignment = Alignment(horizontal='center', vertical='center')
 ws['E1'].alignment = Alignment(horizontal='center', vertical='center')
 
-wb.save('./1.xlsx')
+# wb.save('./1.xlsx')
+
+
+# 三元表达式 实现斐波那契额数列
+# def fn(n):
+#     return n if n < 2 else fn(n-1)+fn(n-2)
+# n = 5
+# p = fn(n)
+# print(p)
+

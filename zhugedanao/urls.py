@@ -5,7 +5,7 @@ from zhugedanao.views_dir.wechat import wechat
 from zhugedanao.views_dir import oper_log
 from zhugedanao.views_dir import tongji_data
 from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun, zhongdianci_jiankong, \
-    pingtai_wajue, baidu_xiala, guanjianci_paiming, permissions
+    pingtai_wajue, baidu_xiala, guanjianci_paiming, permissions, roleManagement
 from zhugedanao.views_dir.Access_tijiaolianjie_task import access_task
 from zhugedanao.views_dir.Access_shouluChaxun import shouluchauxn
 from zhugedanao.views_dir.Access_fugaiChaxun import fugaichaxun
@@ -93,8 +93,24 @@ urlpatterns = [
     url(r'^todayActiveUsersNumberDetail', tongji_data.todayActiveUsersNumberDetail),        # 今日活跃详情
     url(r'^loginNmberDeatil', tongji_data.loginNmberDeatil),                                # 登录详情
 
-    # 权限
-    url(r'^permissions_oper/(?P<oper_type>\w+)/(?P<o_id>\d+)', permissions.permissions_oper),   # 操作
-    url(r'^permissionsShow', permissions.permissionsShow),                                      # 查询
+    # 权限管理
+    url(r'^permissions_oper/(?P<oper_type>\w+)/(?P<o_id>\d+)', permissions.permissions_oper),            # 操作
+    url(r'^permissionsShow', permissions.permissionsShow),                                               # 查询
 
+    # 角色管理
+    # url(r'^roleManagementOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', roleManagement.roleManagementOper),     # 操作
+    # url(r'^roleManagementShow', roleManagement.roleManagementShow),                                      # 查询
 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
