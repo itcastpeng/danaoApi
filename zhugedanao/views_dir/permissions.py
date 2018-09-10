@@ -142,6 +142,7 @@ def permissions_oper(request, oper_type, o_id):
             else:
                 response.code = 302
                 response.msg = '删除ID不存在'
+
         elif oper_type == "update":
             # 获取需要修改的信息
             form_data = {
@@ -179,15 +180,16 @@ def permissions_oper(request, oper_type, o_id):
                 #  字符串转换 json 字符串
                 response.msg = json.loads(forms_obj.errors.as_json())
 
-    # else:
-    #     if oper_type == "get_tree_data":
-    #         response.code = 200
-    #         response.msg = "获取tree数据成功"
-    #         response.data = {
-    #             'ret_data': json.dumps(init_data())
-    #         }
     else:
-        response.code = 402
-        response.msg = "请求异常"
+        if oper_type == "get_tree_data":
+            print('======')
+            response.code = 200
+            response.msg = "获取tree数据成功"
+            response.data = {
+                'ret_data': json.dumps(init_data())
+            }
+        else:
+            response.code = 402
+            response.msg = "请求异常"
 
     return JsonResponse(response.__dict__)

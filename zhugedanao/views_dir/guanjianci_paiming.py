@@ -175,12 +175,18 @@ def guanJianCiPaiMingOper(request, oper_type, o_id):
             ws.cell(row=1, column=6, value="制表日期:{}".format(now_date)).font = Font(b=True)
 
             # 合并单元格        开始行      结束行       用哪列          占用哪列
-            # ws.merge_cells(start_row=1, end_row=2, start_column=1, end_column=2)
+            ws.merge_cells(start_row=1, end_row=1, start_column=6, end_column=7)
+            ws.merge_cells(start_row=2, end_row=2, start_column=6, end_column=7)
+            ws.merge_cells(start_row=3, end_row=3, start_column=6, end_column=7)
+            ws.merge_cells(start_row=4, end_row=4, start_column=6, end_column=7)
+            ws.merge_cells(start_row=5, end_row=5, start_column=6, end_column=7)
+            ws.merge_cells(start_row=6, end_row=6, start_column=6, end_column=7)
+            ws.merge_cells(start_row=7, end_row=7, start_column=6, end_column=7)
 
             # print('设置列宽')
             ws.column_dimensions['A'].width = 8
-            ws.column_dimensions['B'].width = 20
-            ws.column_dimensions['C'].width = 20
+            ws.column_dimensions['B'].width = 50
+            ws.column_dimensions['C'].width = 50
             ws.column_dimensions['D'].width = 10
             ws.column_dimensions['E'].width = 8
             ws.column_dimensions['F'].width = 15
@@ -246,7 +252,7 @@ def guanJianCiPaiMingOper(request, oper_type, o_id):
             chongfu_ws.font = Font('宋体', color='0066CD', size=10, b=True)
             chongfu_ws.alignment = Alignment(vertical='center')
 
-            baidu_pc_paiming_num = objs.filter(search_engine=1).filter(paiming__isnull=False).count() # 百度pc排名总数
+            baidu_pc_paiming_num = objs.filter(search_engine=1).filter(paiming__isnull=False).exclude(paiming=0).count() # 百度pc排名总数
             pc_bili = 0
             if baidu_pc_paiming_num:
                 pc_bili = int((int(baidu_pc_paiming_num) / int(paiming_num)) * 100)
@@ -257,7 +263,7 @@ def guanJianCiPaiMingOper(request, oper_type, o_id):
             pcpaimingbili_ws.font = Font('宋体', color='0066CD', size=10, b=True)
             pcpaimingbili_ws.alignment = Alignment(vertical='center')
 
-            baidu_mobiel_paiming_num = objs.filter(search_engine=1).filter(paiming__isnull=False).count()   # 百度移动排名总数
+            baidu_mobiel_paiming_num = objs.filter(search_engine=1).filter(paiming__isnull=False).exclude(paiming=0).count()   # 百度移动排名总数
             mobiel_bili = 0
             if baidu_mobiel_paiming_num:
                 mobiel_bili = int((int(baidu_mobiel_paiming_num) / int(paiming_num)) * 100)
