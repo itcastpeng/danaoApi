@@ -38,6 +38,7 @@ def decideIsTask(request):
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
     now_time_stamp = int(time.time())
     q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(is_zhixing=0), Q.AND)
+    q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time_stamp), Q.AND)
     q.add(Q(status=1) | Q(status=3), Q.AND)
     q.add(Q(beforeSubmitStatus=1) | Q(beforeSubmitStatus=3), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]

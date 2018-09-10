@@ -94,7 +94,7 @@ urlpatterns = [
     url(r'^loginNmberDeatil', tongji_data.loginNmberDeatil),                                # 登录详情
 
     # 权限
-    # url(r'^permissions_oper/(?P<oper_type>\w+)/(?P<o_id>\d+)', permissions.permissions_oper),   # 操作
-    # url(r'^permissionsShow', permissions.permissionsShow),                                      # 查询
+    url(r'^permissions_oper/(?P<oper_type>\w+)/(?P<o_id>\d+)', permissions.permissions_oper),   # 操作
+    url(r'^permissionsShow', permissions.permissionsShow),                                      # 查询
 
 ]
