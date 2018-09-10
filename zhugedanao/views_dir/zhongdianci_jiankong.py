@@ -119,7 +119,7 @@ def zhongDianCiDetailShowTaskList(request):
         headers_list = []
         if objs:
             for obj in objs:
-                detail_objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.filter(tid_id=obj.id)[0:3]
+                detail_objs = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.filter(tid_id=obj.id).order_by('-create_time')[0:3]
                 sanci_chaxun = {}
                 if detail_objs:
                     for detail_obj in detail_objs:

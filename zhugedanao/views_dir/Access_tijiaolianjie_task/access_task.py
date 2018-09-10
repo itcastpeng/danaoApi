@@ -150,7 +150,7 @@ def get_task_for(request):
                     task_list_objs.update(task_progress=jindutiao)
                     if yiwancheng_count == count_list:
                         task_list_objs.update(task_status=1)
-                        objs.update(count=log_count)
+                        objs.update(count=log_count+1)
                 else:
                     models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId).update(status=3, is_zhixing=1)
             else:

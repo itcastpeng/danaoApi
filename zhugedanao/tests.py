@@ -1964,15 +1964,62 @@ if len(url) > 1:
 # print(p )
 
 
-from requests.exceptions import ConnectionError
+# from requests.exceptions import ConnectionError
+#
+# p = 'http://www.jiacom/hy==='
+#
+# pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
+# url = re.findall(pattern, p)
+# if url:
+#     print('=-==', url)
+#     try:
+#         ret = requests.get(url[0])
+#     except ConnectionError:
+#         print('==-----')
 
-p = 'http://www.jiacom/hy==='
 
-pattern = re.compile(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')  # 匹配模式
-url = re.findall(pattern, p)
-if url:
-    print('=-==', url)
-    try:
-        ret = requests.get(url[0])
-    except ConnectionError:
-        print('==-----')
+# 爬虫2018-09-10
+from openpyxl.styles import Font, Alignment
+from openpyxl import Workbook
+date = datetime.datetime.now().strftime('%Y-%m-%d')
+
+wb = Workbook()
+ws = wb.active
+ws.cell(row=1, column=1, value="久久网站爬取").font = Font(b=True, size=15)
+ws.cell(row=3, column=1, value="医院名称")
+ws.cell(row=3, column=2, value="医院电话")
+ws.cell(row=3, column=3, value="医院科室")
+ws.cell(row=3, column=4, value="医院地址")
+create_date = ws.cell(row=1, column=5, value="创建时间:{date}".format(date=date))
+create_date.font = Font(b=True, size=13, color='DC143C')
+
+# 合并单元格        开始行      结束行       用哪列          占用哪列
+ws.merge_cells(start_row=1, end_row=2, start_column=1, end_column=4)
+ws.merge_cells(start_row=1, end_row=3, start_column=5, end_column=7)
+
+
+# print('设置列宽')
+ws.column_dimensions['A'].width = 30
+ws.column_dimensions['B'].width = 30
+ws.column_dimensions['C'].width = 30
+ws.column_dimensions['D'].width = 30
+
+
+# print('文本居中')
+ws['A1'].alignment = Alignment(horizontal='center', vertical='center')
+ws['A3'].alignment = Alignment(horizontal='center', vertical='center')
+ws['B3'].alignment = Alignment(horizontal='center', vertical='center')
+ws['C3'].alignment = Alignment(horizontal='center', vertical='center')
+ws['D3'].alignment = Alignment(horizontal='center', vertical='center')
+ws['E1'].alignment = Alignment(horizontal='center', vertical='center')
+
+# wb.save('./1.xlsx')
+
+
+# 三元表达式 实现斐波那契额数列
+# def fn(n):
+#     return n if n < 2 else fn(n-1)+fn(n-2)
+# n = 5
+# p = fn(n)
+# print(p)
+
