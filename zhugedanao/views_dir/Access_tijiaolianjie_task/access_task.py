@@ -45,14 +45,14 @@ def decideIsTask(request):
     flag = False
     if objs:
         flag = True
-        if objs[0].submit_date:
-            flag = False
-            next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
-            q = Q()
-            q.add(Q(submit_date__isnull=True) | Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
-            objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
-            if objs:
-                flag = True
+        # if objs[0].submit_date:
+        #     flag = False
+        #     next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
+        #     q = Q()
+        #     q.add(Q(submit_date__isnull=True) | Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
+        #     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
+        #     if objs:
+        #         flag = True
     response.code = 200
     response.msg = '查询成功'
     response.data = {'flag': flag}
@@ -79,25 +79,25 @@ def set_task_access(request):
             'url': obj.url
         }
         response.msg = '查询成功'
-        if objs[0].submit_date:
-            response.data = {}
-            response.msg = '无任务'
-            next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
-            q = Q()
-            q.add(Q(submit_date__isnull=True) | Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
-            objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=objs[0].id).filter(q)[0:1]
-            if objs:
-                obj = objs[0]
-                obj.submit_date = next_24datetime_addoneday
-                obj.save()
-                response.data = {
-                    'tid': obj.id,
-                    'url': obj.url
-                }
-                response.msg = '查询成功'
-            else:
-                response.data = {}
-                response.msg = '无任务'
+        # if objs[0].submit_date:
+        #     response.data = {}
+        #     response.msg = '无任务'
+        #     next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
+        #     q = Q()
+        #     q.add(Q(submit_date__isnull=True) | Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
+        #     objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=objs[0].id).filter(q)[0:1]
+        #     if objs:
+        #         obj = objs[0]
+        #         obj.submit_date = next_24datetime_addoneday
+        #         obj.save()
+        #         response.data = {
+        #             'tid': obj.id,
+        #             'url': obj.url
+        #         }
+        #         response.msg = '查询成功'
+        #     else:
+        #         response.data = {}
+        #         response.msg = '无任务'
     else:
         response.data = {}
         response.msg = '无任务'
@@ -117,6 +117,7 @@ def get_task_for(request):
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId)
             obj = objs[0]
             obj.submit_date = now_date  # 提交时间
+            obj.is_zhixing = 1
             obj.save()
             # 如果有日志
             # 创建log 日志
@@ -174,7 +175,7 @@ def tiJiaoLianJieDecideIsTask(request):
     q = Q()
     print(next_datetime_addoneday)
     # status 收录状态
-    q.add(Q(status=1) & Q(submit_date__lte=next_datetime_addoneday), Q.AND)
+    q.add(Q(status=1) & Q(submit_date__lte=next_datetime_addoneday) & Q(is_zhixing=1), Q.AND)
     q.add(Q(shoulutime_stamp__isnull=True) | Q(shoulutime_stamp__lt=now_time_stamp), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     flag = False
@@ -194,7 +195,7 @@ def linksToSubmitShouLu(request):
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
     time_stamp20 = now_time_stamp + 20
     q = Q()
-    q.add(Q(status=1) & Q(submit_date__lte=next_datetime_addoneday), Q.AND)
+    q.add(Q(status=1) & Q(submit_date__lte=next_datetime_addoneday) & Q(is_zhixing=1), Q.AND)
     q.add(Q(shoulutime_stamp__isnull=True) | Q(shoulutime_stamp__lt=now_time_stamp), Q.AND)
     objs_tijiao = models.zhugedanao_lianjie_tijiao.objects
     objs = objs_tijiao.filter(q)[0:1]
@@ -225,13 +226,13 @@ def linksShouLuReturnData(request):
         ip_addr = request.POST.get('ip_addr')
         address = request.POST.get('address')
         if is_shoulu and o_id:
-            # create_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-            # models.zhugedanao_lianjie_tijiao_log.objects.create(
-            #     zhugedanao_lianjie_tijiao_id=o_id,
-            #     ip=ip_addr,
-            #     address=address,
-            #     create_date=create_date
-            # )
+            create_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
+            models.zhugedanao_lianjie_tijiao_log.objects.create(
+                zhugedanao_lianjie_tijiao_id=o_id,
+                ip=ip_addr,
+                address=address,
+                create_date=create_date
+            )
 
             objs_tijiaolianjie = models.zhugedanao_lianjie_tijiao.objects
             objs = objs_tijiaolianjie.filter(id=o_id)
