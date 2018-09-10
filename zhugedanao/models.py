@@ -10,9 +10,10 @@ class zhugedanao_quanxian(models.Model):
     icon = models.CharField(verbose_name="图标", max_length=64)
     title = models.CharField(verbose_name="功能名称", max_length=64)
     pid = models.ForeignKey('self', verbose_name="父级id", null=True, blank=True)
-    order_num = models.SmallIntegerField(verbose_name="按照该字段的大小排序")
+    # order_num = models.SmallIntegerField(verbose_name="按照该字段的大小排序")
     create_date = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     component = models.CharField(verbose_name="vue 文件路径", max_length=64, null=True, blank=True)
+    oper_user = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "角色表"
@@ -128,7 +129,7 @@ class zhugedanao_lianjie_tijiao(models.Model):
     create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, null=True, blank=True)
     submit_date = models.DateTimeField(verbose_name='提交时间', null=True, blank=True)
     shoulutime_stamp = models.IntegerField(verbose_name='收录取任务间隔时间', null=True, blank=True)
-    access_task_stamp = models.IntegerField(verbose_name='提交链接获取任务间隔时间', null=True, blank=True)
+    # access_task_stamp = models.IntegerField(verbose_name='提交链接获取任务间隔时间', null=True, blank=True)
 
     class Meta:
         app_label = "zhugedanao"

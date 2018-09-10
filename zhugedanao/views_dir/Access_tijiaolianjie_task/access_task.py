@@ -37,22 +37,21 @@ def decideIsTask(request):
     q = Q()
     next_datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')
     now_time_stamp = int(time.time())
-    time_stamp5 = now_time_stamp + 600
     q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(is_zhixing=0), Q.AND)
-    q.add(Q(access_task_stamp__isnull=True) | Q(access_task_stamp__lte=now_time_stamp), Q.AND)
     q.add(Q(status=1) | Q(status=3), Q.AND)
+    q.add(Q(beforeSubmitStatus=1) | Q(beforeSubmitStatus=3), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     flag = False
     if objs:
-        objs[0].access_task_stamp = time_stamp5
-        objs[0].save()
+        flag = True
         if objs[0].submit_date:
+            flag = False
             next_24datetime_addoneday = (datetime.datetime.now() - datetime.timedelta(hours=24))
             q = Q()
             q.add(Q(submit_date__isnull=True) | Q(submit_date__lte=next_24datetime_addoneday), Q.AND)
             objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
-    if objs:
-        flag = True
+            if objs:
+                flag = True
     response.code = 200
     response.msg = '查询成功'
     response.data = {'flag': flag}
@@ -68,6 +67,7 @@ def set_task_access(request):
     q.add(Q(create_date__lte=next_datetime_addoneday) & Q(count__lt=3) & Q(is_zhixing=0), Q.AND)
     q.add(Q(time_stamp__isnull=True) | Q(time_stamp__lte=now_time_stamp), Q.AND)
     q.add(Q(status=1) | Q(status=3), Q.AND)
+    q.add(Q(beforeSubmitStatus=1) | Q(beforeSubmitStatus=3), Q.AND)
     objs = models.zhugedanao_lianjie_tijiao.objects.filter(q)[0:1]
     if objs:
         obj = objs[0]
