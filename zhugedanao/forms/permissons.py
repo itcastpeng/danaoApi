@@ -18,7 +18,12 @@ class AddForm(forms.Form):
         required=False
     )
 
-
+    oper_user_id = forms.IntegerField(
+        required=True,
+        error_messages={
+            'required': '操作人不能为空'
+        }
+    )
 
 # 更新
 class UpdateForm(forms.Form):

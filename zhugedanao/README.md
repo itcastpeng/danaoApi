@@ -877,8 +877,96 @@ watchDay                GET                 否                   watchYesterday
 ```
 
 
+#### 权限添加说明
+``` 
+http请求  POST    
+http请求url：  http://127.0.0.1:8000/zhugedanao/permissions_oper/add/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+title                   POST                是                   权限名称
+pid_id                  POST                否                   父级权限id
+user_id                 POST                是                   操作人id
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "code": 200,
+    "msg": "添加成功",
+    "data": {}
+}                
+```
 
+#### 权限删除说明
+``` 
+http请求 POST
+http请求url：  http://127.0.0.1:8000/zhugedanao/permissions_oper/delete/3?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+id                      url                 是                   要删除的id
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "删除成功",
+    "code": 200,
+    "data": {}
+}
+``` 
+
+#### 权限修改说明
+``` 
+http请求 POST 
+http请求url：     http://127.0.0.1:8000/zhugedanao/permissions_oper/update/2?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+title                   POST                是                   权限标题
+pid_id                  POST                是                   权限id
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "修改成功",
+    "code": 200,
+    "data": {}
+}
+```
+
+#### 权限查询说明
+``` 
+http请求  GET
+http请求url：  http://127.0.0.1:8000/zhugedanao/permissionsShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+无
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {
+        "data_count": 3,
+        "ret_data": [
+            {
+                "id": 4,
+                "pid_title": "百度",
+                "oper_user__username": "",
+                "pid_id": 1,
+                "title": "百度",
+                "create_date": "2018-09-10 10:43:01"
+            },
+            {
+                "id": 2,
+                "pid_title": "360",
+                "oper_user__username": "",
+                "pid_id": 2,
+                "title": "360",
+                "create_date": "2018-09-10 10:37:21"
+            },
+            {
+                "id": 1,
+                "pid_title": "",
+                "oper_user__username": "",
+                "pid_id": null,
+                "title": "百度",
+                "create_date": "2018-09-10 10:21:42"
+            }
+        ]
+    },
+    "msg": "查询成功",
+    "code": 200
+}
+```
 
 
 

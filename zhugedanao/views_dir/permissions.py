@@ -48,7 +48,7 @@ def permissionsShow(request):
             order = request.GET.get('order', '-create_date')
             field_dict = {
                 'id': '',
-                'name': '__contains',
+                'title': '__contains',
                 'create_date': '',
                 'oper_user__username': '__contains',
                 'pid_id': '__isnull'
@@ -80,7 +80,6 @@ def permissionsShow(request):
                     pid_title = obj.pid.title
                 ret_data.append({
                     'id': obj.id,
-                    'name': obj.name,
                     'title': obj.title,
                     'pid_id': obj.pid_id,
                     'pid_title': pid_title,
@@ -112,6 +111,7 @@ def permissions_oper(request, oper_type, o_id):
             form_data = {
                 'title': request.POST.get('title'),
                 'pid_id': request.POST.get('pid_id'),
+                'oper_user_id': request.GET.get('user_id'),
             }
             #  创建 form验证 实例（参数默认转成字典）
             forms_obj = AddForm(form_data)
@@ -152,7 +152,6 @@ def permissions_oper(request, oper_type, o_id):
             forms_obj = UpdateForm(form_data)
             if forms_obj.is_valid():
                 print("验证通过")
-                name = forms_obj.cleaned_data['name']
                 title = forms_obj.cleaned_data['title']
                 pid_id = forms_obj.cleaned_data['pid_id']
                 #  查询数据库  用户id
@@ -162,7 +161,6 @@ def permissions_oper(request, oper_type, o_id):
                 #  更新 数据
                 if objs:
                     objs.update(
-                        name=name,
                         title=title,
                         pid_id=pid_id,
                     )
@@ -181,15 +179,15 @@ def permissions_oper(request, oper_type, o_id):
                 #  字符串转换 json 字符串
                 response.msg = json.loads(forms_obj.errors.as_json())
 
+    # else:
+    #     if oper_type == "get_tree_data":
+    #         response.code = 200
+    #         response.msg = "获取tree数据成功"
+    #         response.data = {
+    #             'ret_data': json.dumps(init_data())
+    #         }
     else:
-        if oper_type == "get_tree_data":
-            response.code = 200
-            response.msg = "获取tree数据成功"
-            response.data = {
-                'ret_data': json.dumps(init_data())
-            }
-        else:
-            response.code = 402
-            response.msg = "请求异常"
+        response.code = 402
+        response.msg = "请求异常"
 
     return JsonResponse(response.__dict__)
