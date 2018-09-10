@@ -98,8 +98,8 @@ urlpatterns = [
     url(r'^permissionsShow', permissions.permissionsShow),                                               # 查询
 
     # 角色管理
-    # url(r'^roleManagementOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', roleManagement.roleManagementOper),     # 操作
-    # url(r'^roleManagementShow', roleManagement.roleManagementShow),                                      # 查询
+    url(r'^roleManagementOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', roleManagement.roleManagementOper),     # 操作
+    url(r'^roleManagementShow', roleManagement.roleManagementShow),                                      # 查询
 ]
 
 
