@@ -117,6 +117,7 @@ def userStatisticalDetail(request):
             'province':obj.province,        # 省份
             'city':obj.city,                # 城市
             'sex':sex,                      # 性别
+            'set_avator':obj.set_avator     # 头像
         })
     overData = {
         'otherData':otherData,
@@ -153,7 +154,8 @@ def todayAddUserNumberDetail(request):
             'country':obj.country,          # 国家
             'province':obj.province,        # 省份
             'city':obj.city,                # 城市
-            'sex':sex,                  # 性别
+            'sex':sex,                      # 性别
+            'set_avator':obj.set_avator     # 头像
         })
 
     overData = {
@@ -179,6 +181,7 @@ def todayActiveUsersNumberDetail(request):
         'user__username',
         'user_id',
     ).distinct()
+    objs_count = objs.count()
     current_page = request.GET.get('current_page')
     length = request.GET.get('length')
     print('current_page==========> ',current_page, length)
@@ -201,25 +204,27 @@ def todayActiveUsersNumberDetail(request):
         decode_username = base64.b64decode(obj.get('user__username'))
         username = str(decode_username, 'utf-8')
         otherData.append({
-            'objs_count':objs_count,
+            'objs_count': objs_count,
             'user_id':user_id,
             'username':username,
-            'dataList':dataList
+            'dataList':dataList,
+            # 'set_avator': obj.set_avator  # 头像
         })
     response.code = 200
     response.msg = '查询成功'
-    response.data = {'otherData':otherData}
+    response.data = {
+        'otherData':otherData,
+        'objs_count':objs_count
+    }
     return JsonResponse(response.__dict__)
 
 # 登录详情
 def loginNmberDeatil(request):
     watch_Yesterday = request.GET.get('watchDay')
-    objs = models.zhugedanao_oper_log.objects.filter(gongneng=1).values('user__username', 'create_date').distinct().order_by('-create_date')
-    if watch_Yesterday:
-        start_date, stop_date = determineTheTime(watch_Yesterday)
-        q = Q()
-        q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date) &(Q(gongneng=1)), Q.AND)
-        objs = models.zhugedanao_oper_log.objects.filter(q).values('user__username', 'create_date').distinct().order_by('-create_date')
+    start_date, stop_date = determineTheTime(watch_Yesterday)
+    q = Q()
+    q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date) &(Q(gongneng=1)), Q.AND)
+    objs = models.zhugedanao_oper_log.objects.filter(q).values('user__username', 'create_date').distinct().order_by('-create_date')
     obj_count = objs.count()
     otherData = []
     current_page = request.GET.get('current_page')
