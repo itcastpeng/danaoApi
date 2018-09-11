@@ -143,7 +143,7 @@ def get_task_for(request):
                     tid=objs[0].tid.id   # 任务列表 id
                     detail_objs = models.zhugedanao_lianjie_tijiao.objects.filter(tid_id=tid)
                     count_list = detail_objs.count()       # 数据总数
-                    yiwancheng_count = detail_objs.exclude(status=1).count()  # 已完成
+                    yiwancheng_count = detail_objs.filter(is_zhixing=1).count()  # 已完成
                     if yiwancheng_count:
                         jindutiao = int((yiwancheng_count / count_list) * 100)
                     task_list_objs = models.zhugedanao_lianjie_task_list.objects.filter(id=tid)
