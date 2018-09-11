@@ -150,7 +150,7 @@ def todayAddUserNumberDetail(request):
         if int(obj.sex) == 2:
             sex = '女'
         otherData.append({
-            'username':username,
+            'username':username,            # 用户名
             'country':obj.country,          # 国家
             'province':obj.province,        # 省份
             'city':obj.city,                # 城市
@@ -206,9 +206,8 @@ def todayActiveUsersNumberDetail(request):
         otherData.append({
             'objs_count': objs_count,
             'user_id':user_id,
-            'username':username,
+            'username':username,            # 用户名
             'dataList':dataList,
-            # 'set_avator': obj.set_avator  # 头像
         })
     response.code = 200
     response.msg = '查询成功'
@@ -224,7 +223,7 @@ def loginNmberDeatil(request):
     start_date, stop_date = determineTheTime(watch_Yesterday)
     q = Q()
     q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date) &(Q(gongneng=1)), Q.AND)
-    objs = models.zhugedanao_oper_log.objects.filter(q).values('user__username', 'create_date').distinct().order_by('-create_date')
+    objs = models.zhugedanao_oper_log.objects.filter(q).values('user__username', 'create_date', 'user__set_avator').distinct().order_by('-create_date')
     obj_count = objs.count()
     otherData = []
     current_page = request.GET.get('current_page')
@@ -236,7 +235,8 @@ def loginNmberDeatil(request):
         username = str(decode_username, 'utf-8')
         otherData.append({
             'username':username,
-            'create_time':obj.get('create_date').strftime('%Y-%m-%d %H-%M-%S')
+            'create_time':obj.get('create_date').strftime('%Y-%m-%d %H-%M-%S'),
+            'set_avator':obj.get('user__set_avator')
         })
     dataList = {
         'otherData':otherData,
