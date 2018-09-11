@@ -112,6 +112,7 @@ def permissions_oper(request, oper_type, o_id):
             form_data = {
                 'title': request.POST.get('title'),
                 'pid_id': request.POST.get('pid_id'),
+                'path':request.POST.get('path'),
                 'oper_user_id': request.GET.get('user_id'),
             }
             #  创建 form验证 实例（参数默认转成字典）
@@ -149,6 +150,7 @@ def permissions_oper(request, oper_type, o_id):
             form_data = {
                 'title': request.POST.get('title'),
                 'pid_id': request.POST.get('pid_id'),
+                'path': request.POST.get('path'),
             }
 
             forms_obj = UpdateForm(form_data)
@@ -156,6 +158,7 @@ def permissions_oper(request, oper_type, o_id):
                 print("验证通过")
                 title = forms_obj.cleaned_data['title']
                 pid_id = forms_obj.cleaned_data['pid_id']
+                path = forms_obj.cleaned_data['path']
                 #  查询数据库  用户id
                 objs = models.zhugedanao_quanxian.objects.filter(
                     id=o_id
@@ -165,6 +168,7 @@ def permissions_oper(request, oper_type, o_id):
                     objs.update(
                         title=title,
                         pid_id=pid_id,
+                        path=path
                     )
 
                     response.code = 200

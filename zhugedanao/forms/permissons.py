@@ -25,12 +25,27 @@ class AddForm(forms.Form):
         }
     )
 
+    path = forms.CharField(
+        required=True,
+        error_messages={
+            'required': '权限路径不能为空'
+        }
+    )
+
+
 # 更新
 class UpdateForm(forms.Form):
     title = forms.CharField(
         required=True,
         error_messages={
             'required': "权限标题不能为空"
+        }
+    )
+
+    path = forms.CharField(
+        required=True,
+        error_messages={
+            'required': '权限路径不能为空'
         }
     )
 
