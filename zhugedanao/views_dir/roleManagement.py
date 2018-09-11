@@ -38,11 +38,12 @@ def roleManagementShow(request):
                 permissionsData = []
                 if obj.quanxian:
                     permissionsList = [i['id'] for i in obj.quanxian.values('id')]
+                    print('permissionsList=========> ',permissionsList)
                     permissionsData = init_data(selected_list=permissionsList)
                 retData.append({
                     'id':obj.id,
                     'name':obj.name,
-                    'createDate':obj.create_date,
+                    'createDate':obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),
                     'permissionsData':permissionsData,
                 })
             response.code = 200

@@ -877,7 +877,7 @@ watchDay                GET                 否                   watchYesterday
 ```
 
 
-#### 权限添加说明
+#### 权限添加 说明
 ``` 
 http请求  POST    
 http请求url：  http://127.0.0.1:8000/zhugedanao/permissions_oper/add/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
@@ -894,7 +894,7 @@ user_id                 POST                是                   操作人id
 }                
 ```
 
-#### 权限删除说明
+#### 权限删除 说明
 ``` 
 http请求 POST
 http请求url：  http://127.0.0.1:8000/zhugedanao/permissions_oper/delete/3?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
@@ -909,7 +909,7 @@ id                      url                 是                   要删除的id
 }
 ``` 
 
-#### 权限修改说明
+#### 权限修改 说明
 ``` 
 http请求 POST 
 http请求url：     http://127.0.0.1:8000/zhugedanao/permissions_oper/update/2?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
@@ -925,7 +925,7 @@ pid_id                  POST                是                   权限id
 }
 ```
 
-#### 权限查询说明
+ #### 权限查询 说明
 ``` 
 http请求  GET
 http请求url：  http://127.0.0.1:8000/zhugedanao/permissionsShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
@@ -965,6 +965,23 @@ http请求url：  http://127.0.0.1:8000/zhugedanao/permissionsShow?timestamp=153
     },
     "msg": "查询成功",
     "code": 200
+}
+```
+
+#### 权限树状图 说明
+``` 
+http请求  GET
+http请求url： http://127.0.0.1:8000/zhugedanao/permissions_oper/get_tree_data/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+无
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {
+        "ret_data": "[{\"id\": 1, \"expand\": true, \"title\": \"\\u767e\\u5ea6\", \"checked\": false, \"children\": [{\"id\": 5, \"expand\": true, \"title\": \"\\u767e\\u5ea6\", \"checked\": false}, {\"id\": 6, \"expand\": true, \"title\": \"\\u767e\\u5ea6\", \"checked\": false}]}, {\"id\": 7, \"expand\": true, \"title\": \"\\u91cd\\u70b9\\u8bcd\\u76d1\\u63a7\", \"checked\": false}]"
+    },
+    "code": 200,
+    "msg": "获取tree数据成功"
 }
 ```
 
@@ -1078,6 +1095,11 @@ http请求url：  http://127.0.0.1:8000/zhugedanao/roleManagementShow?timestamp=
 ```
 
 
+#### 用户管理添加 说明
+``` 
+
+
+```
 
 
 

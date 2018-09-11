@@ -14,6 +14,7 @@ def init_data(pid=None, selected_list=None):
     :param pid:  权限父级id
     :return:
     """
+    print('pid------->',pid)
     result_data = []
     objs = models.zhugedanao_quanxian.objects.filter(pid_id=pid)
     for obj in objs:
@@ -30,7 +31,7 @@ def init_data(pid=None, selected_list=None):
             current_data['children'] = children_data
         result_data.append(current_data)
 
-    print('result_data -->', result_data)
+    # print('result_data -->', result_data)
     return result_data
 
 
@@ -173,16 +174,12 @@ def permissions_oper(request, oper_type, o_id):
                     response.msg = json.loads(forms_obj.errors.as_json())
 
             else:
-                print("验证不通过")
-                # print(forms_obj.errors)
                 response.code = 301
-                # print(forms_obj.errors.as_json())
-                #  字符串转换 json 字符串
                 response.msg = json.loads(forms_obj.errors.as_json())
 
     else:
+        print('==============')
         if oper_type == "get_tree_data":
-            print('======')
             response.code = 200
             response.msg = "获取tree数据成功"
             response.data = {
