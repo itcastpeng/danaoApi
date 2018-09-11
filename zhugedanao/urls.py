@@ -5,7 +5,7 @@ from zhugedanao.views_dir.wechat import wechat
 from zhugedanao.views_dir import oper_log
 from zhugedanao.views_dir import tongji_data
 from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun, zhongdianci_jiankong, \
-    pingtai_wajue, baidu_xiala, guanjianci_paiming, permissions, roleManagement
+    pingtai_wajue, baidu_xiala, guanjianci_paiming, permissions, roleManagement, userMamagement
 from zhugedanao.views_dir.Access_tijiaolianjie_task import access_task
 from zhugedanao.views_dir.Access_shouluChaxun import shouluchauxn
 from zhugedanao.views_dir.Access_fugaiChaxun import fugaichaxun
@@ -24,6 +24,24 @@ urlpatterns = [
     url(r'^oper_log$', oper_log.oper_log),                                                       # 记录使用日志
     url(r'^tongji_data$', tongji_data.tongji_data),                                              # 微信公众号获取统计数据
 
+    # 权限管理
+    url(r'^permissions_oper/(?P<oper_type>\w+)/(?P<o_id>\d+)', permissions.permissions_oper),  # 操作
+    url(r'^permissionsShow', permissions.permissionsShow),  # 查询
+
+    # 角色管理
+    url(r'^roleManagementOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', roleManagement.roleManagementOper),  # 操作
+    url(r'^roleManagementShow', roleManagement.roleManagementShow),  # 查询
+
+    # 用户管理
+    url(r'^userManagementShow', userMamagement.userManagementShow),  # 查询
+    url(r'^userManagementOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', userMamagement.userManagementOper),  # 操作
+
+    # 用户统计
+    url(r'^userStatisticalDetail', tongji_data.userStatisticalDetail),  # 全部用户详情
+    url(r'^todayAddUserNumberDetail', tongji_data.todayAddUserNumberDetail),  # 今日添加用户详情
+    url(r'^todayActiveUsersNumberDetail', tongji_data.todayActiveUsersNumberDetail),  # 今日活跃详情
+    url(r'^loginNmberDeatil', tongji_data.loginNmberDeatil),  # 登录详情
+
     # 链接提交
     url(r'^lianjie_tijiao/(?P<oper_type>\w+)/(?P<o_id>\d+)', lianjie_tijiao.lianjie_tijiao_oper),# 操作
     url(r'^lianjie_tijiao_show', lianjie_tijiao.lianjie_tijiao),                                 # 查看任务
@@ -34,8 +52,6 @@ urlpatterns = [
     url(r'^linksShouLuReturnData', access_task.linksShouLuReturnData),                           # 收录返回任务改状态
     url(r'^set_task_access', access_task.set_task_access),                                       # 获取提交链接数据
     url(r'^get_task_for', access_task.get_task_for),                                             # 接收返回的数据并改值
-    # url(r'^panduan_shijian', access_task.panduan_shijian),                                     # celery定时判断时间改值30分钟
-    # url(r'^linksSubmitDelteTask', access_task.linksSubmitDelteTask),                             # 删除任务
 
     # 收录功能
     url(r'^shouLuChaxun/(?P<oper_type>\w+)/(?P<o_id>\d+)', shoulu_chauxn.shouLuChaxun),          # 操作
@@ -87,19 +103,9 @@ urlpatterns = [
     url(r'^guanJianCiPaiMingHuoQuRenWu', guanjiancipaiming.guanJianCiPaiMingHuoQuRenWu),                        # 获取任务
     url(r'^guanJianCiPaiMingTiJiaoRenWu', guanjiancipaiming.guanJianCiPaiMingTiJiaoRenWu),                      # 返回任务
 
-    # 用户统计
-    url(r'^userStatisticalDetail', tongji_data.userStatisticalDetail),                      # 全部用户详情
-    url(r'^todayAddUserNumberDetail', tongji_data.todayAddUserNumberDetail),                # 今日添加用户详情
-    url(r'^todayActiveUsersNumberDetail', tongji_data.todayActiveUsersNumberDetail),        # 今日活跃详情
-    url(r'^loginNmberDeatil', tongji_data.loginNmberDeatil),                                # 登录详情
 
-    # 权限管理
-    url(r'^permissions_oper/(?P<oper_type>\w+)/(?P<o_id>\d+)', permissions.permissions_oper),            # 操作
-    url(r'^permissionsShow', permissions.permissionsShow),                                               # 查询
 
-    # 角色管理
-    url(r'^roleManagementOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', roleManagement.roleManagementOper),     # 操作
-    url(r'^roleManagementShow', roleManagement.roleManagementShow),                                      # 查询
+
 ]
 
 
