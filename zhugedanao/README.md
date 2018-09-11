@@ -969,6 +969,130 @@ http请求url：  http://127.0.0.1:8000/zhugedanao/permissionsShow?timestamp=153
 ```
 
 
+#### 角色管理添加 说明
+``` 
+http请求 POST 
+http请求url：  http://127.0.0.1:8000/zhugedanao/roleManagementOper/add/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+role_name               POST                是                   角色名称
+quanxian_list           POST                否                   角色权限 数组id
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "code": 200,
+    "msg": "添加成功",
+    "data": {}
+}
+```
+
+#### 角色查询树状图 说明
+``` 
+http请求 GET
+http请求url：  http://127.0.0.1:8000/zhugedanao/roleManagementOper/get_rules/36?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+o_id                    URL                 是                   要查询树状图的id
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "code": 200,
+    "msg": "查询成功",
+    "data": {
+        "rules_list": [
+            "百度",
+            "360"
+        ]
+    }
+}
+```
+
+#### 角色管理修改 说明
+``` 
+http请求： POST 
+http请求url：  http://127.0.0.1:8000/zhugedanao/roleManagementOper/afterUpdate/35?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+o_id                    URL                 是                   要修改的角色id
+roleName                POST                是                   要修改的名字
+permissionList          POST                否                   要修改的权限
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {},
+    "code": 200,
+    "msg": "修改成功"
+}
+```
+
+#### 角色管理删除 说明
+``` 
+http请求：POST 
+http请求url：  http://127.0.0.1:8000/zhugedanao/roleManagementOper/delete/35?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+o_id                    URL                 是                   要删除的角色ID
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {},
+    "code": 200,
+    "msg": "删除成功"
+}
+```
+
+#### 角色管理查询 说明
+``` 
+http请求： GET
+http请求url：  http://127.0.0.1:8000/zhugedanao/roleManagementShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+无
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {
+        "roleCount": 1,                                 # 查询个数
+        "retData": [    
+            {
+                "permissionsData": [
+                    {
+                        "checked": true,                # 是否选中
+                        "id": 1,                        # 权限ID
+                        "expand": true,                 # 是否展开
+                        "title": "百度",                 # 权限名称 
+                        "children": [                   # 子级
+                            {
+                                "checked": false,       # 是否选中
+                                "id": 5,                # 子级权限ID
+                                "expand": true,         # 是否展开
+                                "title": "百度"         # 子级权限名称 
+                            }
+                        ]
+                    }
+                ],
+                "id": 37,                               # 角色ID
+                "name": "管理员",                        # 角色名称 
+                "createDate": "2018-09-11T10:23:50"     # 创建时间
+            }
+        ]
+    },
+    "code": 200,                                       
+    "msg": "查询成功"                                   
+}   
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

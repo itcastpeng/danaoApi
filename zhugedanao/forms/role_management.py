@@ -49,3 +49,42 @@ class SelectForm(forms.Form):
         else:
             length = int(self.data['length'])
         return length
+
+
+# 更新
+class UpdateForm(forms.Form):
+    roleName = forms.CharField(
+        required=True,
+        error_messages={
+            'required': '角色名称不能为空'
+        }
+    )
+    o_id = forms.IntegerField(
+        required=True,
+        error_messages={
+            'required': '角色id不能为空'
+        }
+    )
+
+    permissionList = forms.CharField(
+        required=True,
+        error_messages={
+            'required': "选择权限不能为空"
+        }
+    )
+
+    # 判断名称是否存在
+    def clean_roleName(self):
+        o_id = self.data['o_id']
+        name = self.data['roleName']
+        objs = models.zhugedanao_role.objects.filter(
+            name=name,
+        ).exclude(id=o_id)
+        if objs:
+            self.add_error('roleName', '角色名称已存在')
+        else:
+            return name
+
+    def clean_permissionList(self):
+        permissionList = self.data.get('permissionList')
+        return json.loads(permissionList)
