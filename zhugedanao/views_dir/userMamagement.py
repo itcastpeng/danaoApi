@@ -1,12 +1,11 @@
-from openpyxl.styles import Font, Alignment
-from openpyxl import Workbook
-import os, time
 from zhugedanao import models
 from publicFunc import Response
 from publicFunc import account
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
-from zhugedanao.forms.pingtai_wajue import AddForm, SelectForm
+from zhugedanao.forms.userManagement import AddForm, SelectForm
+from publicFunc.condition_com import conditionCom
+import base64
 
 # cerf  token验证 用户展示模块
 @csrf_exempt
@@ -18,7 +17,16 @@ def userManagementShow(request):
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
-            objs = models.zhugedanao_userprofile.objects.all()
+            order = request.GET.get('order', '-create_date')
+            field_dict = {
+                'id': '',
+                'name': '__contains',
+                'create_date': '',
+                'oper_user__username': '__contains',
+            }
+            q = conditionCom(request, field_dict)
+
+            objs = models.zhugedanao_userprofile.objects.select_related('role').filter(q).order_by(order)
             obj_count = objs.count()
             # 分页
             if length != 0:
@@ -27,15 +35,23 @@ def userManagementShow(request):
                 objs = objs[start_line: stop_line]
             data_list = []
             for obj in objs:
+                role_name = ''
+                if obj.role:
+                    role_name =obj.role.name
+                decode_username = base64.b64decode(obj.username)
+                username = str(decode_username, 'utf-8')
                 data_list.append({
-                    'username' : obj.username,
-                    'level' : obj.level_name,
+                    'username' : username,
+                    'level' : obj.level_name.name,
                     'create_date' : obj.create_date,
-                    'role' : obj.role
+                    'role' : role_name
                 })
             response.code = 200
             response.msg = '查询成功'
-            response.data = {'data_list' : data_list}
+            response.data = {
+                'data_list' : data_list,
+                'obj_count':obj_count
+            }
     return JsonResponse(response.__dict__)
 
 
@@ -52,26 +68,39 @@ def userManagementOper(request, oper_type, o_id):
         # 修改前数据
         if oper_type == "beforeUpdate":
             objs = models.zhugedanao_userprofile.objects.filter(id=o_id)
-            obj = objs[0]
-            otherData = {
-                'user_level' : obj.level_name,
-                'role':obj.role
-            }
-            response.code = 200
-            response.msg = '查询成功'
-            response.data = {'otherData':otherData}
+            if objs:
+                obj = objs[0]
+                roleName = '无角色'
+                if obj.role:
+                    roleName = obj.role.name
+                levelName = ''
+                if obj.level_name:
+                    levelName = obj.level_name.name,
+                otherData = {
+                    'user_level' : levelName,
+                    'role':roleName
+                }
+                response.code = 200
+                response.msg = '查询成功'
+                response.data = {'otherData':otherData}
 
         # 确认修改数据
         if oper_type == 'afterUpdate':
-            objs = models.zhugedanao_userprofile.objects.filter(id=o_id)
-            obj = objs[0]
+            objs = models.zhugedanao_userprofile.objects.select_related('role').filter(id=o_id)
             role = request.POST.get('role')
             user_level = request.POST.get('user_level')
-            obj.role_id = role
-            obj.level_name_id = user_level
-            obj.save()
-            response.code = 200
-            response.msg = '修改成功'
+            levelObjs = models.zhugedanao_level.objects.filter(id=user_level)
+            roleObjs = models.zhugedanao_role.objects.filter(id=role)
+            if roleObjs and levelObjs:
+                objs.update(
+                    role_id=role,
+                    level_name_id=user_level
+                )
+                response.code = 200
+                response.msg = '修改成功'
+            else:
+                response.code = 402
+                response.msg = '权限或角色不存在'
             response.data = {}
 
     else:

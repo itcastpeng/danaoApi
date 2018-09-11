@@ -223,16 +223,22 @@ def linksShouLuReturnData(request):
     if request.method == 'POST':
         o_id = request.POST.get('o_id')
         is_shoulu = request.POST.get('shoulu')
-        ip_addr = request.POST.get('ip_addr')
-        address = request.POST.get('address')
         if is_shoulu and o_id:
+            ip_addr = ''
+            address = ''
+            if request.POST.get('ip_addr'):
+                ip_addr = request.POST.get('ip_addr')
+            if request.POST.get('address'):
+                address = request.POST.get('address')
+            print(o_id)
+            print(is_shoulu, ip_addr)
             create_date = datetime.datetime.today().strftime('%Y-%m-%d %H:%M:%S')
-            models.zhugedanao_lianjie_tijiao_log.objects.create(
-                zhugedanao_lianjie_tijiao_id=o_id,
-                ip=ip_addr,
-                address=address,
-                create_date=create_date
-            )
+            # models.zhugedanao_lianjie_tijiao_log.objects.select_related('zhugedanao_lianjie_tijiao').create(
+            #     zhugedanao_lianjie_tijiao_id=o_id,
+            #     ip=ip_addr,
+            #     address=address,
+            #     create_date=create_date
+            # )
 
             objs_tijiaolianjie = models.zhugedanao_lianjie_tijiao.objects
             objs = objs_tijiaolianjie.filter(id=o_id)
