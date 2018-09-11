@@ -1095,14 +1095,122 @@ http请求url：  http://127.0.0.1:8000/zhugedanao/roleManagementShow?timestamp=
 ```
 
 
-#### 用户管理添加 说明
+#### 用户管理修改前查询 说明
 ``` 
+http请求: POST 
+http请求url:   http://127.0.0.1:8000/zhugedanao/userManagementOper/beforeUpdate/o_id?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+o_id                    URL                 是                   要查询的用户ID
 
-
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "查询成功",
+    "code": 200,
+    "data": {
+        "otherData": {                  
+            "role": "无角色",                  # 对应角色 
+            "user_level": [                   # 用户等级
+                "普通用户"
+            ]
+        }
+    }
+}
 ```
 
+#### 用户管理修改 说明
+``` 
+http请求： POST
+http请求url：  http://127.0.0.1:8000/zhugedanao/userManagementOper/afterUpdate/16?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+user_level              POST                是                   用户等级ID
+role                    POST                是                   角色ID
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "code": 200,
+    "data": {},
+    "msg": "修改成功"
+}
+```
 
+#### 用户管理查询 说明
+``` 
+http请求： GET
+http请求url： http://127.0.0.1:8000/zhugedanao/userManagementShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+无
+
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "查询成功",
+    "code": 200,
+    "data": {
+        "data_list": [
+            {
+                "create_date": "2018-09-07T20:11:16",
+                "level": "普通用户",
+                "role": "",
+                "username": "做自己"
+            },
+            {
+                "create_date": "2018-09-05T17:25:12",
+                "level": "普通用户",
+                "role": "",
+                "username": "吴中生有"
+            },
+            {
+                "create_date": "2018-09-05T17:08:02",
+                "level": "普通用户",
+                "role": "",
+                "username": "雷华标"
+            },
+            {
+                "create_date": "2018-09-04T11:19:34",
+                "level": "普通用户",
+                "role": "",
+                "username": "真诚（陈）"
+            },
+            {
+                "create_date": "2018-08-30T08:51:54",
+                "level": "普通用户",
+                "role": "",
+                "username": "邱华兵"
+            },
+            {
+                "create_date": "2018-08-28T16:23:22",
+                "level": "普通用户",
+                "role": "",
+                "username": " 小四月 。"
+            },
+            {
+                "create_date": "2018-08-23T11:06:34",
+                "level": "普通用户",
+                "role": "",
+                "username": "宁波同仁植发"
+            },
+            {
+                "create_date": "2018-08-23T10:39:36",
+                "level": "普通用户",
+                "role": "",
+                "username": "二庆"
+            },
+            {
+                "create_date": "2018-08-23T10:34:18",
+                "level": "普通用户",
+                "role": "",
+                "username": "Sven"
+            },
+            {
+                "create_date": "2018-08-23T10:33:55",
+                "level": "普通用户",
+                "role": "",
+                "username": "眼迷离"
+            }
+        ],
+        "obj_count": 98                                                               总数
+    }
+}
+```
 
 
 

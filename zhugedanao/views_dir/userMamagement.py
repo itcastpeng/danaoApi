@@ -5,6 +5,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from zhugedanao.forms.userManagement import AddForm, SelectForm
 from publicFunc.condition_com import conditionCom
+import base64
+
 # cerf  token验证 用户展示模块
 @csrf_exempt
 @account.is_token(models.zhugedanao_userprofile)
@@ -35,16 +37,21 @@ def userManagementShow(request):
             for obj in objs:
                 role_name = ''
                 if obj.role:
-                    role_name = obj.role.name
+                    role_name =obj.role.name
+                decode_username = base64.b64decode(obj.username)
+                username = str(decode_username, 'utf-8')
                 data_list.append({
-                    'username' : obj.username,
-                    'level' : obj.level_name,
+                    'username' : username,
+                    'level' : obj.level_name.name,
                     'create_date' : obj.create_date,
                     'role' : role_name
                 })
             response.code = 200
             response.msg = '查询成功'
-            response.data = {'data_list' : data_list}
+            response.data = {
+                'data_list' : data_list,
+                'obj_count':obj_count
+            }
     return JsonResponse(response.__dict__)
 
 
@@ -79,15 +86,21 @@ def userManagementOper(request, oper_type, o_id):
 
         # 确认修改数据
         if oper_type == 'afterUpdate':
-            objs = models.zhugedanao_userprofile.objects.filter(id=o_id)
-            obj = objs[0]
+            objs = models.zhugedanao_userprofile.objects.select_related('role').filter(id=o_id)
             role = request.POST.get('role')
             user_level = request.POST.get('user_level')
-            obj.role_id = role
-            obj.level_name_id = user_level
-            obj.save()
-            response.code = 200
-            response.msg = '修改成功'
+            levelObjs = models.zhugedanao_level.objects.filter(id=user_level)
+            roleObjs = models.zhugedanao_role.objects.filter(id=role)
+            if roleObjs and levelObjs:
+                objs.update(
+                    role_id=role,
+                    level_name_id=user_level
+                )
+                response.code = 200
+                response.msg = '修改成功'
+            else:
+                response.code = 402
+                response.msg = '权限或角色不存在'
             response.data = {}
 
     else:
