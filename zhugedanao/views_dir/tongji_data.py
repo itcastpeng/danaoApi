@@ -108,13 +108,12 @@ def statisticalDetails(request):
     q = Q()
     objs = ''
     logObjs = ''
-    objsCount = ''
     q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date), Q.AND)
     print(start_date, stop_date)
-    if judgeFunc == 'userStatistics':  # 用户统计 新增统计
+    if judgeFunc == 'userStatistics':  # 用户统计
         objs = models.zhugedanao_userprofile.objects.filter(status=1)
         objsCount = objs.count()
-    elif judgeFunc == 'newUserStatistics':
+    elif judgeFunc == 'newUserStatistics': # 新增统计
         objs = models.zhugedanao_userprofile.objects.filter(q).filter(status=1)
         objsCount = objs.count()
     elif judgeFunc == 'activeUsersNum' or judgeFunc == 'loginNum':         # 活跃统计 登录统计
@@ -151,14 +150,14 @@ def statisticalDetails(request):
             decode_username = base64.b64decode(obj.username)
             username = str(decode_username, 'utf-8')
             otherData.append({
-                'o_id': obj.id,  # 用户id
-                'username': username,  # 用户名
-                'create_time': obj.create_date.strftime('%Y-%m-%d %H-%M-%S'),  # 创建时间
-                'country': obj.country,  # 国家
-                'province': obj.province,  # 省份
-                'city': obj.city,  # 城市
-                'sex': sex,  # 性别
-                'set_avator': obj.set_avator  # 头像
+                'o_id': obj.id,                                                 # 用户id
+                'username': username,                                           # 用户名
+                'create_date': obj.create_date.strftime('%Y-%m-%d %H-%M-%S'),   # 创建时间
+                'country': obj.country,                                         # 国家
+                'province': obj.province,                                       # 省份
+                'city': obj.city,                                               # 城市
+                'sex': sex,                                                     # 性别
+                'set_avator': obj.set_avator                                    # 头像
             })
 
     for obj in logObjs:
@@ -168,24 +167,27 @@ def statisticalDetails(request):
         if int(obj.get('user__sex')) == 2:
             sex = '女'
         otherData.append({
-            'user' : username,
-            'set_avator' : obj.get('user__set_avator'),
-            'country' : obj.get('user__country'),
-            'city' : obj.get('user__city'),
-            'sex' : sex,
-            'create_date' : obj.get('user__create_date'),
+            'username' : username,                              # 用户名
+            'set_avator' : obj.get('user__set_avator'),     # 头像
+            'country' : obj.get('user__country'),           # 国家
+            'province': obj.province,                       # 省份
+            'city' : obj.get('user__city'),                 # 城市
+            'sex' : sex,                                    # 性别
+            'create_date' : obj.get('user__create_date'),   # 创建时间
         })
+
     response.data = {
         'otherData': otherData,
         'objsCount': objsCount
     }
-    if detailsUserData:
+    if detailsUserData:  # 查看用户在线时长详情
         userObjs = models.zhugedanao_userprofile.objects.filter(id=detailsUserData)
         userCount = userObjs.count()
         decode_username = base64.b64decode(userObjs[0].username)
         username = str(decode_username, 'utf-8')
         onlineObjs = models.zhugedanao_statistics_user_online_time.objects.filter(user_id_id=detailsUserData).order_by('-start_time')
         onlineTime = []
+        # 统计该用户在线时长
         for onlineObj in onlineObjs:
             startTime = time.mktime(onlineObj.start_time.timetuple())
             stopTime = time.mktime(onlineObj.stop_time.timetuple())
@@ -202,10 +204,9 @@ def statisticalDetails(request):
             'objCount': userCount,
             'username': username,
             'onlineTime':onlineTime,        # 在线时长
-
         }
 
-    if detailsLogData:
+    if detailsLogData:  # 查看功能详情
         objs_gongneng = models.zhugedanao_oper_log.objects.filter(user_id=detailsLogData).values('gongneng__name').distinct()
         dataList = []
         for gongneng in objs_gongneng:
