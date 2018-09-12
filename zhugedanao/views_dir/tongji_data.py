@@ -156,7 +156,7 @@ def todayAddUserNumberDetail(request):
             'city':obj.city,                # 城市
             'sex':sex,                      # 性别
             'set_avator':obj.set_avator,    # 头像
-            'create_time':obj.create_date   # 创建时间
+            'create_time':obj.create_date.strftime('%Y-%m-%d %H-%M-%S')   # 创建时间
         })
 
     overData = {
@@ -259,7 +259,6 @@ def loginNmberDeatil(request):
             'province': userObj.province,               # 省份
             'city': userObj.city,                       # 城市
             'sex': sex,                                 # 性别
-
         })
     dataList = {
         'otherData':otherData,

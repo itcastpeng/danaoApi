@@ -123,6 +123,9 @@ def get_task_for(request):
             # 创建log 日志
             log_objs = models.zhugedanao_lianjie_tijiao_log.objects
             log_count = log_objs.filter(zhugedanao_lianjie_tijiao_id=urlId).count()
+            tid = objs[0].tid.id  # 任务列表 id
+            detail_objs = models.zhugedanao_lianjie_tijiao.objects.filter(tid_id=tid)
+            count_list = models.zhugedanao_lianjie_tijiao.objects.filter(tid_id=tid).count()
             if log_count < 3:
                 log_objs.create(
                     zhugedanao_lianjie_tijiao_id=urlId,
@@ -140,21 +143,26 @@ def get_task_for(request):
                         objs.filter(id=urlId).update(beforeSubmitStatus=shoulu)
                         if int(shoulu) == 2:
                             objs.filter(id=urlId).update(status=2, is_zhixing=1)
-                    tid=objs[0].tid.id   # 任务列表 id
-                    detail_objs = models.zhugedanao_lianjie_tijiao.objects.filter(tid_id=tid)
-                    count_list = detail_objs.count()       # 数据总数
-                    yiwancheng_count = detail_objs.filter(is_zhixing=1).count()  # 已完成
+                    yiwancheng_count = detail_objs.filter(is_zhixing=1).count()  # 进度已完成
                     if yiwancheng_count:
                         jindutiao = int((yiwancheng_count / count_list) * 100)
                     task_list_objs = models.zhugedanao_lianjie_task_list.objects.filter(id=tid)
                     task_list_objs.update(task_progress=jindutiao)
                     if yiwancheng_count == count_list:
-                        task_list_objs.update(task_status=1)
                         objs.update(count=log_count+1)
+                    yiwancheng = detail_objs.filter(tid_id=tid).exclude(status=1).count()  # 已完成
+                    if yiwancheng == count_list:
+                        task_list_objs.update(task_status=1)
                 else:
                     models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId).update(status=3, is_zhixing=1)
+                    yiwancheng = detail_objs.filter(tid_id=tid).exclude(status=1).count()  # 已完成
+                    if yiwancheng == count_list:
+                        models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(task_status=1)
             else:
                 models.zhugedanao_lianjie_tijiao.objects.filter(id=urlId).update(status=3, is_zhixing=1)
+                yiwancheng = detail_objs.filter(tid_id=tid).exclude(status=1).count()  # 已完成
+                if yiwancheng == count_list:
+                    models.zhugedanao_lianjie_task_list.objects.filter(id=tid).update(task_status=1)
             response.code = 200
             response.msg = '请求成功'
         else:
