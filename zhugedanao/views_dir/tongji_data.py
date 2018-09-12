@@ -144,9 +144,11 @@ def statisticalDetails(request):
             logObjs = pagingPage(logObjs, current_page, length)
     otherData = []
     for obj in objs:
-            sex = '男'
+            sex = ''
             if int(obj.sex) == 2:
                 sex = '女'
+            elif int(obj.sex) == 1:
+                sex = '男'
             decode_username = base64.b64decode(obj.username)
             username = str(decode_username, 'utf-8')
             otherData.append({
@@ -163,9 +165,11 @@ def statisticalDetails(request):
     for obj in logObjs:
         decode_username = base64.b64decode(obj.get('user__username'))
         username = str(decode_username, 'utf-8')
-        sex = '男'
+        sex = ''
         if int(obj.get('user__sex')) == 2:
             sex = '女'
+        elif int(obj.sex) == 1:
+            sex = '男'
         otherData.append({
             'username' : username,                              # 用户名
             'set_avator' : obj.get('user__set_avator'),     # 头像
