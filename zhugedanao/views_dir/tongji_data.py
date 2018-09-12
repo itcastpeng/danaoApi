@@ -6,7 +6,7 @@ from publicFunc.account import is_token
 from zhugedanao import models
 from publicFunc.condition_com import conditionCom
 from django.db.models import Q
-
+import time
 import datetime, base64, sys, io
 
 response = ResponseObj()
@@ -183,11 +183,25 @@ def statisticalDetails(request):
         userCount = userObjs.count()
         decode_username = base64.b64decode(userObjs[0].username)
         username = str(decode_username, 'utf-8')
-
+        onlineObjs = models.zhugedanao_statistics_user_online_time.objects.filter(user_id_id=detailsUserData).order_by('-start_time')
+        onlineTime = []
+        for onlineObj in onlineObjs:
+            startTime = time.mktime(onlineObj.start_time.timetuple())
+            stopTime = time.mktime(onlineObj.stop_time.timetuple())
+            calculationResult = time.gmtime(stopTime - startTime)
+            onlineTime.append({
+                'startTime':onlineObj.start_time.strftime('%Y-%m-%d %H:%M:%S'),
+                'stopTime':onlineObj.stop_time.strftime('%Y-%m-%d %H:%M:%S'),
+                'day':calculationResult.tm_mday - 1,
+                'hour':calculationResult.tm_hour,
+                'minutes':calculationResult.tm_min,
+                'seconds':calculationResult.tm_sec
+            })
         response.data = {
             'objCount': userCount,
             'username': username,
-            'objs':'一些详情 当前写死'
+            'onlineTime':onlineTime,        # 在线时长
+
         }
 
     if detailsLogData:
@@ -206,8 +220,31 @@ def statisticalDetails(request):
     return JsonResponse(response.__dict__)
 
 
+# 统计用户在线时长
+def statisticsUserOnlineTime(request):
+    startTime = request.GET.get('startTime')
+    user_id = request.GET.get('user_id')
+    pid = request.GET.get('pid')
 
+    nowDate = datetime.datetime.now()
+    userObjs = models.zhugedanao_statistics_user_online_time.objects
+    if startTime == 'startTime':
+        objs = userObjs.create(
+            user_id_id=user_id,
+            start_time=nowDate.strftime('%Y-%m-%d %H:%M:%S')
+        )
+        response.msg = '创建初始时间'
+        response.data = {
+            'pid':objs.id
+        }
+    if pid:
+        userObjs.filter(id=pid).update(
+            stop_time=nowDate.strftime('%Y-%m-%d %H:%M:%S')
+        )
+        response.msg = '更新时间叠加'
+    response.code = 200
 
+    return JsonResponse(response.__dict__)
 
 
 

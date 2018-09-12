@@ -250,3 +250,11 @@ class zhugedanao_guanjianci_paiming_chaxun(models.Model):
     lianjie = models.CharField(verbose_name='链接', max_length=128, null=True, blank=True)
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
     paiming = models.IntegerField(verbose_name='链接排名', default=0)
+
+# 统计用户在线时长
+class zhugedanao_statistics_user_online_time(models.Model):
+    user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户')
+    start_time = models.DateTimeField(verbose_name='开始时间', auto_now_add=True)
+    stop_time = models.DateTimeField(verbose_name='结束时间', auto_now_add=True)
+
+

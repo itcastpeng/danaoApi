@@ -37,7 +37,8 @@ urlpatterns = [
     url(r'^userManagementOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', userMamagement.userManagementOper),  # 操作
 
     # 统计
-    url(r'^statisticalDetails', tongji_data.statisticalDetails),
+    url(r'^statisticalDetails', tongji_data.statisticalDetails),                    # 统计用户信息
+    url(r'^statisticsUserOnlineTime', tongji_data.statisticsUserOnlineTime),        # 统计用户在线时长
     # url(r'^userStatisticalDetail', tongji_data.userStatisticalDetail),  # 全部用户详情
     # url(r'^todayAddUserNumberDetail', tongji_data.todayAddUserNumberDetail),  # 今日添加用户详情
     # url(r'^todayActiveUsersNumberDetail', tongji_data.todayActiveUsersNumberDetail),  # 今日活跃详情
