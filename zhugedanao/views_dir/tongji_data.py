@@ -76,6 +76,7 @@ def determineTheTime(watch_Yesterday=None):
     start_date = now_date.strftime('%Y-%m-%d 00:00:00')
     if watch_Yesterday == 'watchYesterday':
         start_date = (now_date - datetime.timedelta(days=1)).strftime('%Y-%m-%d 00:00:00')
+        stop_date = (now_date - datetime.timedelta(days=1)).strftime('%Y-%m-%d 23:59:59')
     elif watch_Yesterday == 'watchSevenDays':
         start_date = (now_date - datetime.timedelta(days=6)).strftime('%Y-%m-%d 00:00:00')
     elif watch_Yesterday == 'watchThirtyDays':
