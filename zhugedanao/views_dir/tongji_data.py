@@ -155,7 +155,8 @@ def todayAddUserNumberDetail(request):
             'province':obj.province,        # 省份
             'city':obj.city,                # 城市
             'sex':sex,                      # 性别
-            'set_avator':obj.set_avator     # 头像
+            'set_avator':obj.set_avator,    # 头像
+            'create_time':obj.create_date   # 创建时间
         })
 
     overData = {
@@ -178,7 +179,6 @@ def todayActiveUsersNumberDetail(request):
     objs = log_objs.select_related(
         'user_id'
     ).values(
-        'user__username',
         'user_id',
     ).distinct()
     objs_count = objs.count()
@@ -189,6 +189,11 @@ def todayActiveUsersNumberDetail(request):
         objs = pagingPage(objs, current_page, length)
     otherData = []
     for obj in objs:
+        user_obj = models.zhugedanao_userprofile.objects.filter(id=obj.get('user_id'))
+        userObj = user_obj[0]
+        sex = '男'
+        if int(userObj.sex) == 2:
+            sex = '女'
         user_id = obj.get('user_id')
         dataList = []
         objs_gongneng = log_objs.filter(
@@ -200,14 +205,22 @@ def todayActiveUsersNumberDetail(request):
             dataList.append(
                 gongneng.get('gongneng__name')
             )
-        objs_count = objs_gongneng.count()
-        decode_username = base64.b64decode(obj.get('user__username'))
+        obj_count = objs_gongneng.count()
+        decode_username = base64.b64decode(userObj.username)
         username = str(decode_username, 'utf-8')
         otherData.append({
-            'objs_count': objs_count,
+            'objs_count': obj_count,
             'user_id':user_id,
-            'username':username,            # 用户名
-            'dataList':dataList,
+            'create_time':userObj.create_date.strftime('%Y-%m-%d %H-%M-%S'), # 创建时间
+            'country':userObj.country,
+            'province': userObj.province,       # 省份
+            'city': userObj.city,               # 城市
+            'sex': sex,                         # 性别
+            'set_avator': userObj.set_avator,   # 头像
+            'username':username,                # 用户名
+            'dataList':dataList,                # 功能
+
+
         })
     response.code = 200
     response.msg = '查询成功'
@@ -223,7 +236,7 @@ def loginNmberDeatil(request):
     start_date, stop_date = determineTheTime(watch_Yesterday)
     q = Q()
     q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date) &(Q(gongneng=1)), Q.AND)
-    objs = models.zhugedanao_oper_log.objects.filter(q).values('user__username', 'create_date', 'user__set_avator').distinct().order_by('-create_date')
+    objs = models.zhugedanao_oper_log.objects.filter(q).values('user_id', 'create_date').distinct().order_by('-create_date')
     obj_count = objs.count()
     otherData = []
     current_page = request.GET.get('current_page')
@@ -231,12 +244,22 @@ def loginNmberDeatil(request):
     if length:
         objs = pagingPage(objs, current_page, length)
     for obj in objs:
-        decode_username = base64.b64decode(obj.get('user__username'))
+        user_objs = models.zhugedanao_userprofile.objects.filter(id=obj.get('user_id'))
+        userObj = user_objs[0]
+        sex = '男'
+        if int(userObj.sex) == 2:
+            sex = '女'
+        decode_username = base64.b64decode(userObj.username)
         username = str(decode_username, 'utf-8')
         otherData.append({
             'username':username,
-            'create_time':obj.get('create_date').strftime('%Y-%m-%d %H-%M-%S'),
-            'set_avator':obj.get('user__set_avator')
+            'create_time':userObj.create_date.strftime('%Y-%m-%d %H-%M-%S'),
+            'set_avator':userObj.set_avator,        # 头像
+            'country': userObj.country,                 # 国家
+            'province': userObj.province,               # 省份
+            'city': userObj.city,                       # 城市
+            'sex': sex,                                 # 性别
+
         })
     dataList = {
         'otherData':otherData,
