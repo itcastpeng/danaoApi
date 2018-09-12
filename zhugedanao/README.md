@@ -752,130 +752,6 @@ http请求 url：       http://127.0.0.1:8000/zhugedanao/guanJianCiMaiMingOper/g
 }
 ```
 
-#### 统计 用户统计详情 说明
-``` 
-http请求 GET
-http请求 url： http://127.0.0.1:8000/zhugedanao/userStatisticalDetail
-参数   			        请求方式		        是否必须 		         说明
-无
-
-返回说明 （正常时返回的json数据 示例）
-{
-    "code": 200,
-    "msg": "查询成功",
-    "data": {
-        "overData": {
-            "otherData": [
-                {
-                    "username": "做自己",
-                    "country": "中国",
-                    "city": "通州",
-                    "create_time": "2018-09-07 20-11-16",
-                    "province": "北京",
-                    "o_id": 10,
-                    "sex": "男"
-                }
-            ],
-            "obj_count": 98                                 # 总数
-        }
-    }
-}
-
-```
-
-#### 统计 今日增加用户详情 说明
-``` 
-http请求 GET
-http请求 url:  http://127.0.0.1:8000/zhugedanao/todayAddUserNumberDetail
-参数   			        请求方式		        是否必须 		         说明
-watchDay                GET                 否                   watchYesterday  昨天
-                                                                 watchSevenDays  最近七天
-                                                                 watchThirtyDays 最近三十天
-                                                                 不传值 默认当天
-
-返回说明 （正常时返回的json数据 示例）
-{
-    "data": {
-        "overData": {
-            "obj_count": 1,
-            "otherData": [
-                {
-                    "username": "做自己",
-                    "country": "中国",
-                    "city": "通州",
-                    "sex": "男",
-                    "province": "北京"
-                }
-            ]
-        }
-    },
-    "code": 200,
-    "msg": "查询成功"
-}
-```
-
-#### 统计 今日活跃用户详情 说明
-``` 
-http请求 GET
-http请求url：   http://127.0.0.1:8000/zhugedanao/todayActiveUsersNumberDetail
-参数   			        请求方式		        是否必须 		         说明
-watchDay                GET                 否                   watchYesterday  昨天
-                                                                 watchSevenDays  最近七天
-                                                                 watchThirtyDays 最近三十天
-                                                                 不传值 默认当天
-
-返回说明 （正常时返回的json数据 示例）
-{
-    "data":{
-        "otherData":[
-            {
-                "username":"张聪",
-                "objs_count":1,
-                "dataList":[
-                    "登录"
-                ],
-                "user_id":11
-            }
-        ]
-    },
-    "code":200,
-    "msg":"查询成功"
-}
-```
-
-#### 统计 登录详情 说明
-``` 
-http请求 GET
-http请求url：      http://127.0.0.1:8000/zhugedanao/loginNmberDeatil
-http请求url：   http://127.0.0.1:8000/zhugedanao/todayActiveUsersNumberDetail
-参数   			        请求方式		        是否必须 		         说明
-watchDay                GET                 否                   watchYesterday  昨天
-                                                                 watchSevenDays  最近七天
-                                                                 watchThirtyDays 最近三十天
-                                                                 不传值 默认当天
-
-返回说明 （正常时返回的json数据 示例）
-{
-    "msg": "查询成功",
-    "code": 200,
-    "data": {
-        "dataList": {
-            "otherData": [
-                {
-                    "create_time": "2018-09-07 19-41-55",
-                    "username": "心有损失"
-                },
-                {
-                    "create_time": "2018-09-07 19-41-55",
-                    "username": "张聪"
-                }                
-            ],
-            "obj_count": 158
-        }
-    }
-}
-```
-
 
 #### 权限添加 说明
 ``` 
@@ -1213,9 +1089,104 @@ http请求url： http://127.0.0.1:8000/zhugedanao/userManagementShow?timestamp=1
 ```
 
 
+#### 统计
+``` 
+http请求： GET
+http请求url：  http://127.0.0.1:8000/zhugedanao/statisticalDetails?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11&JudgeFunc=userStatistics&watchDay=watchSevenDays
+参数   			        请求方式		        是否必须 		         说明
+watchDay                GET                 否                   # 不传参 默认今天
+                                                                 watchYesterday  # 明天      
+                                                                 watchSevenDays  # 七天
+                                                                 watchThirtyDays # 一个月
+                                                                 watchAllDays    # 汇总
+                                                                  
+JudgeFunc               GET                 是                   userStatistics      # 用户统计
+                                                                 newUserStatistics   # 新增用户 
+                                                                 activeUsersNum      # 活跃用户
+                                                                 loginNum            # 登录用户
+                                                                  
+detailsLogData          GET                 否                   用户统计 和 新增用户详情查询 ID
+detailsUserData         GET                 否                   活跃用户 和 登录用户详情查询 ID
+用户统计返回说明 （正常时返回的json数据示例）
+{
+    "data": {
+        "otherData": [
+            {
+                "create_time": "2018-09-07 20-11-16",
+                "city": "通州",
+                "set_avator": "http://thirdwx.qlogo.cn/mmopen/PiajxSqBRaEKVmDsdSa1GOBN4XVnegvVRTeHqwVJMnOomZOlUzPTicAXyYNibKsLFRaW7nVSQUic75070xpmZOeMkw/132",
+                "sex": "男",
+                "o_id": 10,
+                "username": "做自己",
+                "country": "中国",
+                "province": "北京"
+            }
+        ],
+        "objsCount": 98
+    },
+    "msg": "查询成功",
+    "code": 200
+}
 
+新增用户返回说明 （正常时返回的json数据示例）
+{
+    "data": {
+        "otherData": [
+            {
+                "create_time": "2018-09-07 20-11-16",
+                "city": "通州",
+                "set_avator": "http://thirdwx.qlogo.cn/mmopen/PiajxSqBRaEKVmDsdSa1GOBN4XVnegvVRTeHqwVJMnOomZOlUzPTicAXyYNibKsLFRaW7nVSQUic75070xpmZOeMkw/132",
+                "sex": "男",
+                "o_id": 10,
+                "username": "做自己",
+                "country": "中国",
+                "province": "北京"
+            }
+        ],
+        "objsCount": 1
+    },
+    "msg": "查询成功",
+    "code": 200
+}
 
+活跃用户返回说明 （正常时返回的json数据示例）
+{
+    "data": {
+        "otherData": [
+            {
+                "city": "通州",
+                "create_date": "2018-09-07T20:11:16",
+                "sex": 1,
+                "user": "做自己",
+                "country": "中国",
+                "set_avator": "http://thirdwx.qlogo.cn/mmopen/PiajxSqBRaEKVmDsdSa1GOBN4XVnegvVRTeHqwVJMnOomZOlUzPTicAXyYNibKsLFRaW7nVSQUic75070xpmZOeMkw/132"
+            }           
+        ],
+        "objsCount": 11
+    },
+    "msg": "查询成功",
+    "code": 200
+}
 
+登录用户返回说明 （正常时返回的json数据示例）
+{
+    "code": 200,
+    "msg": "查询成功",
+    "data": {
+        "objsCount": 5,
+        "otherData": [
+            {
+                "user": "张聪",
+                "city": "丰台",
+                "set_avator": "http://thirdwx.qlogo.cn/mmopen/oFswpUmYn53kTv5QdmmONicVJqp3okrhHospu6icoLF7Slc5XyZWR96STN9RiakoBQn1uoFJIWEicJgJ1QjR5iaGOgWNQ5BSVqFe5/132",
+                "country": "中国",
+                "sex": "男",
+                "create_date": "2018-06-16T20:13:59"
+            }            
+        ]
+    }
+}
+```
 
 
 

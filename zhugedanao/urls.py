@@ -36,11 +36,12 @@ urlpatterns = [
     url(r'^userManagementShow', userMamagement.userManagementShow),  # 查询
     url(r'^userManagementOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', userMamagement.userManagementOper),  # 操作
 
-    # 用户统计
-    url(r'^userStatisticalDetail', tongji_data.userStatisticalDetail),  # 全部用户详情
-    url(r'^todayAddUserNumberDetail', tongji_data.todayAddUserNumberDetail),  # 今日添加用户详情
-    url(r'^todayActiveUsersNumberDetail', tongji_data.todayActiveUsersNumberDetail),  # 今日活跃详情
-    url(r'^loginNmberDeatil', tongji_data.loginNmberDeatil),  # 登录详情
+    # 统计
+    url(r'^statisticalDetails', tongji_data.statisticalDetails),
+    # url(r'^userStatisticalDetail', tongji_data.userStatisticalDetail),  # 全部用户详情
+    # url(r'^todayAddUserNumberDetail', tongji_data.todayAddUserNumberDetail),  # 今日添加用户详情
+    # url(r'^todayActiveUsersNumberDetail', tongji_data.todayActiveUsersNumberDetail),  # 今日活跃详情
+    # url(r'^loginNmberDeatil', tongji_data.loginNmberDeatil),  # 登录详情
 
     # 链接提交
     url(r'^lianjie_tijiao/(?P<oper_type>\w+)/(?P<o_id>\d+)', lianjie_tijiao.lianjie_tijiao_oper),# 操作
