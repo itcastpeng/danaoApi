@@ -250,9 +250,10 @@ def statisticsUserOnlineTime(request):
             'pid':objs.id
         }
     if pid:
-        userObjs.filter(id=pid).update(
+        objs = userObjs.filter(id=pid).update(
             stop_time=nowDate.strftime('%Y-%m-%d %H:%M:%S')
         )
+        response.data = {'pid':objs.id}
         response.msg = '更新时间叠加'
     response.code = 200
 
