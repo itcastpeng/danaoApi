@@ -120,6 +120,7 @@ def statisticalDetails(request):
         if judgeFunc == 'activeUsersNum':
             logObjs = models.zhugedanao_oper_log.objects.filter(q)
         else:
+            print('------------------------')
             logObjs = models.zhugedanao_oper_log.objects.filter(q).filter(gongneng=1)
         logObjs = logObjs.select_related(
                 'user_id'
@@ -131,6 +132,7 @@ def statisticalDetails(request):
                 'user__city',               # 城市
                 'user__sex',                # 性别
                 'user__create_date',        # 创建时间
+                'user__province'
             ).annotate(user=Count('user_id')).distinct()
         objsCount = logObjs.count()
     else:
@@ -144,25 +146,26 @@ def statisticalDetails(request):
             logObjs = pagingPage(logObjs, current_page, length)
     otherData = []
     for obj in objs:
-            sex = ''
-            if int(obj.sex) == 2:
-                sex = '女'
-            elif int(obj.sex) == 1:
-                sex = '男'
-            decode_username = base64.b64decode(obj.username)
-            username = str(decode_username, 'utf-8')
-            otherData.append({
-                'o_id': obj.id,                                                 # 用户id
-                'username': username,                                           # 用户名
-                'create_date': obj.create_date.strftime('%Y-%m-%d %H-%M-%S'),   # 创建时间
-                'country': obj.country,                                         # 国家
-                'province': obj.province,                                       # 省份
-                'city': obj.city,                                               # 城市
-                'sex': sex,                                                     # 性别
-                'set_avator': obj.set_avator                                    # 头像
-            })
+        sex = ''
+        if int(obj.sex) == 2:
+            sex = '女'
+        elif int(obj.sex) == 1:
+            sex = '男'
+        decode_username = base64.b64decode(obj.username)
+        username = str(decode_username, 'utf-8')
+        otherData.append({
+            'o_id': obj.id,                                                 # 用户id
+            'username': username,                                           # 用户名
+            'create_date': obj.create_date.strftime('%Y-%m-%d %H-%M-%S'),   # 创建时间
+            'country': obj.country,                                         # 国家
+            'province': obj.province,                                       # 省份
+            'city': obj.city,                                               # 城市
+            'sex': sex,                                                     # 性别
+            'set_avator': obj.set_avator                                    # 头像
+        })
 
     for obj in logObjs:
+        print('obj======> ', obj)
         decode_username = base64.b64decode(obj.get('user__username'))
         username = str(decode_username, 'utf-8')
         sex = ''
@@ -171,10 +174,11 @@ def statisticalDetails(request):
         elif int(obj.get('user__sex')) == 1:
             sex = '男'
         otherData.append({
-            'username' : username,                              # 用户名
+            'o_id':obj.get('user_id'),
+            'username' : username,                          # 用户名
             'set_avator' : obj.get('user__set_avator'),     # 头像
             'country' : obj.get('user__country'),           # 国家
-            'province': obj.province,                       # 省份
+            'province': obj.get('user__province'),          # 省份
             'city' : obj.get('user__city'),                 # 城市
             'sex' : sex,                                    # 性别
             'create_date' : obj.get('user__create_date'),   # 创建时间
