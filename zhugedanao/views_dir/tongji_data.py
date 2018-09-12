@@ -120,7 +120,6 @@ def statisticalDetails(request):
         if judgeFunc == 'activeUsersNum':
             logObjs = models.zhugedanao_oper_log.objects.filter(q)
         else:
-            print('------------------------')
             logObjs = models.zhugedanao_oper_log.objects.filter(q).filter(gongneng=1)
         logObjs = logObjs.select_related(
                 'user_id'
@@ -165,7 +164,6 @@ def statisticalDetails(request):
         })
 
     for obj in logObjs:
-        print('obj======> ', obj)
         decode_username = base64.b64decode(obj.get('user__username'))
         username = str(decode_username, 'utf-8')
         sex = ''
@@ -215,12 +213,16 @@ def statisticalDetails(request):
         }
 
     if detailsLogData:  # 查看功能详情
-        objs_gongneng = models.zhugedanao_oper_log.objects.filter(user_id=detailsLogData).values('gongneng__name').distinct()
+        objs_gongneng = models.zhugedanao_oper_log.objects.filter(user_id=detailsLogData).values(
+            'gongneng__name',
+            'gongneng__create_date'
+        ).distinct()
         dataList = []
         for gongneng in objs_gongneng:
-            dataList.append(
-                gongneng.get('gongneng__name')
-            )
+            dataList.append({
+                'username': gongneng.get('gongneng__name'),
+                'create_date': gongneng.get('gongneng__create_date').strftime('%Y-%m-%d %H:%M:%S')
+            })
         response.data = {
             'dataList':dataList,
             'objCount':len(dataList)
