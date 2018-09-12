@@ -168,7 +168,7 @@ def statisticalDetails(request):
         sex = ''
         if int(obj.get('user__sex')) == 2:
             sex = '女'
-        elif int(obj.sex) == 1:
+        elif int(obj.get('user__sex')) == 1:
             sex = '男'
         otherData.append({
             'username' : username,                              # 用户名
