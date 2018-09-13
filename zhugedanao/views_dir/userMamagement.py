@@ -26,7 +26,7 @@ def userManagementShow(request):
             }
             q = conditionCom(request, field_dict)
 
-            objs = models.zhugedanao_userprofile.objects.select_related('role').filter(q).order_by(order)
+            objs = models.zhugedanao_userprofile.objects.select_related('role').filter(q).order_by('-order')
             obj_count = objs.count()
             # 分页
             if length != 0:
@@ -41,6 +41,7 @@ def userManagementShow(request):
                 decode_username = base64.b64decode(obj.username)
                 username = str(decode_username, 'utf-8')
                 data_list.append({
+                    'o_id':obj.id,
                     'username' : username,
                     'level' : obj.level_name.name,
                     'create_date' : obj.create_date,
@@ -104,8 +105,20 @@ def userManagementOper(request, oper_type, o_id):
             response.data = {}
 
     else:
-        response.code = 402
-        response.msg = "请求异常"
+        if oper_type == 'getUserLevel':
+            objs = models.zhugedanao_level.objects.all()
+            otherData = []
+            for obj in objs:
+                otherData.append({
+                    'o_id':obj.id,
+                    'level':obj.name
+                })
+            response.code = 200
+            response.msg = '查询成功'
+            response.data = {'otherData':otherData}
+        else:
+            response.code = 402
+            response.msg = "请求异常"
 
 
 
