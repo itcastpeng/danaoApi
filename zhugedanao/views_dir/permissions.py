@@ -191,7 +191,7 @@ def permissions_oper(request, oper_type, o_id):
                 'ret_data': json.dumps(init_data())
             }
 
-        if oper_type =='getParentPermission':
+        elif oper_type =='getParentPermission':
             titleList = []
             objs = models.zhugedanao_quanxian.objects.filter(pid__isnull=True)
             for obj in objs:
@@ -200,6 +200,8 @@ def permissions_oper(request, oper_type, o_id):
                     'title': obj.title,
                     'path': obj.path
                 })
+            response.code = 200
+            response.msg = '查询成功'
             response.data = {'titleList': titleList}
 
         else:
