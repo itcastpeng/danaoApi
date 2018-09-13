@@ -117,7 +117,9 @@ def userManagementOper(request, oper_type, o_id):
             response.code = 200
             response.msg = '查询成功'
             response.data = {'otherData':otherData}
-        if oper_type == 'getSingleUserPermissions':
+
+
+        elif oper_type == 'getSingleUserPermissions':
             userObjs = models.zhugedanao_userprofile.objects.filter(id=user_id)
             permissionsList = []
             objs = models.zhugedanao_role.objects.get(id=userObjs[0].role.id)

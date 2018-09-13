@@ -70,10 +70,14 @@ def shouLuChaXunShow(request):
                     is_shoulu = False
                 if str(obj.search) == '1':
                     yinqing = '百度'
+                elif str(obj.search) == '2':
+                    yinqing = '搜狗'
                 elif str(obj.search) == '4':
                     yinqing = '手机百度'
                 elif str(obj.search) == '3':
                     yinqing = '360'
+                elif str(obj.search) == '5':
+                    yinqing = '手机搜狗'
                 elif str(obj.search) == '6':
                     yinqing = '手机360'
                 else:
@@ -206,10 +210,14 @@ def shouLuChaxun(request, oper_type, o_id):
             for obj in objs:
                 if str(obj.search) == '1':
                     yinqing = '百度'
+                elif str(obj.search) == '2':
+                    yinqing = '搜狗'
                 elif str(obj.search) == '4':
                     yinqing = '手机百度'
                 elif str(obj.search) == '3':
                     yinqing = '360'
+                elif str(obj.search) == '5':
+                    yinqing = '手机搜狗'
                 elif str(obj.search) == '6':
                     yinqing = '手机360'
                 else:
