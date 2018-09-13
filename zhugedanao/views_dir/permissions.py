@@ -118,15 +118,7 @@ def permissions_oper(request, oper_type, o_id):
             }
             #  创建 form验证 实例（参数默认转成字典）
             forms_obj = AddForm(form_data)
-            titleList = []
             if forms_obj.is_valid():
-                objs = models.zhugedanao_quanxian.objects.filter(pid__isnull=True)
-                for obj in objs:
-                    titleList.append({
-                        'p_id': obj.id,
-                        'title': obj.title,
-                        'path':obj.path
-                    })
                 print("验证通过")
                 #  添加数据库
                 print('forms_obj.cleaned_data-->',forms_obj.cleaned_data)
@@ -137,7 +129,7 @@ def permissions_oper(request, oper_type, o_id):
                 print("验证不通过")
                 response.code = 301
                 response.msg = json.loads(forms_obj.errors.as_json())
-            response.data = {'titleList':titleList}
+
         elif oper_type == "delete":
             # 删除 ID
             objs = models.zhugedanao_quanxian.objects.filter(id=o_id)
@@ -198,6 +190,18 @@ def permissions_oper(request, oper_type, o_id):
             response.data = {
                 'ret_data': json.dumps(init_data())
             }
+
+        if oper_type =='getParentPermission':
+            titleList = []
+            objs = models.zhugedanao_quanxian.objects.filter(pid__isnull=True)
+            for obj in objs:
+                titleList.append({
+                    'p_id': obj.id,
+                    'title': obj.title,
+                    'path': obj.path
+                })
+            response.data = {'titleList': titleList}
+
         else:
             response.code = 402
             response.msg = "请求异常"
