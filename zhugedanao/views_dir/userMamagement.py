@@ -36,6 +36,9 @@ def userManagementShow(request):
                 objs = objs[start_line: stop_line]
             data_list = []
             for obj in objs:
+                role_id = 0
+                if obj.role.id:
+                    role_id = obj.role.id
                 role_name = ''
                 if obj.role:
                     role_name =obj.role.name
@@ -44,9 +47,11 @@ def userManagementShow(request):
                 data_list.append({
                     'o_id':obj.id,
                     'username' : username,
+                    'level_id':obj.level_name.id,
                     'level' : obj.level_name.name,
                     'create_date' : obj.create_date,
-                    'role' : role_name
+                    'role' : role_name,
+                    'role_id':role_id
                 })
             response.code = 200
             response.msg = '查询成功'
