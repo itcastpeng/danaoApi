@@ -121,12 +121,11 @@ def userManagementOper(request, oper_type, o_id):
             userObjs = models.zhugedanao_userprofile.objects.filter(id=user_id)
             permissionsList = []
             objs = models.zhugedanao_role.objects.get(id=userObjs[0].role.id)
-            if objs.quanxian:
-                permissionsList = [i['id'] for i in objs.quanxian.values('id')]
-            result = init_data(selected_list=permissionsList)
+            for obj in objs.quanxian.values('path'):
+                permissionsList.append(obj['path'])
             response.code = 200
             response.msg = '查询成功'
-            response.data = {'result':result}
+            response.data = {'permissionsList':permissionsList}
 
         else:
             response.code = 402
