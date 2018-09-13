@@ -2027,6 +2027,60 @@ if len(url) > 1:
 
 # 搜狗浏览器爬虫测试
 import requests
+from bs4 import BeautifulSoup
+import requests, json, random
+from urllib import parse
+import os,sys
+import re
+sys.path.append(os.path.dirname(os.getcwd()))
+from requests.exceptions import ConnectTimeout
+from requests.exceptions import ReadTimeout
+from requests.exceptions import ConnectionError
+
+
+# 获取链接标题 状态码 解密url
+def getSiteUrl(domain, panduan_url, headers, mobeil=None):
+    try:
+        print('------------> ',panduan_url)
+        ret = requests.get(panduan_url, headers=headers, timeout=5, allow_redirects=False)
+        # print('ret.text===========> ', ret.text)
+        flag = 0
+        https_domain = ''
+
+
+        if domain.startswith('http'):
+            https_domain = domain.replace('http', 'https')
+        if ret.status_code == 200:
+            pattern = re.compile(
+                r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+')
+            zhixing_url = re.findall(pattern, ret.text)
+            if len(zhixing_url) > 1:
+                if len(zhixing_url) >= 2:
+                    zhixing_url = zhixing_url[0]
+                # print('--zhixing_url--> ', domain, zhixing_url)
+                if domain in zhixing_url or domain == zhixing_url or https_domain in zhixing_url or https_domain == zhixing_url:
+                    flag = 1
+        else:
+            zhixing_url = ret.headers['location']
+            if domain in zhixing_url or domain == zhixing_url or https_domain in zhixing_url or https_domain == zhixing_url:
+                flag = 1
+            else:
+                ret = requests.get(panduan_url, headers=headers, timeout=5)
+                ret_url = ret.url
+                if domain in ret_url or domain == ret_url or https_domain in ret_url or https_domain == ret_url:
+                    flag = 1
+        if mobeil:
+            if 'http://m' in zhixing_url:
+                zhixing_url = zhixing_url.split('http://m')[1]
+            if 'https://m' in zhixing_url:
+                zhixing_url = zhixing_url.split('https://m')[1]
+            if domain in zhixing_url or domain == zhixing_url:
+                flag = 1
+
+        return flag
+    except ConnectTimeout:
+        pass
+
 
 
 headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)]}
@@ -2040,9 +2094,9 @@ if linkhead:
         print('无收录')
     else:
         resultTag = soup.find('div', id='rb_0')
-        print(resultTag.find('a'))
         panduanUrl = resultTag.find('a').get('href')
-        print("=panduanUrl==========> ",panduanUrl)
+        if 'http' not in panduanUrl:
+            panduanUrl  = 'https://www.sogou.com/' + panduanUrl
         left_down_url = resultTag.find('div', class_='fb').find('cite').find('b').get_text()
         left_down_url = left_down_url.strip().split('...')[0]
         if '>' in left_down_url:
@@ -2052,15 +2106,14 @@ if linkhead:
         urlparse_obj = parse.urlparse(left_down_url.rstrip('.'))
         left_down_domain = urlparse_obj.netloc
         if left_down_domain in domain:
-            print(domain, panduanUrl)
             if domain in panduanUrl or domain == panduanUrl:
                 print('===========')
-
-
-
-
-
-
+            else:
+                zhixing_url = getSiteUrl(domain, panduanUrl, headers)
+                if zhixing_url:
+                    print('============')
+                else:
+                    print('无收录')
 
 
 
