@@ -37,11 +37,10 @@ def userManagementShow(request):
             data_list = []
             for obj in objs:
                 role_id = 0
-                if obj.role.id:
-                    role_id = obj.role.id
                 role_name = ''
                 if obj.role:
                     role_name =obj.role.name
+                    role_id = obj.role.id
                 decode_username = base64.b64decode(obj.username)
                 username = str(decode_username, 'utf-8')
                 data_list.append({
