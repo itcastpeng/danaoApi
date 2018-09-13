@@ -106,7 +106,6 @@ def roleManagementOper(request, oper_type, o_id):
                 'permissionList' : request.POST.get('permissionList')
             }
             roleObjs = models.zhugedanao_role.objects
-
             forms_obj = UpdateForm(form_data)
             if forms_obj.is_valid():
                 objs = roleObjs.filter(id=o_id)
