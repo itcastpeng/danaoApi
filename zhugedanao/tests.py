@@ -1979,39 +1979,39 @@ if len(url) > 1:
 
 
 # 爬虫2018-09-10
-from openpyxl.styles import Font, Alignment
-from openpyxl import Workbook
-date = datetime.datetime.now().strftime('%Y-%m-%d')
-
-wb = Workbook()
-ws = wb.active
-ws.cell(row=1, column=1, value="久久网站爬取").font = Font(b=True, size=15)
-ws.cell(row=3, column=1, value="医院名称")
-ws.cell(row=3, column=2, value="医院电话")
-ws.cell(row=3, column=3, value="医院科室")
-ws.cell(row=3, column=4, value="医院地址")
-create_date = ws.cell(row=1, column=5, value="创建时间:{date}".format(date=date))
-create_date.font = Font(b=True, size=13, color='DC143C')
-
-# 合并单元格        开始行      结束行       用哪列          占用哪列
-ws.merge_cells(start_row=1, end_row=2, start_column=1, end_column=4)
-ws.merge_cells(start_row=1, end_row=3, start_column=5, end_column=7)
-
-
-# print('设置列宽')
-ws.column_dimensions['A'].width = 30
-ws.column_dimensions['B'].width = 30
-ws.column_dimensions['C'].width = 30
-ws.column_dimensions['D'].width = 30
-
-
-# print('文本居中')
-ws['A1'].alignment = Alignment(horizontal='center', vertical='center')
-ws['A3'].alignment = Alignment(horizontal='center', vertical='center')
-ws['B3'].alignment = Alignment(horizontal='center', vertical='center')
-ws['C3'].alignment = Alignment(horizontal='center', vertical='center')
-ws['D3'].alignment = Alignment(horizontal='center', vertical='center')
-ws['E1'].alignment = Alignment(horizontal='center', vertical='center')
+# from openpyxl.styles import Font, Alignment
+# from openpyxl import Workbook
+# date = datetime.datetime.now().strftime('%Y-%m-%d')
+#
+# wb = Workbook()
+# ws = wb.active
+# ws.cell(row=1, column=1, value="久久网站爬取").font = Font(b=True, size=15)
+# ws.cell(row=3, column=1, value="医院名称")
+# ws.cell(row=3, column=2, value="医院电话")
+# ws.cell(row=3, column=3, value="医院科室")
+# ws.cell(row=3, column=4, value="医院地址")
+# create_date = ws.cell(row=1, column=5, value="创建时间:{date}".format(date=date))
+# create_date.font = Font(b=True, size=13, color='DC143C')
+#
+# # 合并单元格        开始行      结束行       用哪列          占用哪列
+# ws.merge_cells(start_row=1, end_row=2, start_column=1, end_column=4)
+# ws.merge_cells(start_row=1, end_row=3, start_column=5, end_column=7)
+#
+#
+# # print('设置列宽')
+# ws.column_dimensions['A'].width = 30
+# ws.column_dimensions['B'].width = 30
+# ws.column_dimensions['C'].width = 30
+# ws.column_dimensions['D'].width = 30
+#
+#
+# # print('文本居中')
+# ws['A1'].alignment = Alignment(horizontal='center', vertical='center')
+# ws['A3'].alignment = Alignment(horizontal='center', vertical='center')
+# ws['B3'].alignment = Alignment(horizontal='center', vertical='center')
+# ws['C3'].alignment = Alignment(horizontal='center', vertical='center')
+# ws['D3'].alignment = Alignment(horizontal='center', vertical='center')
+# ws['E1'].alignment = Alignment(horizontal='center', vertical='center')
 
 # wb.save('./1.xlsx')
 
@@ -2022,4 +2022,45 @@ ws['E1'].alignment = Alignment(horizontal='center', vertical='center')
 # n = 5
 # p = fn(n)
 # print(p)
+
+
+
+# 搜狗浏览器爬虫测试
+import requests
+
+
+headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)]}
+domain = 'http://www.bjhzkq.com'
+souGouURL = 'https://www.sogou.com/web?query={domain}'.format(domain=domain)
+ret = requests.get(souGouURL, headers=headers)
+soup = BeautifulSoup(ret.text, 'lxml')
+linkhead = soup.find('div', class_='linkhead')
+if linkhead:
+    if '未收录' in linkhead.get_text():
+        print('无收录')
+    else:
+        resultTag = soup.find('div', id='rb_0')
+        print(resultTag.find('a'))
+        panduanUrl = resultTag.find('a').get('href')
+        print("=panduanUrl==========> ",panduanUrl)
+        left_down_url = resultTag.find('div', class_='fb').find('cite').find('b').get_text()
+        left_down_url = left_down_url.strip().split('...')[0]
+        if '>' in left_down_url:
+            left_down_url = left_down_url.split('>')[0]
+        if not left_down_url.startswith('http'):
+            left_down_url = 'http://' + left_down_url
+        urlparse_obj = parse.urlparse(left_down_url.rstrip('.'))
+        left_down_domain = urlparse_obj.netloc
+        if left_down_domain in domain:
+            print(domain, panduanUrl)
+            if domain in panduanUrl or domain == panduanUrl:
+                print('===========')
+
+
+
+
+
+
+
+
 
