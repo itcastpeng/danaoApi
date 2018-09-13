@@ -26,7 +26,7 @@ def userManagementShow(request):
             }
             q = conditionCom(request, field_dict)
 
-            objs = models.zhugedanao_userprofile.objects.select_related('role').filter(q).order_by('-order')
+            objs = models.zhugedanao_userprofile.objects.select_related('role').filter(q).order_by(order)
             obj_count = objs.count()
             # 分页
             if length != 0:
