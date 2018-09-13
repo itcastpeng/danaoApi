@@ -14,7 +14,7 @@ def init_data(pid=None, selected_list=None):
     :param pid:  权限父级id
     :return:
     """
-    print('pid------->',pid)
+    # print('pid------->',pid)
     result_data = []
     objs = models.zhugedanao_quanxian.objects.filter(pid_id=pid)
     for obj in objs:
@@ -24,9 +24,10 @@ def init_data(pid=None, selected_list=None):
             'id': obj.id,
             'checked': False
         }
+        print('selected_list -->', selected_list, obj.id)
         if selected_list and obj.id in selected_list:
             current_data['checked'] = True
-        children_data = init_data(obj.id)
+        children_data = init_data(obj.id, selected_list)
         if children_data:
             current_data['children'] = children_data
         result_data.append(current_data)
