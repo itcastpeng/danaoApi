@@ -159,9 +159,6 @@ def pingTaiWaJue(request, oper_type, o_id):
             ws.cell(row=3, column=4, value="比例")
             ws.cell(row=3, column=5, value="搜索引擎")
             ws.cell(row=3, column=6, value="查询时间:{}".format(now_date))
-            # ft1 = Font(name='宋体', size=22)
-            # a1 = ws['A1']
-            # a1.font = ft1
 
             # 合并单元格        开始行      结束行       用哪列          占用哪列
             ws.merge_cells(start_row=1, end_row=2, start_column=1, end_column=8)
@@ -194,10 +191,10 @@ def pingTaiWaJue(request, oper_type, o_id):
             ws['F4'].alignment = Alignment(horizontal='center', vertical='center')
             ws['F5'].alignment = Alignment(horizontal='center', vertical='center')
             row = 4
-            objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id_id=user_id)
-            print('objs.count()=========> ', objs.count())
+            objs = models.zhugedanao_pingtaiwajue_yuming.objects.filter(tid__user_id_id=user_id).order_by('-number')
+            # print('objs.count()=========> ', objs.count())
             number_count = objs.values('tid__user_id').annotate(Sum('number'))
-            print('number_count==========> ',number_count)
+            # print('number_count==========> ',number_count)
             number = 0
             bili = 0
             yinqing = '百度'
@@ -211,8 +208,10 @@ def pingTaiWaJue(request, oper_type, o_id):
                 elif str(obj.tid.search) == '6':
                     yinqing = '手机360'
                 number += 1
+                num_count = int(number_count[0]['number__sum'])
                 if obj.number:
-                    bili = int((int(obj.number) / int(number_count[0]['number__sum'])) * 100)
+                    bili = round(int(obj.number) / num_count, 2)
+                print('bilibili===============> ',bili)
                 ws.cell(row=row, column=1, value="{number}".format(number=number))
                 ws.cell(row=row, column=2, value="{title}".format(title=obj.yuming))
                 ws.cell(row=row, column=3, value="{title}".format(title=obj.number))

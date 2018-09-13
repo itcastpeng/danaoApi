@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import datetime
 from zhugedanao.forms.zhongdianci_jiankong import AddForm, SelectForm
 import json, time, re, os, sys
+from django.db.models import Count, Sum
+
 
 # cerf  token验证 用户展示模块
 @csrf_exempt
@@ -31,16 +33,10 @@ def zhongDianCiShowTaskList(request):
             if objs:
                 data_list = []
                 for obj in objs:
-                    # 查询跑出来的任务 数量 判断百分比
-                    # detail_objs_count = obj.zhugedanao_zhongdianci_jiankong_taskdetail_set.filter(
-                    #     tid_id=obj.id,
-                    # )
-                    # detail_count = detail_objs_count.filter(is_perform=0).filter(task_start_time__isnull=False).count()
-                    # baifenbi = 0
-                    # if detail_count:
-                    #     baifenbi = int((detail_count / detail_objs_count.count()) * 100)
-                    # obj.task_jindu = baifenbi
-                    # obj.save()
+                    paiming_count = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.filter(
+                        tid__tid_id=obj.id).exclude(paiming='').values('create_time').annotate(Count('id')).order_by('-create_time')
+                    paimingCount = paiming_count[0].get('id__count')
+                    yishoulu_num = 0
                     qiyongstatus = '未启用'
                     if obj.qiyong_status:
                         qiyongstatus = '已启用'
@@ -59,6 +55,7 @@ def zhongDianCiShowTaskList(request):
                         "task_status": task_status,
                         "search_engine": obj.search_engine.split(','),
                         'task_jindu': obj.task_jindu,
+                        'paimingCount':paimingCount,
                     })
                     # if int(obj.task_jindu) == 100:
                     #     task_list_objs.filter(id=obj.id).update(
