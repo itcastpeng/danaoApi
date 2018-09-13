@@ -6,6 +6,7 @@ from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from zhugedanao.forms.userManagement import AddForm, SelectForm
 from publicFunc.condition_com import conditionCom
 import base64
+from zhugedanao.views_dir.permissions import init_data
 
 # cerf  token验证 用户展示模块
 @csrf_exempt
@@ -116,6 +117,17 @@ def userManagementOper(request, oper_type, o_id):
             response.code = 200
             response.msg = '查询成功'
             response.data = {'otherData':otherData}
+        if oper_type == 'getSingleUserPermissions':
+            userObjs = models.zhugedanao_userprofile.objects.filter(id=user_id)
+            permissionsList = []
+            objs = models.zhugedanao_role.objects.get(id=userObjs[0].role.id)
+            if objs.quanxian:
+                permissionsList = [i['id'] for i in objs.quanxian.values('id')]
+            result = init_data(selected_list=permissionsList)
+            response.code = 200
+            response.msg = '查询成功'
+            response.data = {'result':result}
+
         else:
             response.code = 402
             response.msg = "请求异常"
