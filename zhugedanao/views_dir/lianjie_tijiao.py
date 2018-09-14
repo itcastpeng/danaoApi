@@ -185,7 +185,7 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
             #  创建 form验证 实例（参数默认转成字典）
             task_list_count = models.zhugedanao_lianjie_task_list.objects.filter(user_id_id=form_data['oper_user_id']).count()
             print('task_list_count======> ',task_list_count)
-            if int(task_list_count) <= 10:
+            if int(task_list_count) <= 19:
                 forms_obj = AddForm(form_data)
                 if forms_obj.is_valid():
                     #  添加数据库
