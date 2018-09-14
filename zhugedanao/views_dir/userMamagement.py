@@ -39,7 +39,7 @@ def userManagementShow(request):
                 role_id = 0
                 role_name = ''
                 if obj.role:
-                    role_name =obj.role.name
+                    role_name = obj.role.name
                     role_id = obj.role.id
                 decode_username = base64.b64decode(obj.username)
                 username = str(decode_username, 'utf-8')
@@ -48,7 +48,7 @@ def userManagementShow(request):
                     'username' : username,
                     'level_id':obj.level_name.id,
                     'level' : obj.level_name.name,
-                    'create_date' : obj.create_date,
+                    'create_date' : obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),
                     'role' : role_name,
                     'role_id':role_id
                 })

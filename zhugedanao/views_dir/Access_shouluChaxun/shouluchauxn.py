@@ -71,6 +71,7 @@ def shouluTiJiaoRenWu(request):
             status_code=status_code,
             is_zhixing = 1,
         )
+
         response.code = 200
         response.msg = '完成'
 
