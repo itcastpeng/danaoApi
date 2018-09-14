@@ -25,6 +25,12 @@ class AddForm(forms.Form):
             'required': "提交链接不能为空"
         }
     )
+    userLevel = forms.CharField(
+        required=True,
+        error_messages={
+            'required': "用户等级不能为空"
+        }
+    )
 
     def clean_url(self):
         url_list = []
@@ -38,9 +44,11 @@ class AddForm(forms.Form):
                 self.add_error('url', '第{}行不能为空!'.format(url_num))
         if len(url_list) == 0:
             self.add_error('url', '提交链接不能为空')
-        # if len(url_list) > 20:                          # 测试
-        if len(url_list) > 200:                       # 线上
-            self.add_error('url', '提交链接大于200条!')
+        userLevel = self.data.get('userLevel')
+        if int(userLevel) == 1 and len(url_list) > 50:
+            self.add_error('url', '提交链接大于50条!')
+        elif int(userLevel) == 2 and len(url_list) > 100:
+            self.add_error('url', '提交链接大于100条!')
         else:
             url_list_data = []
             num = 0

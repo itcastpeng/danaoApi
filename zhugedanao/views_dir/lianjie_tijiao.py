@@ -174,22 +174,35 @@ def lianjie_tijiao_detail(request):
 @account.is_token(models.zhugedanao_userprofile)
 def lianjie_tijiao_oper(request, oper_type, o_id):
     response = Response.ResponseObj()
+    user_id = request.GET.get('user_id')
     if request.method == "POST":
         print('进入------')
         if oper_type == "add":
+            userObjs = models.zhugedanao_userprofile.objects.filter(id=user_id)
+            userLevel = userObjs[0].level_name_id
+            print('userLevel==========>',userLevel)
             form_data = {
-                'oper_user_id' :  request.GET.get('user_id'),
+                'oper_user_id': user_id ,
                 'name': request.POST.get('name'),
-                'url': request.POST.get('url')
+                'url': request.POST.get('url'),
+                'userLevel' : userLevel
             }
             #  创建 form验证 实例（参数默认转成字典）
             task_list_count = models.zhugedanao_lianjie_task_list.objects.filter(user_id_id=form_data['oper_user_id']).count()
-            print('task_list_count======> ',task_list_count)
-            if int(task_list_count) <= 19:
+            if userLevel == 2: # 1为一级用户 2为二级用户 判断用户为几级用户
+                tijiaoCount = 9
+                message = '最多创建10个任务!'
+            elif userLevel == 3:
+                tijiaoCount = 19
+                message = '最多创建20个任务!'
+            else:
+                tijiaoCount = 4
+                message = '最多创建5个任务!'
+            if int(task_list_count) <= tijiaoCount:
                 forms_obj = AddForm(form_data)
                 if forms_obj.is_valid():
                     #  添加数据库
-                    print('forms_obj.cleaned_data-->',forms_obj.cleaned_data)
+                    # print('forms_obj.cleaned_data-->',forms_obj.cleaned_data)
                     url_list = forms_obj.cleaned_data.get('url')
                     name = forms_obj.cleaned_data.get('name')
                     oper_user_id = forms_obj.cleaned_data.get('oper_user_id')
@@ -218,7 +231,7 @@ def lianjie_tijiao_oper(request, oper_type, o_id):
                     response.msg = json.loads(forms_obj.errors.as_json())
             else:
                 response.code = 301
-                response.msg = '任务列表创建超过限额!'
+                response.msg = message
 
         # 删除任务
         elif oper_type == "delete":
