@@ -21,14 +21,10 @@ def userManagementShow(request):
             length = forms_obj.cleaned_data['length']
             order = request.GET.get('order', '-create_date')
             role_id = request.GET.get('role_id')
-            encode_username = request.GET.get('username')
-            if encode_username:
-                encodestr = base64.b64encode(encode_username.encode('utf-8'))
-                encode_username = str(encodestr, encoding='utf-8')
-                print('encode_username---------> ',encode_username)
+            # encode_username = request.GET.get('username')
             field_dict = {
                 'id': '',
-                'username': encode_username,
+                'username': '__contains',
                 'create_date': '',
                 'role_id': role_id,
             }

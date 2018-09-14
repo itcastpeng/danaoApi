@@ -17,7 +17,7 @@ def conditionCom(request, field_dict):
                 # 模糊查询
                 q.add(Q(**{k + '__in': value}), Q.AND)
             else:
-                q.add(Q(**{k: v}), Q.AND)
+                q.add(Q(**{k: value}), Q.AND)
 
     return q
 
