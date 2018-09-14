@@ -132,8 +132,8 @@ def wechat_login(request):
         decode_username = base64.b64decode(user_obj.username)
         username = str(decode_username, 'utf-8')
         role_id = ''
-        if user_objs.role:
-            role_id = user_objs.role.id
+        if user_obj.role:
+            role_id = user_obj.role.id
         response.data = {
             'token': user_obj.token,
             'user_id': user_obj.id,
