@@ -5,8 +5,9 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from zhugedanao.forms.userManagement import AddForm, SelectForm
 from publicFunc.condition_com import conditionCom
-import base64
+import base64, sys, io
 from zhugedanao.views_dir.permissions import init_data
+from django.db.models import Q
 
 # cerf  token验证 用户展示模块
 @csrf_exempt
@@ -19,14 +20,20 @@ def userManagementShow(request):
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
             order = request.GET.get('order', '-create_date')
+            role_id = request.GET.get('role_id')
+            encode_username = request.GET.get('username')
+            if encode_username:
+                encodestr = base64.b64encode(encode_username.encode('utf-8'))
+                encode_username = str(encodestr, encoding='utf-8')
+                print('encode_username---------> ',encode_username)
             field_dict = {
                 'id': '',
-                'name': '__contains',
+                'username': encode_username,
                 'create_date': '',
-                'oper_user__username': '__contains',
+                'role_id': role_id,
             }
             q = conditionCom(request, field_dict)
-
+            print('q----------> ',q)
             objs = models.zhugedanao_userprofile.objects.select_related('role').filter(q).order_by(order)
             obj_count = objs.count()
             # 分页
