@@ -33,9 +33,11 @@ def zhongDianCiShowTaskList(request):
             if objs:
                 data_list = []
                 for obj in objs:
+                    paimingCount = 0
                     paiming_count = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.filter(
                         tid__tid_id=obj.id).exclude(paiming='').values('create_time').annotate(Count('id')).order_by('-create_time')
-                    paimingCount = paiming_count[0].get('id__count')
+                    if paiming_count:
+                        paimingCount = paiming_count[0].get('id__count')
                     yishoulu_num = 0
                     qiyongstatus = '未启用'
                     if obj.qiyong_status:
