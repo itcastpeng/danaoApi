@@ -50,7 +50,7 @@ class zhugedanao_userprofile(models.Model):
     username = models.CharField(verbose_name="姓名", max_length=64, null=True, blank=True)
 
     level_name = models.ForeignKey('zhugedanao_level', verbose_name="用户级别", default=1)
-    role = models.ForeignKey("zhugedanao_role", verbose_name="角色", null=True, blank=True)
+    role = models.ForeignKey("zhugedanao_role", verbose_name="角色", default=5)
     create_date = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     last_login_date = models.DateTimeField(verbose_name="最后登录时间", null=True, blank=True)
     token = models.CharField(verbose_name="token值", max_length=32, null=True, blank=True)
