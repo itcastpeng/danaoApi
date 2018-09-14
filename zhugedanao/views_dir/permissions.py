@@ -5,7 +5,7 @@ from publicFunc import account
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from zhugedanao.forms.permissons import AddForm, UpdateForm, SelectForm
-import json
+import json, base64
 
 
 def init_data(pid=None, selected_list=None):
@@ -72,7 +72,9 @@ def permissionsShow(request):
             for obj in objs:
                 #  如果有oper_user字段 等于本身名字
                 if obj.oper_user:
-                    oper_user_username = obj.oper_user.username
+                    decode_username = base64.b64decode(obj.oper_user.username)
+                    username = str(decode_username, 'utf-8')
+                    oper_user_username = username
                 else:
                     oper_user_username = ''
                 # print('oper_user_username -->', oper_user_username)

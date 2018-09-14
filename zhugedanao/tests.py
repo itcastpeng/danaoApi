@@ -2083,37 +2083,53 @@ def getSiteUrl(domain, panduan_url, headers, mobeil=None):
 
 
 
-headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)]}
-domain = 'http://www.bjhzkq.com'
-souGouURL = 'https://www.sogou.com/web?query={domain}'.format(domain=domain)
-ret = requests.get(souGouURL, headers=headers)
-soup = BeautifulSoup(ret.text, 'lxml')
-linkhead = soup.find('div', class_='linkhead')
-if linkhead:
-    if '未收录' in linkhead.get_text():
-        print('无收录')
-    else:
-        resultTag = soup.find('div', id='rb_0')
-        panduanUrl = resultTag.find('a').get('href')
-        if 'http' not in panduanUrl:
-            panduanUrl  = 'https://www.sogou.com/' + panduanUrl
-        left_down_url = resultTag.find('div', class_='fb').find('cite').find('b').get_text()
-        left_down_url = left_down_url.strip().split('...')[0]
-        if '>' in left_down_url:
-            left_down_url = left_down_url.split('>')[0]
-        if not left_down_url.startswith('http'):
-            left_down_url = 'http://' + left_down_url
-        urlparse_obj = parse.urlparse(left_down_url.rstrip('.'))
-        left_down_domain = urlparse_obj.netloc
-        if left_down_domain in domain:
-            if domain in panduanUrl or domain == panduanUrl:
-                print('===========')
-            else:
-                zhixing_url = getSiteUrl(domain, panduanUrl, headers)
-                if zhixing_url:
-                    print('============')
-                else:
-                    print('无收录')
+# headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)]}
+# domain = 'http://www.bjhzkq.com'
+# souGouURL = 'https://www.sogou.com/web?query={domain}'.format(domain=domain)
+# ret = requests.get(souGouURL, headers=headers)
+# soup = BeautifulSoup(ret.text, 'lxml')
+# linkhead = soup.find('div', class_='linkhead')
+# if linkhead:
+#     if '未收录' in linkhead.get_text():
+#         print('无收录')
+#     else:
+#         resultTag = soup.find('div', id='rb_0')
+#         panduanUrl = resultTag.find('a').get('href')
+#         if 'http' not in panduanUrl:
+#             panduanUrl  = 'https://www.sogou.com/' + panduanUrl
+#         left_down_url = resultTag.find('div', class_='fb').find('cite').find('b').get_text()
+#         left_down_url = left_down_url.strip().split('...')[0]
+#         if '>' in left_down_url:
+#             left_down_url = left_down_url.split('>')[0]
+#         if not left_down_url.startswith('http'):
+#             left_down_url = 'http://' + left_down_url
+#         urlparse_obj = parse.urlparse(left_down_url.rstrip('.'))
+#         left_down_domain = urlparse_obj.netloc
+#         if left_down_domain in domain:
+#             if domain in panduanUrl or domain == panduanUrl:
+#                 print('===========')
+#             else:
+#                 zhixing_url = getSiteUrl(domain, panduanUrl, headers)
+#                 if zhixing_url:
+#                     print('============')
+#                 else:
+#                     print('无收录')
+
+
+
+p = '江西治疗近视眼方法有哪些_【南昌普瑞】_江西治疗近视眼方法   江西治疗近视眼方法有哪些，江西全飞秒近视手术价格，南昌激光治低度近视医院，江西青光眼手术大概要多少钱，南昌普瑞眼科医院散瞳验光，南昌治疗近视有哪些方法  mvimeg.8lbyk03.cn/ - 2018-9-5翻译此页  - 快照 initEndorseShow2("",""); 推荐您搜索：治近视眼科医院；眼科医院激光治近视；眼科奇书治近视的方子；何氏眼科治近视怎么样；爱尔眼科治近视后遗症；眼科治近视手术；青医附院眼科治近视；爱尔眼科激光治近视；爱尔眼科治近视价格；飞秒治近视爱尔眼科；爱尔眼科治近视多少钱；爱尔眼科治近视；治近视爱尔眼科；怎么治假性近视；治假性近视方法'
+m = '【南昌普瑞】'
+
+if m in p:
+    print('====')
+
+
+
+
+
+
+
+
 
 
 
