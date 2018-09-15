@@ -69,7 +69,7 @@ def shouluTiJiaoRenWu(request):
             is_shoulu=shoulu,
             kuaizhao_time=kuaizhao_time,
             status_code=status_code,
-            is_zhixing = 1,
+            is_zhixing=1
         )
 
         response.code = 200

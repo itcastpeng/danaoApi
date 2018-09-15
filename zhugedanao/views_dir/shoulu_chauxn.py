@@ -80,6 +80,8 @@ def shouLuChaXunShow(request):
                     yinqing = '手机搜狗'
                 elif str(obj.search) == '6':
                     yinqing = '手机360'
+                elif str(obj.search) == '7':
+                    yinqing = '手机神马'
                 else:
                     yinqing = ''
                 retData.append({
@@ -220,6 +222,8 @@ def shouLuChaxun(request, oper_type, o_id):
                     yinqing = '手机搜狗'
                 elif str(obj.search) == '6':
                     yinqing = '手机360'
+                elif str(obj.search) == '7':
+                    yinqing = '手机神马'
                 else:
                     yinqing = ''
                 is_shoulu = '未收录'

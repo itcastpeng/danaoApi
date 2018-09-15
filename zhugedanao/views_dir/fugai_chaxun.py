@@ -74,6 +74,12 @@ def fuGaiChaxunShow(request):
                     yinqing = '360'
                 elif str(obj.search_engine) == '6':
                     yinqing = '手机360'
+                elif str(obj.search_engine) == '2':
+                    yinqing = '搜狗'
+                elif str(obj.search_engine) == '5':
+                    yinqing = '手机搜狗'
+                elif str(obj.search_engine) == '7':
+                    yinqing = '手机神马'
                 else:
                     yinqing = ''
                 rank_num = 0
@@ -271,6 +277,12 @@ def fuGaiChaXun(request, oper_type, o_id):
                     yinqing = '360'
                 elif str(obj.search_engine) == '6':
                     yinqing = '手机360'
+                elif str(obj.search_engine) == '2':
+                    yinqing = '搜狗'
+                elif str(obj.search_engine) == '5':
+                    yinqing = '手机搜狗'
+                elif str(obj.search_engine) == '7':
+                    yinqing = '手机神马'
                 else:
                     yinqing = ''
                 paiming_num = 0
