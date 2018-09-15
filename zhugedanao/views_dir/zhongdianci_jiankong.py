@@ -442,6 +442,12 @@ def zhongDianCiOper(request, oper_type, o_id):
                     yinqing = '360'
                 elif search == '6':
                     yinqing = '手机360'
+                elif search == '2':
+                    yinqing = '搜狗'
+                elif search == '5':
+                    yinqing = '手机搜狗'
+                elif search == '7':
+                    yinqing = '手机神马'
                 objs_detail = models.zhugedanao_zhongdianci_jiankong_taskDetailData.objects.filter(
                     tid__tid__user_id=user_id,
                     tid=tid

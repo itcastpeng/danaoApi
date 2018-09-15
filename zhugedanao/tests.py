@@ -2038,6 +2038,47 @@ from requests.exceptions import ReadTimeout
 from requests.exceptions import ConnectionError
 
 
+
+
+# headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)]}
+# domain = 'http://www.bjhzkq.com'
+# souGouURL = 'https://www.sogou.com/web?query={domain}'.format(domain=domain)
+# ret = requests.get(souGouURL, headers=headers)
+# soup = BeautifulSoup(ret.text, 'lxml')
+# linkhead = soup.find('div', class_='linkhead')
+# if linkhead:
+#     if '未收录' in linkhead.get_text():
+#         print('无收录')
+#     else:
+#         resultTag = soup.find('div', id='rb_0')
+#         panduanUrl = resultTag.find('a').get('href')
+#         if 'http' not in panduanUrl:
+#             panduanUrl  = 'https://www.sogou.com/' + panduanUrl
+#         left_down_url = resultTag.find('div', class_='fb').find('cite').find('b').get_text()
+#         left_down_url = left_down_url.strip().split('...')[0]
+#         if '>' in left_down_url:
+#             left_down_url = left_down_url.split('>')[0]
+#         if not left_down_url.startswith('http'):
+#             left_down_url = 'http://' + left_down_url
+#         urlparse_obj = parse.urlparse(left_down_url.rstrip('.'))
+#         left_down_domain = urlparse_obj.netloc
+#         if left_down_domain in domain:
+#             if domain in panduanUrl or domain == panduanUrl:
+#                 print('===========')
+#             else:
+#                 zhixing_url = getSiteUrl(domain, panduanUrl, headers)
+#                 if zhixing_url:
+#                     print('============')
+#                 else:
+#                     print('无收录')
+
+
+# p = [1,2,3,4,5,6,7,8,9]
+#
+# print(random.sample(p, 5))
+
+
+
 # 获取链接标题 状态码 解密url
 def getSiteUrl(domain, panduan_url, headers, mobeil=None):
     try:
@@ -2081,39 +2122,40 @@ def getSiteUrl(domain, panduan_url, headers, mobeil=None):
     except ConnectTimeout:
         pass
 
+def shenma(domain):
+    url = 'https://m.sm.cn/s?q={}'.format(domain)
+    headers = {'User-Agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.106 Mobile Safari/537.36'}
+    ret = requests.get(url, headers=headers)
+    soup = BeautifulSoup(ret.text, 'lxml')
+    resultsTag = soup.find('div', id='results')
+    div_tags = resultsTag.find_all('div', class_='sc c-container')
+    if len(div_tags) > 1:
+        panduan_url = div_tags[0].find('a').get('href')
+        page_link = div_tags[0].get('data-sc')
+        if 'null' in page_link:
+            page_link = page_link.replace('null', '0')
+        pageLinkEval = eval(page_link)
+        order = pageLinkEval.get('pg')
+        if domain == panduan_url:
+            print('Shoulu')
+        flag = getSiteUrl(domain, panduan_url, headers)
+        print(flag)
 
 
-# headers = {'User-Agent': pcRequestHeader[random.randint(0, len(pcRequestHeader) - 1)]}
-# domain = 'http://www.bjhzkq.com'
-# souGouURL = 'https://www.sogou.com/web?query={domain}'.format(domain=domain)
-# ret = requests.get(souGouURL, headers=headers)
-# soup = BeautifulSoup(ret.text, 'lxml')
-# linkhead = soup.find('div', class_='linkhead')
-# if linkhead:
-#     if '未收录' in linkhead.get_text():
-#         print('无收录')
-#     else:
-#         resultTag = soup.find('div', id='rb_0')
-#         panduanUrl = resultTag.find('a').get('href')
-#         if 'http' not in panduanUrl:
-#             panduanUrl  = 'https://www.sogou.com/' + panduanUrl
-#         left_down_url = resultTag.find('div', class_='fb').find('cite').find('b').get_text()
-#         left_down_url = left_down_url.strip().split('...')[0]
-#         if '>' in left_down_url:
-#             left_down_url = left_down_url.split('>')[0]
-#         if not left_down_url.startswith('http'):
-#             left_down_url = 'http://' + left_down_url
-#         urlparse_obj = parse.urlparse(left_down_url.rstrip('.'))
-#         left_down_domain = urlparse_obj.netloc
-#         if left_down_domain in domain:
-#             if domain in panduanUrl or domain == panduanUrl:
-#                 print('===========')
-#             else:
-#                 zhixing_url = getSiteUrl(domain, panduanUrl, headers)
-#                 if zhixing_url:
-#                     print('============')
-#                 else:
-#                     print('无收录')
+
+
+domain = 'http://m.360xh.com/201712/04/37409.html'
+shenma(domain)
+
+
+
+
+
+
+
+
+
+
 
 
 
