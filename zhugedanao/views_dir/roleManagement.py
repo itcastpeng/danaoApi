@@ -45,6 +45,7 @@ def roleManagementShow(request):
                     'name':obj.name,
                     'createDate':obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),
                     'permissionsData':permissionsData,
+                    'oper_user':obj.oper_user.username
                 })
             response.code = 200
             response.msg = '查询成功'
@@ -67,6 +68,7 @@ def roleManagementShow(request):
 def roleManagementOper(request, oper_type, o_id):
     response = Response.ResponseObj()
     if request.method == "POST":
+        user_id = request.GET.get('user_id')
         # 增加角色任务
         if oper_type == "add":
             role_name = request.POST.get('role_name')
@@ -74,7 +76,8 @@ def roleManagementOper(request, oper_type, o_id):
             now_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             objs = models.zhugedanao_role.objects.create(
                 name=role_name,
-                create_date=now_date
+                create_date=now_date,
+                oper_user_id=user_id
             )
             quanxian = quanxian_list if quanxian_list else []
             if quanxian:

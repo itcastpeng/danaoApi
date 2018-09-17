@@ -5,7 +5,8 @@ from zhugedanao.views_dir.wechat import wechat
 from zhugedanao.views_dir import oper_log
 from zhugedanao.views_dir import tongji_data
 from zhugedanao.views_dir import lianjie_tijiao, shoulu_chauxn, fugai_chaxun, zhongdianci_jiankong, \
-    pingtai_wajue, baidu_xiala, guanjianci_paiming, permissions, roleManagement, userMamagement
+    pingtai_wajue, baidu_xiala, guanjianci_paiming, permissions, roleManagement, userMamagement, userIntegral,\
+    userMembershipMechanism
 from zhugedanao.views_dir.Access_tijiaolianjie_task import access_task
 from zhugedanao.views_dir.Access_shouluChaxun import shouluchauxn
 from zhugedanao.views_dir.Access_fugaiChaxun import fugaichaxun
@@ -24,6 +25,9 @@ urlpatterns = [
     url(r'^oper_log$', oper_log.oper_log),                                                       # 记录使用日志
     url(r'^tongji_data$', tongji_data.tongji_data),                                              # 微信公众号获取统计数据
 
+    # 用户积分
+    url(r'^userIntegralOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', userIntegral.userIntegralOper),  # 操作
+
     # 权限管理
     url(r'^permissions_oper/(?P<oper_type>\w+)/(?P<o_id>\d+)', permissions.permissions_oper),  # 操作
     url(r'^permissionsShow', permissions.permissionsShow),  # 查询
@@ -39,10 +43,6 @@ urlpatterns = [
     # 统计
     url(r'^statisticalDetails', tongji_data.statisticalDetails),                    # 统计用户信息
     url(r'^statisticsUserOnlineTime', tongji_data.statisticsUserOnlineTime),        # 统计用户在线时长
-    # url(r'^userStatisticalDetail', tongji_data.userStatisticalDetail),  # 全部用户详情
-    # url(r'^todayAddUserNumberDetail', tongji_data.todayAddUserNumberDetail),  # 今日添加用户详情
-    # url(r'^todayActiveUsersNumberDetail', tongji_data.todayActiveUsersNumberDetail),  # 今日活跃详情
-    # url(r'^loginNmberDeatil', tongji_data.loginNmberDeatil),  # 登录详情
 
     # 链接提交
     url(r'^lianjie_tijiao/(?P<oper_type>\w+)/(?P<o_id>\d+)', lianjie_tijiao.lianjie_tijiao_oper),# 操作
@@ -105,7 +105,9 @@ urlpatterns = [
     url(r'^guanJianCiPaiMingHuoQuRenWu', guanjiancipaiming.guanJianCiPaiMingHuoQuRenWu),                        # 获取任务
     url(r'^guanJianCiPaiMingTiJiaoRenWu', guanjiancipaiming.guanJianCiPaiMingTiJiaoRenWu),                      # 返回任务
 
-
+    # 会员机制
+    url(r'^userMembershipShow', userMembershipMechanism.userMembershipShow),                      # 返回任务
+    url(r'^userMembershipOper/(?P<oper_type>\w+)/(?P<o_id>\d+)', userMembershipMechanism.userMembershipOper),  # 操作
 
 
 ]

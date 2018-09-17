@@ -25,6 +25,7 @@ class zhugedanao_role(models.Model):
     name = models.CharField(verbose_name="角色名称", max_length=32)
     create_date = models.DateTimeField(verbose_name="创建时间", auto_now_add=True)
     quanxian = models.ManyToManyField('zhugedanao_quanxian', verbose_name="对应权限")
+    oper_user = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='操作人', null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "角色表"
@@ -37,7 +38,25 @@ class zhugedanao_role(models.Model):
 # 用户级别表
 class zhugedanao_level(models.Model):
     name = models.CharField(verbose_name="级别名称", max_length=128)
+    # stoptime = models.DateTimeField(verbose_name='到期时间', null=True, blank=True)
 
+# 用户级别权限表
+class zhugedanao_user_level_permissions(models.Model):
+    membershipGrade = models.ForeignKey(to='zhugedanao_level', verbose_name='用户级别')
+    status_choices = (
+        (1, "一个月"),
+        (2, "三个月"),
+        (3, "半年"),
+        (4, "一年"),
+    )
+    theOpeningTime = models.SmallIntegerField(verbose_name='开通时长', choices=status_choices, default=1)
+    price = models.IntegerField(verbose_name='开通金额', null=True, blank=True)
+    shouLuChaXunNum = models.IntegerField(verbose_name='收录查询条数', null=True, blank=True)
+    fuGaiChaXunNum = models.IntegerField(verbose_name='覆盖查询条数', null=True, blank=True)
+    zhongDianCiNum = models.IntegerField(verbose_name='重点词条数', null=True, blank=True)
+    pingTaiWaJueNum = models.IntegerField(verbose_name='平台挖掘条数', null=True, blank=True)
+    baiDuXiaLaNum = models.IntegerField(verbose_name='百度下拉条数', null=True, blank=True)
+    oper_user = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='操作人', null=True, blank=True)
 
 # 用户信息表
 class zhugedanao_userprofile(models.Model):
@@ -67,7 +86,7 @@ class zhugedanao_userprofile(models.Model):
     province = models.CharField(verbose_name="省份", max_length=32, null=True, blank=True)
     city = models.CharField(verbose_name="城市", max_length=32, null=True, blank=True)
     subscribe_time = models.CharField(verbose_name="最后关注时间", max_length=32, null=True, blank=True)
-
+    userIntegral = models.IntegerField(verbose_name='用户积分', null=True, blank=True)
     def __str__(self):
         return self.username
 
@@ -129,6 +148,7 @@ class zhugedanao_lianjie_tijiao(models.Model):
     create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True, null=True, blank=True)
     submit_date = models.DateTimeField(verbose_name='提交时间', null=True, blank=True)
     shoulutime_stamp = models.IntegerField(verbose_name='收录取任务间隔时间', null=True, blank=True)
+
     # access_task_stamp = models.IntegerField(verbose_name='提交链接获取任务间隔时间', null=True, blank=True)
 
     class Meta:
@@ -251,10 +271,29 @@ class zhugedanao_guanjianci_paiming_chaxun(models.Model):
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户', null=True, blank=True)
     paiming = models.IntegerField(verbose_name='链接排名', default=0)
 
+
 # 统计用户在线时长
 class zhugedanao_statistics_user_online_time(models.Model):
     user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户')
     start_time = models.DateTimeField(verbose_name='开始时间', auto_now_add=True)
     stop_time = models.DateTimeField(verbose_name='结束时间', auto_now_add=True)
 
+
+# 用户积分记录日志
+class zhugedanao_user_prepaid_phone_records_log(models.Model):
+    user_id = models.ForeignKey(to='zhugedanao_userprofile', verbose_name='用户')
+    create_date = models.DateTimeField(verbose_name='创建时间', auto_now_add=True)
+    status_choices = (
+        (1, "用户充值"),
+        (2, "大脑赠送"),
+        (3, "推广赠送")
+    )
+    topUpType = models.SmallIntegerField(verbose_name='充值类型', choices=status_choices, default=1)
+    status_choices = (
+        (1, "用户充值"),
+        (2, "大脑赠送"),
+        (3, "推广赠送")
+    )
+    consumptionType = models.SmallIntegerField(verbose_name='消费类型', choices=status_choices, default=1)
+    rechargeOrConsumptionPoints = models.IntegerField(verbose_name='充值或消费积分', null=True, blank=True)
 

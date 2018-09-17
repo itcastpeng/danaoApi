@@ -1260,12 +1260,136 @@ pid                     GET                 否                   第一次发�
 }
 ```
 
+#### 会员机制 添加前查询 说明
+``` 
+http请求： GET
+http请求url: http://127.0.0.1:8000/zhugedanao/userMembershipOper/queryBeforeAdding/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+无
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "查询成功",
+    "code": 200,
+    "data": {
+        "billingList": [
+            {
+                "1": "一个月"
+            },
+            {
+                "2": "三个月"
+            },
+            {
+                "3": "半年"
+            },
+            {
+                "4": "一年"
+            }
+        ],
+        "levelList": [
+            {
+                "id": 1,
+                "name": "一级用户"
+            },
+            {
+                "id": 2,
+                "name": "二级用户"
+            },
+            {
+                "id": 3,
+                "name": "三级用户"
+            }
+        ]
+    }
+}
+```
 
+#### 会员机制 添加 说明
+``` 
+http请求： POST
+http请求url：http://127.0.0.1:8000/zhugedanao/userMembershipOper/addUserIntegral/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+membershipGrade_id      POST                   是                 会员等级 id
+theOpeningTime          POST                   是                 时长 序号
+price                   POST                   是                 钱数
+shouLuChaXunNum         POST                   否                 收录数量
+fuGaiChaXunNum          POST                   否                 覆盖数量
+zhongDianCiNum          POST                   否                 重点词数量
+pingTaiWaJueNum         POST                   否                 平台挖掘数量
+baiDuXiaLaNum           POST                   否                 百度下拉数量
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "添加成功",
+    "code": 200,
+    "data": {}
+}
+```
 
+#### 会员机制 修改 说明
+``` 
+http请求： POST
+http请求url：http://127.0.0.1:8000/zhugedanao/userMembershipOper/updateUserIntegral/0?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+o_id                    url                    是                 要修改的会员ID    
+membershipGrade_id      POST                   是                 会员等级 id
+theOpeningTime          POST                   是                 时长 序号
+price                   POST                   是                 钱数
+shouLuChaXunNum         POST                   否                 收录数量
+fuGaiChaXunNum          POST                   否                 覆盖数量
+zhongDianCiNum          POST                   否                 重点词数量
+pingTaiWaJueNum         POST                   否                 平台挖掘数量
+baiDuXiaLaNum           POST                   否                 百度下拉数量
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "msg": "修改成功",
+    "code": 200,
+    "data": {}
+}
+```
 
+#### 会员机制 删除 说明
+```
+http请求： GET
+http请求url： http://127.0.0.1:8000/zhugedanao/userMembershipOper/delete/1?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+o_id                    url                 是                   要删除的会员ID
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "data": {},
+    "code": 200,
+    "msg": "删除成功"
+}
+```
 
+#### 会员机制 查询 说明
+``` 
+http请求： GET
+http请求 url: http://127.0.0.1:8000/zhugedanao/userMembershipShow?timestamp=1534157927644&rand_str=17737c51d4459f40694e4740bc5a002c&user_id=11
+参数   			        请求方式		        是否必须 		         说明
+无
 
+返回说明 （正常时返回的json数据 示例）
+{
+    "code": 200,
+    "msg": "查询成功",
+    "data": {
+        "obj_count": 1,
+        "data_list": [
+            {
+                "fuGaiChaXunNum": 100,
+                "price": 10,
+                "membershipGrade": "一级用户",
+                "theOpeningTime": 1,
+                "oper_user": "5byg6IGq",
+                "shouLuChaXunNum": 1010,
+                "zhongDianCiNum": 100,
+                "baiDuXiaLaNum": 100,
+                "pingTaiWaJueNum": 100
+            }
+        ]
+    }
+}
+```

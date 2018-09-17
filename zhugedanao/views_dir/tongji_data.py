@@ -272,177 +272,177 @@ def statisticsUserOnlineTime(request):
 
 
 
-# 用户统计详情
-def userStatisticalDetail(request):
-    objs = models.zhugedanao_userprofile.objects.filter(status=1)
-    obj_count = objs.count()
-    current_page = request.GET.get('current_page')
-    length = request.GET.get('length')
-    if length:
-        objs = pagingPage(objs, current_page, length)
-    otherData = []
-    for obj in objs:
-        sex = '男'
-        if int(obj.sex) == 2:
-            sex = '女'
-        decode_username = base64.b64decode(obj.username)
-        username = str(decode_username, 'utf-8')
-        otherData.append({
-            'o_id':obj.id,                  # 用户id
-            'username':username,            # 用户名
-            'create_time':obj.create_date.strftime('%Y-%m-%d %H-%M-%S'),  # 创建时间
-            'country':obj.country,          # 国家
-            'province':obj.province,        # 省份
-            'city':obj.city,                # 城市
-            'sex':sex,                      # 性别
-            'set_avator':obj.set_avator     # 头像
-        })
-    overData = {
-        'otherData':otherData,
-        'obj_count':obj_count
-    }
-    response.code = 200
-    response.msg = '查询成功'
-    response.data = {'overData':overData}
-    return JsonResponse(response.__dict__)
-
-# 今日增加用户详情
-def todayAddUserNumberDetail(request):
-    watch_Yesterday = request.GET.get('watchDay')
-    print('watch_Yesterday=====> ',watch_Yesterday)
-    start_date, stop_date = determineTheTime(watch_Yesterday)
-    q = Q()
-    print('start_date====> ', start_date, 'stop_date----> ', stop_date)
-    q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date), Q.AND)
-    objs = models.zhugedanao_userprofile.objects.filter(q)
-    obj_count = objs.count()
-    current_page = request.GET.get('current_page')
-    length = request.GET.get('length')
-    if length:
-        objs = pagingPage(objs, current_page, length)
-    otherData = []
-    for obj in objs:
-        decode_username = base64.b64decode(obj.username)
-        username = str(decode_username, 'utf-8')
-        sex = '男'
-        if int(obj.sex) == 2:
-            sex = '女'
-        otherData.append({
-            'username':username,            # 用户名
-            'country':obj.country,          # 国家
-            'province':obj.province,        # 省份
-            'city':obj.city,                # 城市
-            'sex':sex,                      # 性别
-            'set_avator':obj.set_avator,    # 头像
-            'create_time':obj.create_date.strftime('%Y-%m-%d %H-%M-%S')   # 创建时间
-        })
-
-    overData = {
-        'otherData':otherData,
-        'obj_count':obj_count
-    }
-    response.code = 200
-    response.msg = '查询成功'
-    response.data = {'overData':overData}
-    return JsonResponse(response.__dict__)
-
-# 今日活跃用户详情
-def todayActiveUsersNumberDetail(request):
-    watch_Yesterday = request.GET.get('watchDay')
-    start_date, stop_date = determineTheTime(watch_Yesterday)
-    q = Q()
-    print('start_date====> ',start_date, 'stop_date----> ', stop_date)
-    q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date), Q.AND)
-    log_objs = models.zhugedanao_oper_log.objects.filter(q)
-    objs = log_objs.select_related(
-        'user_id'
-    ).values(
-        'user_id',
-    ).distinct()
-    objs_count = objs.count()
-    current_page = request.GET.get('current_page')
-    length = request.GET.get('length')
-    print('current_page==========> ',current_page, length)
-    if length:
-        objs = pagingPage(objs, current_page, length)
-    otherData = []
-    for obj in objs:
-        user_obj = models.zhugedanao_userprofile.objects.filter(id=obj.get('user_id'))
-        userObj = user_obj[0]
-        sex = '男'
-        if int(userObj.sex) == 2:
-            sex = '女'
-        user_id = obj.get('user_id')
-        dataList = []
-        objs_gongneng = log_objs.filter(
-            user_id=user_id
-        ).values(
-            'gongneng__name'
-        ).distinct()
-        for gongneng in objs_gongneng:
-            dataList.append(
-                gongneng.get('gongneng__name')
-            )
-        obj_count = objs_gongneng.count()
-        decode_username = base64.b64decode(userObj.username)
-        username = str(decode_username, 'utf-8')
-        otherData.append({
-            'objs_count': obj_count,
-            'user_id':user_id,
-            'create_time':userObj.create_date.strftime('%Y-%m-%d %H-%M-%S'), # 创建时间
-            'country':userObj.country,
-            'province': userObj.province,       # 省份
-            'city': userObj.city,               # 城市
-            'sex': sex,                         # 性别
-            'set_avator': userObj.set_avator,   # 头像
-            'username':username,                # 用户名
-            'dataList':dataList,                # 功能
-
-
-        })
-    response.code = 200
-    response.msg = '查询成功'
-    response.data = {
-        'otherData':otherData,
-        'objs_count':objs_count
-    }
-    return JsonResponse(response.__dict__)
-
-# 登录详情
-def loginNmberDeatil(request):
-    watch_Yesterday = request.GET.get('watchDay')
-    start_date, stop_date = determineTheTime(watch_Yesterday)
-    q = Q()
-    q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date) &(Q(gongneng=1)), Q.AND)
-    objs = models.zhugedanao_oper_log.objects.filter(q).values('user_id', 'create_date').distinct().order_by('-create_date')
-    obj_count = objs.count()
-    otherData = []
-    current_page = request.GET.get('current_page')
-    length = request.GET.get('length')
-    if length:
-        objs = pagingPage(objs, current_page, length)
-    for obj in objs:
-        user_objs = models.zhugedanao_userprofile.objects.filter(id=obj.get('user_id'))
-        userObj = user_objs[0]
-        sex = '男'
-        if int(userObj.sex) == 2:
-            sex = '女'
-        decode_username = base64.b64decode(userObj.username)
-        username = str(decode_username, 'utf-8')
-        otherData.append({
-            'username':username,
-            'create_time':userObj.create_date.strftime('%Y-%m-%d %H-%M-%S'),
-            'set_avator':userObj.set_avator,        # 头像
-            'country': userObj.country,                 # 国家
-            'province': userObj.province,               # 省份
-            'city': userObj.city,                       # 城市
-            'sex': sex,                                 # 性别
-        })
-    dataList = {
-        'otherData':otherData,
-        'obj_count':obj_count
-    }
-    response.code = 200
-    response.msg = '查询成功'
-    response.data = {'dataList':dataList}
-    return JsonResponse(response.__dict__)
+# # 用户统计详情
+# def userStatisticalDetail(request):
+#     objs = models.zhugedanao_userprofile.objects.filter(status=1)
+#     obj_count = objs.count()
+#     current_page = request.GET.get('current_page')
+#     length = request.GET.get('length')
+#     if length:
+#         objs = pagingPage(objs, current_page, length)
+#     otherData = []
+#     for obj in objs:
+#         sex = '男'
+#         if int(obj.sex) == 2:
+#             sex = '女'
+#         decode_username = base64.b64decode(obj.username)
+#         username = str(decode_username, 'utf-8')
+#         otherData.append({
+#             'o_id':obj.id,                  # 用户id
+#             'username':username,            # 用户名
+#             'create_time':obj.create_date.strftime('%Y-%m-%d %H-%M-%S'),  # 创建时间
+#             'country':obj.country,          # 国家
+#             'province':obj.province,        # 省份
+#             'city':obj.city,                # 城市
+#             'sex':sex,                      # 性别
+#             'set_avator':obj.set_avator     # 头像
+#         })
+#     overData = {
+#         'otherData':otherData,
+#         'obj_count':obj_count
+#     }
+#     response.code = 200
+#     response.msg = '查询成功'
+#     response.data = {'overData':overData}
+#     return JsonResponse(response.__dict__)
+#
+# # 今日增加用户详情
+# def todayAddUserNumberDetail(request):
+#     watch_Yesterday = request.GET.get('watchDay')
+#     print('watch_Yesterday=====> ',watch_Yesterday)
+#     start_date, stop_date = determineTheTime(watch_Yesterday)
+#     q = Q()
+#     print('start_date====> ', start_date, 'stop_date----> ', stop_date)
+#     q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date), Q.AND)
+#     objs = models.zhugedanao_userprofile.objects.filter(q)
+#     obj_count = objs.count()
+#     current_page = request.GET.get('current_page')
+#     length = request.GET.get('length')
+#     if length:
+#         objs = pagingPage(objs, current_page, length)
+#     otherData = []
+#     for obj in objs:
+#         decode_username = base64.b64decode(obj.username)
+#         username = str(decode_username, 'utf-8')
+#         sex = '男'
+#         if int(obj.sex) == 2:
+#             sex = '女'
+#         otherData.append({
+#             'username':username,            # 用户名
+#             'country':obj.country,          # 国家
+#             'province':obj.province,        # 省份
+#             'city':obj.city,                # 城市
+#             'sex':sex,                      # 性别
+#             'set_avator':obj.set_avator,    # 头像
+#             'create_time':obj.create_date.strftime('%Y-%m-%d %H-%M-%S')   # 创建时间
+#         })
+#
+#     overData = {
+#         'otherData':otherData,
+#         'obj_count':obj_count
+#     }
+#     response.code = 200
+#     response.msg = '查询成功'
+#     response.data = {'overData':overData}
+#     return JsonResponse(response.__dict__)
+#
+# # 今日活跃用户详情
+# def todayActiveUsersNumberDetail(request):
+#     watch_Yesterday = request.GET.get('watchDay')
+#     start_date, stop_date = determineTheTime(watch_Yesterday)
+#     q = Q()
+#     print('start_date====> ',start_date, 'stop_date----> ', stop_date)
+#     q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date), Q.AND)
+#     log_objs = models.zhugedanao_oper_log.objects.filter(q)
+#     objs = log_objs.select_related(
+#         'user_id'
+#     ).values(
+#         'user_id',
+#     ).distinct()
+#     objs_count = objs.count()
+#     current_page = request.GET.get('current_page')
+#     length = request.GET.get('length')
+#     print('current_page==========> ',current_page, length)
+#     if length:
+#         objs = pagingPage(objs, current_page, length)
+#     otherData = []
+#     for obj in objs:
+#         user_obj = models.zhugedanao_userprofile.objects.filter(id=obj.get('user_id'))
+#         userObj = user_obj[0]
+#         sex = '男'
+#         if int(userObj.sex) == 2:
+#             sex = '女'
+#         user_id = obj.get('user_id')
+#         dataList = []
+#         objs_gongneng = log_objs.filter(
+#             user_id=user_id
+#         ).values(
+#             'gongneng__name'
+#         ).distinct()
+#         for gongneng in objs_gongneng:
+#             dataList.append(
+#                 gongneng.get('gongneng__name')
+#             )
+#         obj_count = objs_gongneng.count()
+#         decode_username = base64.b64decode(userObj.username)
+#         username = str(decode_username, 'utf-8')
+#         otherData.append({
+#             'objs_count': obj_count,
+#             'user_id':user_id,
+#             'create_time':userObj.create_date.strftime('%Y-%m-%d %H-%M-%S'), # 创建时间
+#             'country':userObj.country,
+#             'province': userObj.province,       # 省份
+#             'city': userObj.city,               # 城市
+#             'sex': sex,                         # 性别
+#             'set_avator': userObj.set_avator,   # 头像
+#             'username':username,                # 用户名
+#             'dataList':dataList,                # 功能
+#
+#
+#         })
+#     response.code = 200
+#     response.msg = '查询成功'
+#     response.data = {
+#         'otherData':otherData,
+#         'objs_count':objs_count
+#     }
+#     return JsonResponse(response.__dict__)
+#
+# # 登录详情
+# def loginNmberDeatil(request):
+#     watch_Yesterday = request.GET.get('watchDay')
+#     start_date, stop_date = determineTheTime(watch_Yesterday)
+#     q = Q()
+#     q.add(Q(create_date__gte=start_date) & Q(create_date__lte=stop_date) &(Q(gongneng=1)), Q.AND)
+#     objs = models.zhugedanao_oper_log.objects.filter(q).values('user_id', 'create_date').distinct().order_by('-create_date')
+#     obj_count = objs.count()
+#     otherData = []
+#     current_page = request.GET.get('current_page')
+#     length = request.GET.get('length')
+#     if length:
+#         objs = pagingPage(objs, current_page, length)
+#     for obj in objs:
+#         user_objs = models.zhugedanao_userprofile.objects.filter(id=obj.get('user_id'))
+#         userObj = user_objs[0]
+#         sex = '男'
+#         if int(userObj.sex) == 2:
+#             sex = '女'
+#         decode_username = base64.b64decode(userObj.username)
+#         username = str(decode_username, 'utf-8')
+#         otherData.append({
+#             'username':username,
+#             'create_time':userObj.create_date.strftime('%Y-%m-%d %H-%M-%S'),
+#             'set_avator':userObj.set_avator,        # 头像
+#             'country': userObj.country,                 # 国家
+#             'province': userObj.province,               # 省份
+#             'city': userObj.city,                       # 城市
+#             'sex': sex,                                 # 性别
+#         })
+#     dataList = {
+#         'otherData':otherData,
+#         'obj_count':obj_count
+#     }
+#     response.code = 200
+#     response.msg = '查询成功'
+#     response.data = {'dataList':dataList}
+#     return JsonResponse(response.__dict__)
