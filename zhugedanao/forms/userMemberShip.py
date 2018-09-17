@@ -71,7 +71,18 @@ class SelectForm(forms.Form):
             'required': "页显示数量类型错误"
         }
     )
-
+    mouth = forms.IntegerField(
+        required=False,
+        error_messages={
+            'required': "日期类型错误"
+        }
+    )
+    level = forms.IntegerField(
+        required=False,
+        error_messages={
+            'required': "日期类型错误"
+        }
+    )
     def clean_current_page(self):
         if 'current_page' not in self.data:
             current_page = 1

@@ -11,25 +11,45 @@ import json, base64
 def userMembershipShow(request):
     response = Response.ResponseObj()
     if request.method == "GET":
+        huiyuan = request.GET.get('huiyuan')
         forms_obj = SelectForm(request.GET)
         if forms_obj.is_valid():
             current_page = forms_obj.cleaned_data['current_page']
             length = forms_obj.cleaned_data['length']
             role_id = request.GET.get('role_id')
+            mouth = forms_obj.cleaned_data.get('mouth')
+            level = forms_obj.cleaned_data.get('level')
             objs = models.zhugedanao_user_level_permissions.objects.all()
-            obj_count = objs.count()
+            if huiyuan:
+                objs = models.zhugedanao_user_level_permissions.objects.filter(theOpeningTime=1)
+                if level == 2:
+                    objs = models.zhugedanao_user_level_permissions.objects.filter(
+                        membershipGrade_id=2)
+                elif level == 3:
+                    objs = models.zhugedanao_user_level_permissions.objects.filter(
+                    membershipGrade_id=3)
+                riqi = 1
+                if mouth:
+                    if int(mouth) == 3:
+                        riqi = 2
+                    elif int(mouth) == 5:
+                        riqi = 3
+                    elif int(mouth) == 10:
+                        riqi = 4
+                    objs = objs.filter(theOpeningTime=riqi)
             # 分页
             if length != 0:
                 start_line = (current_page - 1) * length
                 stop_line = start_line + length
                 objs = objs[start_line: stop_line]
+            obj_count = objs.count()
             data_list = []
             for obj in objs:
                 decode_username = base64.b64decode(obj.oper_user.username)
                 username = str(decode_username, 'utf-8')
                 data_list.append({
                    'membershipGrade' :obj.membershipGrade.name,
-                   'theOpeningTime' :obj.theOpeningTime,
+                   'theOpeningTime' :obj.get_theOpeningTime_display(),
                    'price' :obj.price,
                    'shouLuChaXunNum' :obj.shouLuChaXunNum,
                    'fuGaiChaXunNum' :obj.fuGaiChaXunNum,
@@ -55,8 +75,6 @@ def userMembershipOper(request, oper_type, o_id):
     response = Response.ResponseObj()
     user_id = request.GET.get('user_id')
     if request.method == "POST":
-
-        #
         if oper_type == "addUserIntegral":
             form_data = {
                 'membershipGrade': request.POST.get('membershipGrade'),  # 会员等级
