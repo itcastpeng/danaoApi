@@ -49,6 +49,8 @@ class AddForm(forms.Form):
             self.add_error('url', '提交链接大于50条!')
         elif int(userLevel) == 2 and len(url_list) > 100:
             self.add_error('url', '提交链接大于100条!')
+        elif int(userLevel) == 3 and len(url_list) > 100:
+            self.add_error('url', '提交链接大于100条!')
         else:
             url_list_data = []
             num = 0
