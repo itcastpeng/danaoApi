@@ -48,6 +48,7 @@ def userMembershipShow(request):
                 decode_username = base64.b64decode(obj.oper_user.username)
                 username = str(decode_username, 'utf-8')
                 data_list.append({
+                    'o_id':obj.id,
                    'membershipGrade' :obj.membershipGrade.name,
                    'theOpeningTime' :obj.get_theOpeningTime_display(),
                    'price' :obj.price,
