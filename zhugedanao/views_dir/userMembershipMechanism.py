@@ -143,7 +143,8 @@ def userMembershipOper(request, oper_type, o_id):
             billingList = []
             for obj in objs:
                 billingList.append({
-                    obj[0]: obj[1]
+                    'id': obj[0],
+                    'name': obj[1]
                 })
             levelObjs = models.zhugedanao_level.objects.all()
             levelList = []
