@@ -4,7 +4,7 @@ from publicFunc import account
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from zhugedanao.forms.role_management import AddForm, UpdateForm, SelectForm
-import json, datetime
+import json, datetime, base64
 from publicFunc.condition_com import conditionCom
 from zhugedanao.views_dir.permissions import init_data
 # cerf  token验证 用户展示模块
@@ -40,12 +40,14 @@ def roleManagementShow(request):
                     permissionsList = [i['id'] for i in obj.quanxian.values('id')]
                     print('permissionsList=========> ',permissionsList)
                     permissionsData = init_data(selected_list=permissionsList)
+                decode_username = base64.b64decode(obj.oper_user.username)
+                username = str(decode_username, 'utf-8')
                 retData.append({
                     'id':obj.id,
                     'name':obj.name,
                     'createDate':obj.create_date.strftime('%Y-%m-%d %H:%M:%S'),
                     'permissionsData':permissionsData,
-                    'oper_user':obj.oper_user.username
+                    'oper_user':username
                 })
             response.code = 200
             response.msg = '查询成功'
