@@ -49,15 +49,17 @@ def userMembershipShow(request):
                 username = str(decode_username, 'utf-8')
                 data_list.append({
                     'o_id':obj.id,
-                   'membershipGrade' :obj.membershipGrade.name,
-                   'theOpeningTime' :obj.get_theOpeningTime_display(),
-                   'price' :obj.price,
-                   'shouLuChaXunNum' :obj.shouLuChaXunNum,
-                   'fuGaiChaXunNum' :obj.fuGaiChaXunNum,
-                   'zhongDianCiNum' :obj.zhongDianCiNum,
-                   'pingTaiWaJueNum' :obj.pingTaiWaJueNum,
-                   'baiDuXiaLaNum' :obj.baiDuXiaLaNum,
-                   'oper_user' :username,
+                    'gradeId':obj.membershipGrade_id,
+                    'membershipGrade' :obj.membershipGrade.name,
+                    'timeId':obj.theOpeningTime,
+                    'theOpeningTime' :obj.get_theOpeningTime_display(),
+                    'price' :obj.price,
+                    'shouLuChaXunNum' :obj.shouLuChaXunNum,
+                    'fuGaiChaXunNum' :obj.fuGaiChaXunNum,
+                    'zhongDianCiNum' :obj.zhongDianCiNum,
+                    'pingTaiWaJueNum' :obj.pingTaiWaJueNum,
+                    'baiDuXiaLaNum' :obj.baiDuXiaLaNum,
+                    'oper_user' :username,
                 })
             response.code = 200
             response.msg = '查询成功'
