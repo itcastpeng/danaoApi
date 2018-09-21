@@ -289,6 +289,12 @@ def fuGaiChaXun(request, oper_type, o_id):
                 if obj.paiming_detail:
                     paiming_detail = obj.paiming_detail.split(',')
                     paiming_num = len(paiming_detail)
+                    if paiming_num == 1:
+                        paiming_num = paiming_detail
+                        print('paiming_num-====> ',paiming_num)
+                        if int(paiming_num[0]) == 0:
+                            paiming_num = paiming_detail[0]
+                print('paiming_num----------> ',paiming_num)
                 ws.cell(row=2, column=4, value="{chaxun_time}".format(chaxun_time=obj.createAndStart_time))
                 ws2.cell(row=2, column=6, value="{chaxun_time}".format(chaxun_time=obj.createAndStart_time))
                 ws.cell(row=row, column=1, value="{keyword}".format(keyword=obj.keyword))

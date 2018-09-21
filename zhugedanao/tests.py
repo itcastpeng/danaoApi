@@ -2143,15 +2143,19 @@ def shenma(domain):
 
 
 
-
-domain = 'http://m.360xh.com/201712/04/37409.html'
-shenma(domain)
-
-
+#
+# domain = 'http://m.360xh.com/201712/04/37409.html'
+# shenma(domain)
 
 
 
+p = [{'name': '韩新颖', 'children': [{'name': '张聪', 'children': []}, [{'name': '做自己', 'children': [{'name': '做自己', 'children': []}]},
+{'name': '做自己', 'children': []}]]},
+{'name': '张炬', 'children': [{'name': 'Ju do it', 'children': []}, [{'name': 'Ju do it', 'children': []}], [{'name': '诸葛营销', 'children': [{'name': '诸葛营销', 'children': []}]}, {'name': '诸葛营销', 'children': []}]]}]
 
+
+for i in p:
+    print('i-----> ',i)
 
 
 
